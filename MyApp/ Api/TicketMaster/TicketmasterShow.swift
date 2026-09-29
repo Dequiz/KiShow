@@ -49,7 +49,7 @@ struct Attraction: Decodable{
 
 struct EventEmbedded: Decodable {
     let venues: [Venue]?
-    let atractions: [Attraction]?
+    let attractions: [Attraction]?
 }
 
 struct TicketmasterShow: Decodable, Identifiable {
