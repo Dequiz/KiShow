@@ -42,9 +42,14 @@ struct Venue: Decodable {
     let address: Address?
 }
 
+struct Attraction: Decodable{
+    let name: String?
+}
+
 
 struct EventEmbedded: Decodable {
     let venues: [Venue]?
+    let atractions: [Attraction]?
 }
 
 struct TicketmasterShow: Decodable, Identifiable {

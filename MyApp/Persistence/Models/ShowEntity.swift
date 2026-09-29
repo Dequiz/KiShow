@@ -19,10 +19,8 @@ class ShowEntity {
     var imageShow: String
     var localShow: String
     
-    init(idShow: UUID, nameShow: String, dataShow: Date, artistShow: String, genderShow: String, imageShow:String, localShow: String ) {
-        
-       
-        self.idShow = idShow
+    init(nameShow: String, dataShow: Date, artistShow: String, genderShow: String, imageShow:String, localShow: String ) {
+        self.idShow = UUID()
         self.nameShow = nameShow
         self.dataShow = dataShow
         self.artistShow = artistShow

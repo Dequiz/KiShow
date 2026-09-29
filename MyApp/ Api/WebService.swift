@@ -10,8 +10,6 @@ import Foundation
 
 class WebService {
     
-    
-    
     func downloadData() async -> [TicketmasterShow] {
         
         let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationId=KZFzniwnSyZfZ7v7nJ"
