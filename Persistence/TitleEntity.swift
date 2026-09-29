@@ -12,13 +12,13 @@ import SwiftData
 
 class TitleEntity {
     var idTitle: UUID
-    var idEvent: EventEntity
+    var event: EventEntity?
     var nameTitle: String
     
-    init(idTitle: UUID, idEvent: EventEntity, nameTitle: String)
+    init(idTitle: UUID, event: EventEntity? = nil, nameTitle: String)
     {
         self.idTitle = idTitle
-        self.idEvent = idEvent
+        self.event = event
         self.nameTitle = nameTitle
     }
 }

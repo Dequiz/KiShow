@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-public enum typeMidias: Codable {
+public enum TypeMidias: Codable {
     case image
     case video
     case audio
@@ -17,16 +17,19 @@ public enum typeMidias: Codable {
 
 @Model
 class ExperienceEntity {
-    var type: typeMidias
-    var idEvent: EventEntity
+    var idExperience: UUID
+    var type: TypeMidias
+    var event: EventEntity?
     
-    var textContent: String
+    var textContent: String?
     var imageContent: [Data]?
     var videoContent: [Data]?
     var audioContent: [Data]?
     
-    init (type: typeMidias, textContent: String, imageContent: [Data], videoContent: [Data], audioContent: [Data]) {
+    init (idExperience: UUID = UUID(), type: TypeMidias, event: EventEntity? = nil, textContent: String? = nil, imageContent: [Data]? = nil, videoContent: [Data]? = nil, audioContent: [Data]? = nil) {
+        self.idExperience = idExperience
         self.type = type
+        self.event = event
         self.textContent = textContent
         self.imageContent = imageContent
         self.videoContent = videoContent

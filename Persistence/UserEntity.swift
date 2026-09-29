@@ -14,15 +14,15 @@ class UserEntity {
     var idUser: UUID
     var nameUser: String
     var ageUser: Int
-    var idTitle: TitleEntity
-    var idShow: ShowEntity
+    var title: TitleEntity?
+    var show: ShowEntity?
     
-    init(idUser: UUID, nameUser: String, ageUser: Int, idTitle: TitleEntity, idShow: ShowEntity)
+    init(idUser: UUID, nameUser: String, ageUser: Int, title: TitleEntity? = nil, show: ShowEntity? = nil)
     {
         self.idUser = idUser
         self.nameUser = nameUser
         self.ageUser = ageUser
-        self.idTitle = idTitle
-        self.idShow = idShow
+        self.title = title
+        self.show = show
     }
 }

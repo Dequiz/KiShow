@@ -13,7 +13,7 @@ import SwiftData
 class ShowEntity {
     var idShow: UUID
     var nameShow: String
-    var dataShow: Data
+    var dataShow: Date
     var artistShow:
     var genderShow:
     var imageShow:

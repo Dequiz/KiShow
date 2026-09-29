@@ -12,13 +12,13 @@ import SwiftData
 
 class EventEntity {
     var idEvent: UUID
-    var idShow: ShowEntity
-    var idExperience: ExperienceEntity
+    var show: ShowEntity?
+    @Relationship(deleteRule: .cascade, inverse: \ExperienceEntity.event)
+        var experiences: [ExperienceEntity]?
     
-    init( idEvent: UUID, idShow:ShowEntity, idExperience: ExperienceEntity) {
+    init( idEvent: UUID, show:ShowEntity? = nil) {
         self.idEvent = idEvent
-        self.idShow = idShow
-        self.idExperience = idExperience
+        self.show = show
     }
 }
 
