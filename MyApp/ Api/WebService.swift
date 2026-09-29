@@ -14,7 +14,7 @@ class WebService {
     
     func downloadData() async -> [TicketmasterShow] {
         
-        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=&locale=*&countryCode=BR&classificationId=KZFzniwnSyZfZ7v7nJ"
+        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationId=KZFzniwnSyZfZ7v7nJ"
         guard let url = URL(string: urlString) else {
             return []
         }
