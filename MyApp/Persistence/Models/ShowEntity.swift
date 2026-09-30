@@ -18,16 +18,22 @@ class ShowEntity {
     var genderShow: String
     var imageShow: String
     var localShow: String
+    var addressShow: String
+    var urlShow: String
+    var startTimeShow: String
+    var city: String
     
-    init(idShow: UUID, nameShow: String, dataShow: Date, artistShow: String, genderShow: String, imageShow:String, localShow: String ) {
-        
-       
-        self.idShow = idShow
+    init(nameShow: String, dataShow: Date, artistShow: String, genderShow: String, imageShow:String, localShow: String, addressShow: String, urlShow: String, startTimeShow: String, city: String) {
+        self.idShow = UUID()
         self.nameShow = nameShow
         self.dataShow = dataShow
         self.artistShow = artistShow
         self.genderShow = genderShow
         self.imageShow = imageShow
         self.localShow = localShow
+        self.addressShow = addressShow
+        self.urlShow = urlShow
+        self.startTimeShow = startTimeShow
+        self.city = city
     }
 }

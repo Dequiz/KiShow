@@ -16,8 +16,8 @@ class EventEntity {
     @Relationship(deleteRule: .cascade, inverse: \ExperienceEntity.event)
         var experiences: [ExperienceEntity]?
     
-    init( idEvent: UUID, show:ShowEntity? = nil) {
-        self.idEvent = idEvent
+    init(show:ShowEntity? = nil) {
+        self.idEvent = UUID()
         self.show = show
     }
 }
