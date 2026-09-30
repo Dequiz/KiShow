@@ -7,13 +7,13 @@
 
 
 
-
-class TicketMasterShowViewModel{
-    var show: [TicketmasterShow] = []
-
-    func fetchConcert() async {
-        show = await WebService().downloadData()
-    }
-    
-    
-}
+//
+//class TicketMasterShowViewModel{
+//    var show: [TicketmasterShow] = []
+//
+//    func fetchConcert() async {
+//        show = await WebService().downloadData()
+//    }
+//    
+//    
+//}

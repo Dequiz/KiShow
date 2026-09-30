@@ -8,6 +8,6 @@
 import SwiftUI
 struct MyShows: View{
     var body: some View{
-          Text("Oi")
+//        VinylRecord(fullVynil: 150,urlMusic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo89f864oQy9RKLUJ-YHsetQ4l1tDCnnVqLPOaeUq3EA&s=10")
     }
 }
