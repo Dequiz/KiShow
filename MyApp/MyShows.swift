@@ -8,6 +8,7 @@
 import SwiftUI
 struct MyShows: View{
     var body: some View{
+        VinylRecord(fullVynil: 150)
           Text("Oi")
     }
 }
