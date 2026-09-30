@@ -9,14 +9,21 @@ import SwiftUI
 
 struct testView: View {
     
-    @State var shows = TicketMasterShowViewModel()
+    @State var showsTicket = TicketMasterShowViewModel()
     
     var body: some View {
-        List(shows.show){show in
-            Text(show.name)
+        List(showsTicket.show){show in
+            Button{
+                
+            }label: {
+                HStack{
+                    Text(show.name)
+                    Text("+")
+                }
+            }
             
         }.task{
-            await shows.fetchConcert()
+            await showsTicket.fetchConcert()
         }
     }
 }

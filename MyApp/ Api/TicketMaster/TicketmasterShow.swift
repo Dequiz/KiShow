@@ -55,7 +55,7 @@ struct ImageTicket: Decodable {
 
 struct EventEmbedded: Decodable {
     let venues: [Venue]?
-    let attraction: Attraction?
+    let attractions: [Attraction]?
 }
 
 struct TicketmasterShow: Decodable, Identifiable {
@@ -66,7 +66,7 @@ struct TicketmasterShow: Decodable, Identifiable {
     let dates: EventDates?
     let embedded: EventEmbedded?
     
-    let images: ImageTicket?
+    let images: [ImageTicket]?
 
 
     enum CodingKeys: String, CodingKey {
@@ -78,6 +78,10 @@ struct TicketmasterShow: Decodable, Identifiable {
         embedded?.venues?.first
     }
     
+    var attraction: Attraction? {
+        embedded?.attractions?.first
+    }
+    
     init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -87,7 +91,7 @@ struct TicketmasterShow: Decodable, Identifiable {
             self.classifications = try container.decodeIfPresent([Classification].self, forKey: .classifications) ?? []
             self.dates           = try container.decodeIfPresent(EventDates.self, forKey: .dates)
             self.embedded        = try container.decodeIfPresent(EventEmbedded.self, forKey: .embedded)
-            self.images          = try container.decodeIfPresent(ImageTicket.self, forKey: .images)
+            self.images          = try container.decodeIfPresent([ImageTicket].self, forKey: .images)
         }
     
 }
