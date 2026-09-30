@@ -15,7 +15,7 @@ struct Ticket: View {
     
     var theme: TicketTheme = .purple
     
-    private let baseWidth: CGFloat = 350.0
+    let baseWidth: CGFloat = 350.0
 
     var body: some View {
         GeometryReader { geometry in
