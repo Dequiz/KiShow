@@ -10,7 +10,35 @@ import Foundation
 
 class WebService {
     
-    func downloadData() async -> [TicketmasterShow] {
+    let genreId: [String: String] = [
+            "ALL": "KZFzniwnSyZfZ7v7nJ",
+            "Pop": "KnvZfZ7vAev",
+            "Rock": "KnvZfZ7vAeA",
+            "Metal": "KnvZfZ7vAvt",
+            "R&B": "KnvZfZ7vAee",
+            "Jazz": "KnvZfZ7vAvE",
+            "Classical": "KnvZfZ7vAeJ",
+            "Latin": "KnvZfZ7vAJ6",
+            "Hip-Hop": "KnvZfZ7vAv1",
+            "Contry": "KnvZfZ7vAv6",
+            "Folk": "KnvZfZ7vAva",
+            "Children's Music": "KnvZfZ7vAvk",
+            "Ballads/Romantic": "KnvZfZ7vAve",
+            "Dance/Eletronic": "KnvZfZ7vAvF",
+            "Blues": "KnvZfZ7vAvd",
+            "Alternative": "KnvZfZ7vAvv",
+            "Holiday": "KnvZfZ7vAvJ",
+            "Medieval":"KnvZfZ7vAvI",
+            "New Age": "KnvZfZ7vAvn",
+            "Other": "KnvZfZ7vAvl",
+            "Reggae": "KnvZfZ7vAed",
+            "Religious": "KnvZfZ7vAe7",
+            "Undefined": "KnvZfZ7vAe6",
+            "World": "KnvZfZ7vAeF",
+    ] ///Não sei se aqui é o melhor lugar para deixar isso
+    
+    
+    func downloadAllShows(genre: String = "ALL") async -> [TicketmasterShow] {
         
         let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationId=KZFzniwnSyZfZ7v7nJ"
         guard let url = URL(string: urlString) else {
@@ -35,4 +63,5 @@ class WebService {
             return []
         }
     }
+    
 }

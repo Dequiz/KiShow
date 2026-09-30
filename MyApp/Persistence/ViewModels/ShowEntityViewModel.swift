@@ -11,12 +11,39 @@ import SwiftUI
 
 @Observable
 class ShowEntityViewModel{
-    var show: [ShowEntity]
-    private var showTicketmaster: TicketMasterShowViewModel
+    var show: ShowEntity
     
-    init(show: [ShowEntity], showTicketmaster: TicketMasterShowViewModel) {
-        self.show = show
+    private var showTicketmaster: TicketmasterShow
+    
+    private static func parseDate(_ string: String?) -> Date {
+           guard let string else { return Date() }
+           let f = DateFormatter()
+           f.dateFormat = "yyyy-MM-dd"
+           f.locale = Locale(identifier: "en_US_POSIX")
+           return f.date(from: string) ?? Date()
+       }
+    
+    
+    init(showTicketmaster: TicketmasterShow) {
         
+        
+        self.showTicketmaster = showTicketmaster
+
+        
+        
+        self.show = ShowEntity(
+            nameShow: showTicketmaster.name,
+            dataShow: ShowEntityViewModel.parseDate(showTicketmaster.dates?.start?.localDate),
+            artistShow:  showTicketmaster.embedded?.attraction?.name ?? "Artista desconhecido",
+            genderShow: showTicketmaster.classifications.first(where: { $0.primary == true })?.genre?.name
+            ?? showTicketmaster.classifications.first?.genre?.name
+                        ?? "Gênero desconhecido",
+            imageShow: showTicketmaster.images?.url ?? "",
+            localShow: showTicketmaster.venue?.name ?? "Local desconhecido",
+            urlShow: showTicketmaster.url,
+            startTimeShow: showTicketmaster.dates?.start?.localTime ?? "",
+            city: showTicketmaster.venue?.city?.name ?? "Cidade desconhecida"
+        )
     }
     
 }

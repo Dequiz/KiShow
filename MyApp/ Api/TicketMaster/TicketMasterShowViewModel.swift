@@ -6,13 +6,15 @@
 //
 
 
+import SwiftUI
 
 
+@Observable
 class TicketMasterShowViewModel{
     var show: [TicketmasterShow] = []
 
     func fetchConcert() async {
-        show = await WebService().downloadData()
+        show = await WebService().downloadAllShows()
     }
     
     
