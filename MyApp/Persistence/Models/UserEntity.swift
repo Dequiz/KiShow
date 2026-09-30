@@ -17,9 +17,9 @@ class UserEntity {
     var title: TitleEntity?
     var show: ShowEntity?
     
-    init(idUser: UUID, nameUser: String, ageUser: Int, title: TitleEntity? = nil, show: ShowEntity? = nil)
+    init(nameUser: String, ageUser: Int, title: TitleEntity? = nil, show: ShowEntity? = nil)
     {
-        self.idUser = idUser
+        self.idUser = UUID()
         self.nameUser = nameUser
         self.ageUser = ageUser
         self.title = title

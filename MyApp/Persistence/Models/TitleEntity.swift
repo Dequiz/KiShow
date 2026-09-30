@@ -15,9 +15,9 @@ class TitleEntity {
     var event: EventEntity?
     var nameTitle: String
     
-    init(idTitle: UUID, event: EventEntity? = nil, nameTitle: String)
+    init(event: EventEntity? = nil, nameTitle: String)
     {
-        self.idTitle = idTitle
+        self.idTitle = UUID()
         self.event = event
         self.nameTitle = nameTitle
     }
