@@ -1,8 +1,12 @@
+////
+////  WebService.swift
+////  MyApp
+////
+////  Created by Paulo Eduardo Barbosa da Silva on 28/09/26.
+////
 //
-//  WebService.swift
-//  MyApp
+//import Foundation
 //
-//  Created by Paulo Eduardo Barbosa da Silva on 28/09/26.
 //
 
 import Foundation

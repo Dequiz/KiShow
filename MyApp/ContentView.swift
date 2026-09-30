@@ -3,7 +3,6 @@ import Playgrounds
 
 struct ContentView: View {
     var body: some View {
-        
         TabView{
             Tab("Shows",systemImage: "ticket.fill"){
                  MyShows()
