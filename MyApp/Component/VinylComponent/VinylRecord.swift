@@ -12,12 +12,12 @@ struct VinylRecord: View {
     @State var isTurning = false
     @State var isGoingUp = false
     let fullVynil: CGFloat
+    let urlMusic : URL
     var vynilHole: CGFloat { fullVynil * 0.3 }
     var holeBorder: CGFloat { vynilHole - 5 }
     var spacingStack: CGFloat {fullVynil * 0.4}
     var spacingNotes: CGFloat {fullVynil * 0.4}
     let noteColor = NoteColors()
-    
     var body: some View {
         VStack(spacing:-spacingStack){
           
@@ -55,12 +55,11 @@ struct VinylRecord: View {
                 }
                 .opacity(isGoingUp ? 1 : 0)
             
-
             Button {
                 isTurning.toggle()
                 isGoingUp.toggle()
             } label: {
-                AsyncImage(url: URL(string: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB2sEEuzNGe7eJgnPZO-n4nrOQhprLT-pGjcCNnXvbSQ&s=10")) { image in
+                AsyncImage(url: urlMusic) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -101,5 +100,5 @@ struct VinylRecord: View {
 }
 
 #Preview {
-    VinylRecord(fullVynil: 150)
+    VinylRecord(fullVynil: 200,urlMusic: URL(string: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbvv14-nh3H7SOhX6F9HXdfraMR8hvFsNfVgmkM-Kasw&s=10")!)
 }
