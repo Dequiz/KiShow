@@ -31,20 +31,24 @@ class ShowEntityViewModel{
 
         
         
-        self.show = ShowEntity(
-            nameShow: showTicketmaster.name,
-            dataShow: ShowEntityViewModel.parseDate(showTicketmaster.dates?.start?.localDate),
-            artistShow:  showTicketmaster.attraction?.name ?? "Artista desconhecido",
-            genderShow: showTicketmaster.classifications.first(where: { $0.primary == true })?.genre?.name
-            ?? showTicketmaster.classifications.first?.genre?.name
-                        ?? "Gênero desconhecido",
-            imageShow: showTicketmaster.images?.first?.url ?? "https://placehold.co/400",
-            localShow: showTicketmaster.venue?.name ?? "Local desconhecido",
-            addressShow: showTicketmaster.venue?.address?.line1 ?? "Sem Nome",
-            urlShow: showTicketmaster.url,
-            startTimeShow: showTicketmaster.dates?.start?.localTime ?? "",
-            city: showTicketmaster.venue?.city?.name ?? "Cidade desconhecida"
-        )
+        self.show = ShowEntityViewModel.makeEntity(from: showTicketmaster)
     }
+    
+    static func makeEntity(from showTicketmaster: TicketmasterShow) -> ShowEntity {
+            ShowEntity(
+                nameShow: showTicketmaster.name,
+                dataShow: parseDate(showTicketmaster.dates?.start?.localDate),
+                artistShow: showTicketmaster.attraction?.name ?? "Artista desconhecido",
+                genderShow: showTicketmaster.classifications.first(where: { $0.primary == true })?.genre?.name
+                    ?? showTicketmaster.classifications.first?.genre?.name
+                    ?? "Gênero desconhecido",
+                imageShow: showTicketmaster.images?.first?.url ?? "https://placehold.co/400",
+                localShow: showTicketmaster.venue?.name ?? "Local desconhecido",
+                addressShow: showTicketmaster.venue?.address?.line1 ?? "Sem Nome",
+                urlShow: showTicketmaster.url,
+                startTimeShow: showTicketmaster.dates?.start?.localTime ?? "",
+                city: showTicketmaster.venue?.city?.name ?? "Cidade desconhecida"
+            )
+        }
     
 }

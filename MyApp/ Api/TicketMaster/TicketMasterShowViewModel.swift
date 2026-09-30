@@ -14,7 +14,7 @@ class TicketMasterShowViewModel{
     var show: [TicketmasterShow] = []
 
     func fetchConcert() async {
-        show = await WebService().downloadAllShows(genre: "Metal")
+        show = await WebService().downloadAllShows()
     }
     
     
