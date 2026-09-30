@@ -34,20 +34,20 @@ struct Title: View{
                     .padding(30)
                 Spacer()
             }
-                        ForEach(titleNames.titleNames,id: \.self){ titulo in
-                            Button{
-                                presentedTitle = titulo
-                                upSheet = false
-                            }label: {
-                                Text(titulo)
-                                    .frame(width: 150)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .clipShape(.capsule)
-                                    .foregroundStyle(Color.white)
-                                    .shadow(radius: 10)
-                            }
-                        }
+                ForEach(titleNames.titleNames,id: \.self){ titulo in
+                    Button{
+                        presentedTitle = titulo
+                        upSheet = false
+                    }label: {
+                        Text(titulo)
+                            .frame(width: 150)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(.capsule)
+                            .foregroundStyle(Color.white)
+                            .shadow(radius: 10)
+                    }
+                }
             }
         }
         }
