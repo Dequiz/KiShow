@@ -13,6 +13,8 @@ struct SearchShows: View {
     
     @State var query: String = ""
     
+    
+    
     var body: some View {
         NavigationStack{
             ScrollView {
