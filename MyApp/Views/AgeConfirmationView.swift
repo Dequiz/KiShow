@@ -28,7 +28,7 @@ struct AgeConfirmationView: View {
                     Text("Nos diga sua data de nascimento")
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
-                    Text("Seu nome somente será usado internamente no aplicativo para apresentação do seu perfil")
+                    Text("A data do seu nascimento será utilizada somente internamente no aplicativo para apresentação do seu perfil")
                         .font(.caption)
                         .fontWeight(.regular)
                         .frame(width: 255)
