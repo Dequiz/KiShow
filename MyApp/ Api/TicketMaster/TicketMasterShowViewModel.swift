@@ -9,7 +9,9 @@
 import SwiftUI
 
 
+
 @Observable
+
 class TicketMasterShowViewModel{
     var show: [TicketmasterShow] = []
 

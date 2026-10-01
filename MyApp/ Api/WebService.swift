@@ -3,17 +3,14 @@
 ////  MyApp
 ////
 ////  Created by Paulo Eduardo Barbosa da Silva on 28/09/26.
-////
-//
-//import Foundation
-//
-//
+
 
 import Foundation
 
 
 class WebService {
     
+
     let genreConsult: GenreConsult = GenreConsult()
     
     
@@ -43,5 +40,5 @@ class WebService {
             return []
         }
     }
-    
+
 }

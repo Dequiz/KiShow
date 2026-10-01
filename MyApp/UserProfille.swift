@@ -8,6 +8,7 @@ import SwiftUI
 
 struct UserProfille: View {
     var hasImage: Bool = false
+    var imagemUsuario: String = "Teste"
     
     var body: some View {
         NavigationStack {
@@ -21,17 +22,18 @@ struct UserProfille: View {
                         HStack(spacing: 15) {
                             
                             if (hasImage) {
-                            Image("Teste")
+                            Image(imagemUsuario)
                                     .resizable()
                                     .clipShape(Circle())
                                     .frame(width: 90, height: 90)
                             } else {
-                                
                                 Image(systemName: "person.crop.circle.fill")
                                     .resizable()
                                     .clipShape(Circle())
                                     .frame(width: 90, height: 90)
+                                    .foregroundColor(Color.profileIcon)
                             }
+                            
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Nome Perfil")
                                     .font(.title2)
@@ -41,15 +43,40 @@ struct UserProfille: View {
                             }
                             
                             Spacer()
+                            
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "pencil.line")
+                                    .font(.title2)
+                                    .foregroundStyle(Color.primary)
+                            }
+                            
                         }
-                        .padding(20)
                         
-                        RoundedRectangle(cornerRadius: 25)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 200)
-                            .padding(.horizontal, 20)
+                        Spacer()
+                        
+                        VStack (){
+                            
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 200)
+                            
+                            HStack {
+                                RoundedRectangle(cornerRadius: 25)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 200)
+                                
+                                
+                                RoundedRectangle(cornerRadius: 25)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 200)
+                                
+                                
+                            }
+                        }
                     }
-                    .padding(.top, 10)
+                    .padding(20)
                 }
                 .toolbar {
                     ToolbarItem() {

@@ -9,36 +9,34 @@ import SwiftUI
 
 struct Settings: View {
     var body: some View {
-        
-        ZStack {
-            Color("AppBackground")
-                .ignoresSafeArea()
-            
-            VStack {
+    
+            ZStack {
+                Color("AppBackground")
+                    .ignoresSafeArea()
+                
                 Form {
                     Section(header: Text("Aplicativo")) {
-                        HStack{
+                        
+                        NavigationLink(destination: AboutTheApp()) {
                             Text("Sobre o Aplicativo")
                         }
-                        HStack{
+                        
+                        NavigationLink(destination: Text("Tela: Categorias")) {
                             Text("Categorias")
                         }
-                        
                     }
+                    
                     Section(header: Text("Segurança")) {
-                        HStack {
+                        NavigationLink(destination: ThermsOfService()) {
                             Text("Termos de Uso")
                         }
-                        HStack {
+                        
+                        NavigationLink(destination: PrivacyPolicy()) {
                             Text("Políticas de Privacidade")
                         }
-                        
                     }
                 }
             }
-            .navigationTitle("Ajustes")
-            .toolbarTitleDisplayMode(.inlineLarge)
-        }
     }
 }
 

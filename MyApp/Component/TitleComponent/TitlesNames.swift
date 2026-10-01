@@ -13,5 +13,10 @@ struct TitlesNames{
         "Dono",
         "Super Mary",
         "Cantor",
+        "Cantoar",
+        "Canxtor",
+        "Carfntor",
+        "Cacfcntor",
+        "Canvctor"
     ]
 }
