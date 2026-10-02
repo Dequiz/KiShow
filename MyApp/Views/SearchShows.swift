@@ -40,10 +40,8 @@ struct SearchShows: View {
                         }.padding()
                     }
                 Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
-                
-                Text(ticketMasterShow.selectedGenres.first ?? "ALL")
-                     ShowList(Taskid: TaskId, genre: ticketMasterShow.selectedGenres.first ?? "ALL")
-                }
+                ShowList(Taskid: TaskId, genre: ticketMasterShow.selectedGenres)
+            }
             .navigationTitle("Buscar Shows")
             .toolbarTitleDisplayMode(.inlineLarge)
             .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always) ,prompt: "Pesquise pelo show" )
