@@ -89,13 +89,6 @@ struct VinylRecord: View {
             
         }
        
-        
-      
-        .onAppear{
-            isTurning = true
-            isGoingUp = true
-        }
-       
     }
 }
 
