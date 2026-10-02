@@ -38,12 +38,18 @@ struct Show: View {
                                     Text(artistName)
                                         .foregroundColor(.white)
                                         .font(.headline)
+                                        .multilineTextAlignment(.leading)
                                     
                                         .foregroundColor(.white)
                                         .font(.callout)
-                                    Text("\(dateEvent) | \(localEvent)")
+                                    Text("\(dateEvent)")
                                         .foregroundColor(.white)
                                         .font(.subheadline)
+                                        .multilineTextAlignment(.leading)
+                                    Text("\(localEvent)")
+                                        .foregroundColor(.white)
+                                        .font(.subheadline)
+                                        .multilineTextAlignment(.leading)
                                 }
                                 .minimumScaleFactor(0.8)
                                 .lineLimit(2)
@@ -53,6 +59,7 @@ struct Show: View {
                     )
                 default:
                     Color.gray.opacity(0.2)
+                        .frame(width: 150, height: 250)
                 }
             }
                 

@@ -84,7 +84,6 @@ struct TicketmasterShow: Decodable, Identifiable {
     
     init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-
             self.id              = try container.decode(String.self, forKey: .id)
             self.name            = try container.decode(String.self, forKey: .name)
             self.url             = try container.decode(String.self, forKey: .url)
