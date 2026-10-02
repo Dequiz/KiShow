@@ -15,6 +15,8 @@ struct SearchShows: View {
     
     @State var genresSelected: [String] = []
     
+    @State var TaskId: UUID = UUID()
+    
     var body: some View {
         NavigationStack{
             
@@ -29,7 +31,7 @@ struct SearchShows: View {
                             ForEach(ticketMasterShow.genres, id:\.self){ genre in
                                 FilterCategorie(optionGenre: genre){
                                         ticketMasterShow.addGenre(genre: genre)
-                                        
+                                        TaskId = UUID()
                                     }.background(ticketMasterShow.selectedGenres.contains(genre) ? .selectedCategorie : .categorieButton)
                                     .cornerRadius(23)
                                 }
@@ -37,8 +39,10 @@ struct SearchShows: View {
                             
                         }.padding()
                     }
-                Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres)")
-                ShowList(genre: ticketMasterShow.selectedGenres.first ?? "ALL")
+                Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
+                
+                Text(ticketMasterShow.selectedGenres.first ?? "ALL")
+                     ShowList(Taskid: TaskId, genre: ticketMasterShow.selectedGenres.first ?? "ALL")
                 }
             .navigationTitle("Buscar Shows")
             .toolbarTitleDisplayMode(.inlineLarge)

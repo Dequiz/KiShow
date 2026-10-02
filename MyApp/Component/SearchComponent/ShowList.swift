@@ -11,6 +11,7 @@ import SwiftUI
 
 struct ShowList: View {
     @State private var ticketMasterShow = TicketMasterShowViewModel()
+    let Taskid: UUID
     let genre: String
     var body: some View {
         Text("Total ittens \(ticketMasterShow.show.count)")
@@ -33,8 +34,8 @@ struct ShowList: View {
             }
         }.padding(.leading)
             .padding(.trailing)
-            .task {
-                await ticketMasterShow.fetchConcert(genre: genre ?? "ALL")
+            .task(id: Taskid){
+                await ticketMasterShow.fetchConcert(genre: genre)
             }
         
         
@@ -42,7 +43,7 @@ struct ShowList: View {
 }
 #Preview {
     ScrollView{
-        ShowList(genre: "ALL")
+        ShowList(Taskid: UUID(), genre: "ALL")
     }
     
 }
