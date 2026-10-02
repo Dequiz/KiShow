@@ -33,6 +33,11 @@ class TicketMasterShowViewModel{
     func addGenre(genre: String){
         
         
+        if self.selectedGenres.contains(genre){
+            selectedGenres.removeAll{ $0 == genre }
+            return
+        }
+        
         if self.selectedGenres.count>=2 {
             self.selectedGenres.removeFirst()
             self.selectedGenres.append(genre)
@@ -44,7 +49,10 @@ class TicketMasterShowViewModel{
             return
         }
         
-        selectedGenres.removeAll{ $0 == genre }
+        
+        
+        
+        
     }
 
     func fetchConcert(genre: String = "ALL") async {
