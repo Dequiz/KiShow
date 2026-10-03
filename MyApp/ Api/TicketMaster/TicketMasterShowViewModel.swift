@@ -51,14 +51,14 @@ class TicketMasterShowViewModel{
         
     }
 
-    func fetchConcert(genre1: String = "ALL", genre2: String = "") async {
-        
-        if genre2 == ""{
+    func fetchConcert(genre1: String = "Music", genre2: String = "") async {
+        if genre2.isEmpty {
             show = await WebService().downloadAllShows(genre: genre1)
             return
         }
-        show = await WebService().downloadAllShows(genre: genre1) + WebService().downloadAllShows(genre: genre2)
+        async let requsition1 = WebService().downloadAllShows(genre: genre1)
+        async let requsition2 = WebService().downloadAllShows(genre: genre2)
+        show = await requsition1 + requsition2
     }
-    
     
 }

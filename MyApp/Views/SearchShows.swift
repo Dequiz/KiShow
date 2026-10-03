@@ -13,7 +13,6 @@ struct SearchShows: View {
     
     @State var query: String = ""
     
-    @State var genresSelected: [String] = []
     
     @State var TaskId: UUID = UUID()
     
@@ -40,7 +39,7 @@ struct SearchShows: View {
                         }.padding()
                     }
                 Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
-                ShowList(Taskid: TaskId, genre: ticketMasterShow.selectedGenres)
+                ShowList(ticketMasterShow: ticketMasterShow, Taskid: TaskId, genre: ticketMasterShow.selectedGenres)
             }
             .navigationTitle("Buscar Shows")
             .toolbarTitleDisplayMode(.inlineLarge)

@@ -10,9 +10,9 @@ import SwiftUI
 
 
 struct ShowList: View {
-    @State private var ticketMasterShow = TicketMasterShowViewModel()
+    let ticketMasterShow: TicketMasterShowViewModel
     let Taskid: UUID
-    @State var genre: [String]
+    var genre: [String]
     var body: some View {
         Text("Total ittens \(ticketMasterShow.show.count)")
         LazyVGrid(
@@ -34,26 +34,18 @@ struct ShowList: View {
             }
         }.padding(.leading)
             .padding(.trailing)
-            .task(id: Taskid){
-                
-                if genre.isEmpty{
+            .task(id: Taskid) {
+                switch genre.count {
+                case 0:
                     await ticketMasterShow.fetchConcert()
-                    return
-                }
-                
-                if(genre.count == 2){
+                case 1:
+                    await ticketMasterShow.fetchConcert(genre1: genre[0])
+                default:
                     await ticketMasterShow.fetchConcert(genre1: genre[0], genre2: genre[1])
-                    return
                 }
-                await ticketMasterShow.fetchConcert(genre1: genre[0], genre2: genre[0])
             }
         
         
     }
 }
-#Preview {
-    ScrollView{
-        ShowList(Taskid: UUID(), genre: ["",""])
-    }
-    
-}
+

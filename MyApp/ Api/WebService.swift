@@ -9,15 +9,19 @@ import Foundation
 
 
 class WebService {
-    
 
-    let genreConsult: GenreConsult = GenreConsult()
     
+    let ticketMasterShow =  TicketMasterShowViewModel()
     
-    
-    func downloadAllShows(genre: String = "ALL") async -> [TicketmasterShow] {
+    func downloadAllShows(genre: String? = nil) async -> [TicketmasterShow] {
+        if (genre == nil){
+            return []
+        }
+        guard ticketMasterShow.genres.contains(genre!) else {
+            return []
+        }
         
-        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationId=\( genreConsult.genreId[genre] ?? "KZFzniwnSyZfZ7v7nJ")&size=100&page=0"
+        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationName=\(genre!)&size=100&page=0"
         guard let url = URL(string: urlString) else {
             return []
         }
