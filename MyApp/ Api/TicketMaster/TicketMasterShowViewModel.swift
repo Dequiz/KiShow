@@ -19,12 +19,28 @@ class TicketMasterShowViewModel{
     var show: [TicketmasterShow] = []
     
     let genres = [
-            "Alternative", "Ballads/Romantic", "Blues",
-            "Children's", "Music", "Classical", "Country",
-            "Dance/Electronic", "Folk", "Hip-Hop", "Holiday",
-            "Jazz", "Latin", "Medieval", "Metal", "New Age",
-            "Other", "Pop", "R&B", "Reggae", "Religious",
-            "Rock", "Undefined", "World"
+        "Alternative",
+        "Ballads/Romantic",
+        "Blues",
+        "Children's Music",
+        "Chanson Francaise",
+        "Classical",
+        "Country",
+        "Dance/Electronic",
+        "Folk",
+        "Hip-Hop/Rap",
+        "Holiday",
+        "Jazz",
+        "Latin",
+        "Medieval/Renaissance",
+        "Metal",
+        "New Age",
+        "Pop",
+        "R&B",
+        "Reggae",
+        "Religious",
+        "Rock",
+        "World"
     ]
     
     
@@ -51,7 +67,8 @@ class TicketMasterShowViewModel{
         
     }
 
-    func fetchConcert(genre1: String = "Music", genre2: String = "") async {
+    func fetchConcert(genre1: String, genre2: String = "") async {
+        
         if genre2.isEmpty {
             show = await WebService().downloadAllShows(genre: genre1)
             return

@@ -37,7 +37,7 @@ struct ShowList: View {
             .task(id: Taskid) {
                 switch genre.count {
                 case 0:
-                    await ticketMasterShow.fetchConcert()
+                    await ticketMasterShow.fetchConcert(genre1: "Music")
                 case 1:
                     await ticketMasterShow.fetchConcert(genre1: genre[0])
                 default:
