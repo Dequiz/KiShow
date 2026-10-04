@@ -11,12 +11,9 @@ import SwiftUI
 
 
 @Observable
-
-
-
-
 class TicketMasterShowViewModel{
-    var show: [TicketmasterShow] = []
+    var shows: [TicketmasterShow] = []
+    var query: String = ""
     
     let genres = [
         "Alternative",
@@ -43,12 +40,21 @@ class TicketMasterShowViewModel{
         "World"
     ]
     
+    var filteredShows: [TicketmasterShow] {
+        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return shows
+        }
+        let term = query.lowercased()
+        return shows.filter { s in
+            let artist = s.attraction?.name?.lowercased() ?? ""
+            let venue = s.venue?.name?.lowercased() ?? ""
+            return artist.contains(term) || venue.contains(term)
+        }
+    }
     
     var selectedGenres: [String] = []
 
     func addGenre(genre: String){
-        
-        
         if self.selectedGenres.contains(genre){
             selectedGenres.removeAll{ $0 == genre }
             return
@@ -70,12 +76,17 @@ class TicketMasterShowViewModel{
     func fetchConcert(genre1: String, genre2: String = "") async {
         
         if genre2.isEmpty {
-            show = await WebService().downloadAllShows(genre: genre1)
+            shows = await WebService().downloadAllShows(genre: genre1)
             return
         }
         async let requsition1 = WebService().downloadAllShows(genre: genre1)
         async let requsition2 = WebService().downloadAllShows(genre: genre2)
-        show = await requsition1 + requsition2
+        let combined = await requsition1 + requsition2
+        
+        
+        
+        var seen = Set<String>()
+        shows = combined.filter { seen.insert($0.id).inserted}
     }
     
 }

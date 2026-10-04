@@ -36,7 +36,19 @@ class WebService {
             }
 
             let eventsData = try JSONSerialization.data(withJSONObject: events)
-            return try JSONDecoder().decode([TicketmasterShow].self, from: eventsData)
+            let shows = try JSONDecoder().decode([TicketmasterShow].self, from: eventsData)
+            
+            if genre == "Music"{
+                return shows
+            }
+
+            return shows.filter { show in
+                // se não tem classificação, mantém (não corta)
+                guard !show.classifications.isEmpty else { return true }
+                return show.classifications.contains { c in
+                    c.genre?.name == genre || c.subGenre?.name == genre
+                }
+            }
         } catch {
             return []
         }

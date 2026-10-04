@@ -14,14 +14,14 @@ struct ShowList: View {
     let Taskid: UUID
     var genre: [String]
     var body: some View {
-        Text("Total ittens \(ticketMasterShow.show.count)")
+        //Text("Total ittens \(ticketMasterShow.filteredShows.count)")
         LazyVGrid(
             columns: [
                 GridItem(.flexible(), spacing: 10),
                 GridItem(.flexible()),
             ],
         ) {
-            ForEach(ticketMasterShow.show) { show in
+            ForEach(ticketMasterShow.filteredShows) { show in
                 Button{
                     
                 }label: {

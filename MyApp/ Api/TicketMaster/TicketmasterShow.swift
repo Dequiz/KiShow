@@ -12,9 +12,15 @@ struct Genre: Decodable {
     let name: String
 }
 
+struct SubGenre: Decodable {
+    let id: String
+    let name: String
+}
+
 struct Classification: Decodable {
     let primary: Bool?
     let genre: Genre?
+    let subGenre: SubGenre?
 }
 
 struct EventStart: Decodable {
@@ -34,7 +40,6 @@ struct City: Decodable {
 struct Address: Decodable {
     let line1: String?
 }
-
 
 struct Venue: Decodable {
     let name: String?

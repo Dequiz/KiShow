@@ -11,7 +11,6 @@ import SwiftUI
 struct SearchShows: View {
     @State private var ticketMasterShow = TicketMasterShowViewModel()
     
-    @State var query: String = ""
     
     
     @State var TaskId: UUID = UUID()
@@ -43,7 +42,14 @@ struct SearchShows: View {
             }
             .navigationTitle("Buscar Shows")
             .toolbarTitleDisplayMode(.inlineLarge)
-            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always) ,prompt: "Pesquise pelo show" )
+            .searchable(
+                text: Binding(
+                    get: { ticketMasterShow.query },
+                    set: { ticketMasterShow.query = $0 }
+                ),
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Pesquise pelo show"
+            )
             .searchDictationBehavior(.inline(activation: .onSelect))
                 
             }
