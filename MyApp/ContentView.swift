@@ -8,12 +8,12 @@ struct ContentView: View {
                  MyShows()
             }
             Tab("Buscar",systemImage: "magnifyingglass.circle.fill"){
-                SearchShows()
-            }
+AddExperience()            }
             Tab("Perfil",systemImage: "person.crop.circle.fill"){
                 UserProfille()
             }
         }
+        .navigationBarBackButtonHidden()
         .tint(.mainPink)
         
     }

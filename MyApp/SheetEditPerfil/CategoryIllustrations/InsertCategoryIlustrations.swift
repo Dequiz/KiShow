@@ -10,6 +10,7 @@ import SwiftUI
 struct InsertCategoryIlustrations: View {
     
     var categoryNames: CategoryNames
+    @Binding var selection: ProfilePhotoSelection?
     
     let columns: [GridItem] = [
         GridItem(.flexible(), spacing: 12),
@@ -18,28 +19,22 @@ struct InsertCategoryIlustrations: View {
     ]
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(categoryNames.categoryNames, id: \.self) { category in
-                        Button {
-                         
-                        } label: {
-                            Image(category)
-                                .resizable()
-                                .scaledToFit()
-        
-                        }
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 12) {
+                ForEach(categoryNames.categoryNames, id: \.self) { category in
+                    Button {
+                        selection = .illustration(category)
+                    } label: {
+                        Image(category)
+                            .resizable()
+                            .scaledToFit()
+    
                     }
                 }
-                .padding(20)
             }
+            .padding(20)
         }
         
     }
     
-}
-
-#Preview {
-    InsertCategoryIlustrations(categoryNames: CategoryNames())
 }

@@ -23,38 +23,45 @@ struct Title: View {
         } label: {
             HStack {
                 Text(presentedTitle)
+                    .font(.subheadline)
                     .foregroundStyle(Color.secondary)
-                    .padding(10)
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 5)
                     .glassEffect()
                     .shadow(radius: 1)
             }
         }
         .sheet(isPresented: $upSheet) {
-            NavigationStack {
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        ForEach(titleNames.titleNames, id: \.self) { titulo in
-                            Button {
-                                presentedTitle = titulo
-                                upSheet = false
-                            } label: {
-                                Text(titulo)
-                                    .font(.body)
-                                    .lineLimit(1)
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity, minHeight: 44)
-                                    .background(Color.mainPink)
-                                    .clipShape(.capsule)
-                                    .foregroundStyle(Color.white)
+            ZStack {
+                Color("SheetBackground")
+                    .ignoresSafeArea()
+        
+                NavigationStack {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 12) {
+                            ForEach(titleNames.titleNames, id: \.self) { titulo in
+                                Button {
+                                    presentedTitle = titulo
+                                    upSheet = false
+                                } label: {
+                                    Text(titulo)
+                                        .font(.body)
+                                        .lineLimit(1)
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity, minHeight: 44)
+                                        .background(Color.mainPurple)
+                                        .clipShape(.capsule)
+                                        .foregroundStyle(Color.white)
+                                }
                             }
                         }
+                        .padding(20)
                     }
-                    .padding(20)
+                    .navigationTitle("Escolha seu Título")
+                    .navigationBarTitleDisplayMode(.inline)
                 }
-                .navigationTitle("Escolha seu Título")
-                .navigationBarTitleDisplayMode(.inline)
+                .presentationDetents([.medium, .large])
             }
-            .presentationDetents([.medium, .large])
         }
     }
 }

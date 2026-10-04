@@ -13,11 +13,12 @@ struct MyShows: View {
     
     var body: some View {
     
-        if let currentUser = users.first {
-            Text(currentUser.nameUser)
-            Text("\(currentUser.ageUser)")
-        } else {
-            Text("Nenhum usuário encontrado")
+        NavigationLink(destination: EventView()){
+            RoundedRectangle(cornerRadius: 10)
+                .frame(width: 100,height: 100)
+                .overlay{
+                    Text("Show")
+                }
         }
     }
 }

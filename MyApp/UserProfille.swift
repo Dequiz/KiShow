@@ -5,38 +5,30 @@
 //  Created by Andre on 28/09/26.
 //
 import SwiftUI
+import SwiftData
 
 struct UserProfille: View {
-    var hasImage: Bool = false
-    var imagemUsuario: String = "Teste"
+    @Query(sort: \UserEntity.idUser) var users: [UserEntity]
+    @State var upSheet: Bool = false
+    
+    private var user: UserEntity? {users.first}
+    
     
     var body: some View {
         NavigationStack {
-                ZStack() {
-                    Color("AppBackground")
-                        .ignoresSafeArea()
-                    
-                    ScrollView {
-                    
+            ZStack {
+                Color("AppBackground")
+                    .ignoresSafeArea()
+                
+                ScrollView {
                     VStack(spacing: 20) {
                         HStack(spacing: 15) {
                             
-                            if (hasImage) {
-                            Image(imagemUsuario)
-                                    .resizable()
-                                    .clipShape(Circle())
-                                    .frame(width: 90, height: 90)
-                            } else {
-                                Image(systemName: "person.crop.circle.fill")
-                                    .resizable()
-                                    .clipShape(Circle())
-                                    .frame(width: 90, height: 90)
-                                    .foregroundColor(Color.profileIcon)
-                            }
+                            ProfileIcon(user: user, size: 90)
                             
                             VStack(alignment: .leading, spacing: 6) {
-                                Text("Nome Perfil")
-                                    .font(.title2)
+                                Text(user?.nameUser ?? "Seu Perfil")
+                                    .font(.title)
                                     .fontWeight(.bold)
                                 
                                 Title(titleNames: TitlesNames())
@@ -45,19 +37,20 @@ struct UserProfille: View {
                             Spacer()
                             
                             Button {
-                                
+                                upSheet.toggle()
                             } label: {
                                 Image(systemName: "pencil.line")
                                     .font(.title2)
                                     .foregroundStyle(Color.primary)
                             }
-                            
+                            .sheet(isPresented: $upSheet) {
+                               EditPerfil()
+                            }
                         }
                         
                         Spacer()
                         
-                        VStack (){
-                            
+                        VStack {
                             RoundedRectangle(cornerRadius: 25)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 200)
@@ -67,29 +60,24 @@ struct UserProfille: View {
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 200)
                                 
-                                
                                 RoundedRectangle(cornerRadius: 25)
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 200)
-                                
-                                
                             }
                         }
                     }
                     .padding(20)
                 }
                 .toolbar {
-                    ToolbarItem() {
+                    ToolbarItem {
                         NavigationLink(destination: Settings()) {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.primary)
                         }
                     }
-                    
                 }
                 .navigationTitle("Perfil")
                 .toolbarTitleDisplayMode(.inlineLarge)
-                
             }
         }
     }
