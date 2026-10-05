@@ -23,10 +23,10 @@ class ExperienceEntity {
     
     var textContent: String?
     var imageContent: [Data]?
-    var videoContent: [Data]?
+    var videoContent: [String]?
     var audioContent: [Data]?
     
-    init (type: TypeMidias, event: EventEntity? = nil, textContent: String? = nil, imageContent: [Data]? = nil, videoContent: [Data]? = nil, audioContent: [Data]? = nil) {
+    init (type: TypeMidias, event: EventEntity? = nil, textContent: String? = nil, imageContent: [Data]? = nil, videoContent: [String]? = nil, audioContent: [Data]? = nil) {
         self.idExperience = UUID()
         self.type = type
         self.event = event

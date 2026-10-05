@@ -8,7 +8,8 @@ struct ContentView: View {
                  MyShows()
             }
             Tab("Buscar",systemImage: "magnifyingglass.circle.fill"){
-AddExperience()            }
+                
+            }
             Tab("Perfil",systemImage: "person.crop.circle.fill"){
                 UserProfille()
             }
