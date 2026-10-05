@@ -31,19 +31,31 @@ struct EventView: View {
                 .ignoresSafeArea()
             ScrollView {
                 VStack {
-                    VinylRecord(
-                        fullVynil: 150,
-                        urlMusic: URL(string: "https://http2.mlstatic.com/D_NQ_NP_2X_983699-MLA96154876825_102025-F.webp")!
-                    )
-                    
-                    Picker("", selection: $selected) {
-                        ForEach(AppTheme.allCases) { tipo in
-                            Text(tipo.rawValue).tag(tipo)
+                    Image(.camada1)
+                        .resizable()
+                        .frame(width:500,height: 250)
+                        .rotationEffect(.degrees(0))
+                        .opacity(0.3)
+                        .overlay(alignment: .bottom){
+                            VStack{
+                                VinylRecord(
+                                    fullVynil: 100,
+                                    urlMusic: URL(string: "https://http2.mlstatic.com/D_NQ_NP_2X_983699-MLA96154876825_102025-F.webp")!
+                                )
+                                Text("Nome do artista/Album")
+                                Picker("", selection: $selected) {
+                                    ForEach(AppTheme.allCases) { tipo in
+                                        Text(tipo.rawValue).tag(tipo)
+                                    }
+                                }
+                                .frame(width: 350)
+                                .controlSize(.large)
+                                .pickerStyle(.tabs)
+                                .glassEffect()
+                            }
+                            .padding(.horizontal)
                         }
-                    }
-                    .padding()
-                    .pickerStyle(.tabs)
-                    
+                    Spacer()
                     LazyVStack(spacing: 30) {
                         ForEach(filtered) { experience in
                             row(for: experience)
@@ -54,6 +66,7 @@ struct EventView: View {
                                 }
                         }
                     }
+                    .padding(.horizontal)
                 }
             }
         }
