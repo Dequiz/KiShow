@@ -9,6 +9,8 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 import SwiftData
 import AVKit
+import Combine
+import AVFoundation
 
 struct AddExperience: View {
     @Environment(\.modelContext) private var modelContext
@@ -19,7 +21,9 @@ struct AddExperience: View {
     @State private var itemSelecionado: PhotosPickerItem? = nil
         @State private var imagemCarregada: UIImage? = nil
     @State var viewModel = ExperienceViewModel()
-   
+   @State private var rec = Recorder()
+    @State private var player = MiniPlayer()
+    @State private var recordings: [URL] = []
     var body: some View {
         
         VStack{
@@ -46,7 +50,7 @@ struct AddExperience: View {
             } else if viewModel.media == .video {
                 VStack {
                     switch videoPicker.videoImportState {
-                    case .success(let video):
+                    case .success(let video, _):
                         VideoPlayer(player: video)
                             .frame(maxWidth: .infinity, minHeight: 300)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -96,8 +100,51 @@ struct AddExperience: View {
                         }
                     }
                 }
+            }else if viewModel.media == .audio{
+                BarVisualizer(values: rec.meterHistory,barCount: 24)
+                    .frame(height: 60)
+                    .padding(.horizontal)
+                ProgressView(value: rec.meterLevel)
+                    .progressViewStyle(.linear)
+                    .animation(.linear,value:rec.meterLevel)
+                    .tint(.mainPink)
+                
+                HStack{
+                    Button(rec.isRecording ? "Parar" : "Gravar"){
+                        if rec.isRecording{
+                            rec.stop()
+                        }else{
+                            player.stop()
+                            rec.start()
+                        }
+                    }
+                    Button("Play"){
+                        player.play(rec.fileURL)
+                    }
+                    .disabled(rec.isRecording || rec.fileURL == nil)
+                }
+                if let url = rec.fileURL{
+                    Text("Arquivo: \(url.lastPathComponent)")
+                        .font(.footnote)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
             }
             }
+        .task{
+            rec.requestPermission{ _ in
+            recordings = recordingList()
+            }
+        }
+        .onChange(of: rec.isRecording) { isRecording in
+            if isRecording{
+                player.stop()
+            }else{
+                recordings = recordingList()
+            }
+        
+        }
+    
             .navigationBarBackButtonHidden()
             .toolbar{
                 ToolbarItem(placement: .cancellationAction) {
@@ -111,7 +158,22 @@ struct AddExperience: View {
                         if imagemCarregada != nil{
                             media = TypeMidias.image
                         }
-                        viewModel.saveExperience(description: experiencia, content: (imagemCarregada?.jpegData(compressionQuality: 0.5)) ?? Data(), mediaType: media, context: modelContext)
+                        switch viewModel.media{
+                        case .photo:
+                            viewModel.saveExperience(description: experiencia, content: (imagemCarregada?.jpegData(compressionQuality: 0.5)) ?? Data(), mediaType: media, context: modelContext)
+                        case .video:
+                            if case .success(_, let videoURL) = videoPicker.videoImportState {
+                                let fileName = videoURL.lastPathComponent // Ex: "7C4B1-23F.mp4"
+                                viewModel.saveExperience(description: experiencia, content: [fileName], mediaType: .video, context: modelContext)
+                            }
+                        case .text:
+                            print("Oi")
+                        case .audio:
+                            print("Oi")
+                        case .music:
+                            print("Oi")
+                        }
+                       
                         dismiss()
                     }
                 }
@@ -126,6 +188,21 @@ struct AddExperience: View {
             }
         TextField("Texto",text: $experiencia)
             MidiaPicker(viewModel: viewModel, alignment: .bottomTrailing)
+    }
+     
+    func recordingList() -> [URL]{
+        let dir = try? FileManager.default
+            .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .appendingPathComponent("Recordings", isDirectory: true)
+        
+        guard let dir, let files = try?
+                FileManager.default.contentsOfDirectory(at: dir,includingPropertiesForKeys:nil)else{return []}
+        
+        return files.filter{
+            $0.pathExtension == "m4a"
+        }.sorted{
+            $0.lastPathComponent > $1.lastPathComponent
+        }
     }
         
     
