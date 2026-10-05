@@ -26,29 +26,33 @@ struct EventView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack {
-                VinylRecord(
-                    fullVynil: 150,
-                    urlMusic: URL(string: "https://http2.mlstatic.com/D_NQ_NP_2X_983699-MLA96154876825_102025-F.webp")!
-                )
-
-                Picker("", selection: $selected) {
-                    ForEach(AppTheme.allCases) { tipo in
-                        Text(tipo.rawValue).tag(tipo)
+        ZStack{
+            Color("AppBackground")
+                .ignoresSafeArea()
+            ScrollView {
+                VStack {
+                    VinylRecord(
+                        fullVynil: 150,
+                        urlMusic: URL(string: "https://http2.mlstatic.com/D_NQ_NP_2X_983699-MLA96154876825_102025-F.webp")!
+                    )
+                    
+                    Picker("", selection: $selected) {
+                        ForEach(AppTheme.allCases) { tipo in
+                            Text(tipo.rawValue).tag(tipo)
+                        }
                     }
-                }
-                .padding()
-                .pickerStyle(.tabs)
-
-                LazyVStack(spacing: 30) {
-                    ForEach(filtered) { experience in
-                        row(for: experience)
-                            .contextMenu {
-                                Button("Excluir", role: .destructive) {
-                                    delete(experience)
+                    .padding()
+                    .pickerStyle(.tabs)
+                    
+                    LazyVStack(spacing: 30) {
+                        ForEach(filtered) { experience in
+                            row(for: experience)
+                                .contextMenu {
+                                    Button("Excluir", role: .destructive) {
+                                        delete(experience)
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }
