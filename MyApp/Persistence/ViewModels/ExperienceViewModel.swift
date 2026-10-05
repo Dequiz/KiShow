@@ -29,5 +29,13 @@ class ExperienceViewModel{
         context.insert(newExperience)
     }
     
+    func saveExperience(description: String,content: [String],mediaType: TypeMidias, context: ModelContext){
+        if mediaType == .image && content.isEmpty{
+            return
+        }
+        let newExperience = (ExperienceEntity(type: mediaType,textContent: description,videoContent: content))
+        context.insert(newExperience)
+    }
+    
     
 }

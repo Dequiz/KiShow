@@ -13,34 +13,24 @@ class VideoPickerView{
     enum VideoImportState {
         case empty
         case loading(Progress)
-        case success(AVPlayer)
+        case success(AVPlayer,URL)
         case failure(Error)
     }
     var videoImportState : VideoImportState = .empty
     
     
-    struct VideoType : Transferable{
-        let url : URL
-        
-        static private func documentDirectory() -> String{
-            let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)
-            return documentDirectory[0]
-        }
-        
-        static var transferRepresentation: some TransferRepresentation{
-            FileRepresentation(contentType: .movie){ movie in
+    struct VideoType: Transferable {
+        let url: URL
+
+        static var transferRepresentation: some TransferRepresentation {
+            FileRepresentation(contentType: .movie) { movie in
                 SentTransferredFile(movie.url)
-            }
-            
-            importing: { received in
-                
-                let fileName = received.file.lastPathComponent
-                
-                let copy: URL = URL(fileURLWithPath: "\(documentDirectory())/\(fileName)")
+            } importing: { received in
+                let ext = received.file.pathExtension
+                let fileName = "\(UUID().uuidString).\(ext.isEmpty ? "mov" : ext)"
+                let copy = URL.documentsDirectory.appending(path: fileName)
                 try FileManager.default.copyItem(at: received.file, to: copy)
-                
-                return self.init(url: copy)
-                
+                return Self(url: copy)
             }
         }
     }
@@ -67,7 +57,7 @@ class VideoPickerView{
                     switch result {
                     case .success(let profileVideo?):
                         let player = AVPlayer(url: profileVideo.url)
-                        self.videoImportState = .success(player)
+                        self.videoImportState = .success(player,profileVideo.url)
                     case .success(nil):
                         self.videoImportState = .empty
                     case .failure(let error):

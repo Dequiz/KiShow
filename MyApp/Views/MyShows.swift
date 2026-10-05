@@ -8,17 +8,25 @@
 import SwiftUI
 import SwiftData
 struct MyShows: View {
-   
-    @Query(sort: \UserEntity.idUser) var users: [UserEntity]
-    
     var body: some View {
-    
-        NavigationLink(destination: EventView()){
-            RoundedRectangle(cornerRadius: 10)
-                .frame(width: 100,height: 100)
-                .overlay{
-                    Text("Show")
+        ZStack{
+            Color("AppBackground")
+                .ignoresSafeArea()
+            NavigationStack{
+                NavigationLink(destination: EventView()){
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 100,height: 100)
+                        .overlay{
+                            Text("Show")
+                        }
                 }
+                NavigationLink(destination: EventView()) {
+                    Circle()
+                        .frame(width: 150,height: 150)
+                        .tint(.blueText)
+                    
+                }
+            }
         }
     }
 }
