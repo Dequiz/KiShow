@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3AF84929306C33DA001494EC /* SwiftDotenv in Frameworks */ = {isa = PBXBuildFile; productRef = 3AF84928306C33DA001494EC /* SwiftDotenv */; };
+		3AF84929306C33DA001494EC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +39,7 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				3AF84929306C33DA001494EC /* SwiftDotenv in Frameworks */,
+				3AF84929306C33DA001494EC /* (null) in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -78,9 +78,6 @@
 				000000000000000000000010 /* MyApp */,
 			);
 			name = MyApp;
-			packageProductDependencies = (
-				3AF84928306C33DA001494EC /* SwiftDotenv */,
-			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* MyApp.app */;
 			productType = "com.apple.product-type.application";
@@ -110,7 +107,6 @@
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3AF84927306C33DA001494EC /* XCRemoteSwiftPackageReference "swift-dotenv" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
@@ -276,7 +272,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 22R33Q56Q6;
+				DEVELOPMENT_TEAM = TS232U2UZ2;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -315,7 +311,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 22R33Q56Q6;
+				DEVELOPMENT_TEAM = TS232U2UZ2;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
