@@ -9,15 +9,16 @@ import Foundation
 
 
 class WebService {
-    
 
-    let genreConsult: GenreConsult = GenreConsult()
     
+    let ticketMasterShow =  TicketMasterShowViewModel()
     
-    
-    func downloadAllShows(genre: String = "ALL") async -> [TicketmasterShow] {
+    func downloadAllShows(genre: String) async -> [TicketmasterShow] {
+        guard ticketMasterShow.genres.contains(genre) || genre == "Music" else {
+            return []
+        }
         
-        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationId=\( genreConsult.genreId[genre] ?? "KZFzniwnSyZfZ7v7nJ")"
+        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationName=\(genre)&size=100&page=0"
         guard let url = URL(string: urlString) else {
             return []
         }
@@ -35,7 +36,19 @@ class WebService {
             }
 
             let eventsData = try JSONSerialization.data(withJSONObject: events)
-            return try JSONDecoder().decode([TicketmasterShow].self, from: eventsData)
+            let shows = try JSONDecoder().decode([TicketmasterShow].self, from: eventsData)
+            
+            if genre == "Music"{
+                return shows
+            }
+
+            return shows.filter { show in
+                // se não tem classificação, mantém (não corta)
+                guard !show.classifications.isEmpty else { return true }
+                return show.classifications.contains { c in
+                    c.genre?.name == genre || c.subGenre?.name == genre
+                }
+            }
         } catch {
             return []
         }
