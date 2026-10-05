@@ -14,7 +14,6 @@ struct ShowList: View {
     let Taskid: UUID
     var genre: [String]
     var body: some View {
-        //Text("Total ittens \(ticketMasterShow.filteredShows.count)")
         LazyVGrid(
             columns: [
                 GridItem(.flexible(), spacing: 10),
@@ -25,7 +24,7 @@ struct ShowList: View {
                 Button{
                     
                 }label: {
-                    Show(imageName: show.images?.first?.url ?? "Erro",
+                    Show(imageName: show.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Erro",
                          artistName: show.attraction?.name ?? "Desconhecido",
                          dateEvent: show.dates?.start?.localDate ?? "Sem data",
                          localEvent: show.venue?.name ?? "Local Desconhecido"

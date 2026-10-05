@@ -22,12 +22,14 @@ struct SearchShows: View {
             ScrollView {
                 VStack{
                     Text("Categorias")
+                        .padding()
                         .font(.title2 .bold())
-                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
                     ScrollView(.horizontal){
                         HStack(spacing: 10){
                             ForEach(ticketMasterShow.genres, id:\.self){ genre in
-                                FilterCategorie(optionGenre: genre){
+                                FilterCategorie(optionGenre: ticketMasterShow.genresTranslations[genre] ?? "Gênero Inexistente"){
                                         ticketMasterShow.addGenre(genre: genre)
                                         TaskId = UUID()
                                     }.background(ticketMasterShow.selectedGenres.contains(genre) ? .selectedCategorie : .categorieButton)
@@ -38,7 +40,10 @@ struct SearchShows: View {
                         }.padding()
                     }
                 Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 ShowList(ticketMasterShow: ticketMasterShow, Taskid: TaskId, genre: ticketMasterShow.selectedGenres)
+                
             }
             .navigationTitle("Buscar Shows")
             .toolbarTitleDisplayMode(.inlineLarge)

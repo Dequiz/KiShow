@@ -23,8 +23,3 @@ struct FilterCategorie: View {
         }
     }
 }
-#Preview {
-    FilterCategorie(optionGenre: "ALL"){
-        
-    }
-}

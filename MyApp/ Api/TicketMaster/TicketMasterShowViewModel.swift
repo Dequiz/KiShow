@@ -8,37 +8,61 @@
 
 import SwiftUI
 
-
-
 @Observable
 class TicketMasterShowViewModel{
     var shows: [TicketmasterShow] = []
     var query: String = ""
     
     let genres = [
-        "Alternative",
-        "Ballads/Romantic",
+        "Pop",
+        "World",
+        "Rock",
+        "Metal",
+        "Latin",
+        "R&B",
         "Blues",
+        "Hip-Hop/Rap",
+        "Ballads/Romantic",
         "Children's Music",
-        "Chanson Francaise",
         "Classical",
         "Country",
-        "Dance/Electronic",
         "Folk",
-        "Hip-Hop/Rap",
+        "Dance/Electronic",
         "Holiday",
         "Jazz",
-        "Latin",
         "Medieval/Renaissance",
-        "Metal",
         "New Age",
-        "Pop",
-        "R&B",
         "Reggae",
         "Religious",
-        "Rock",
-        "World"
+        "Chanson Francaise",
+        "Alternative"
     ]
+    
+    let genresTranslations = [
+        "Pop" : "Pop",
+        "World" : "Estilos Regionais",
+        "Rock" : "Rock",
+        "Metal" : "Metal",
+        "Latin" : "Musica Latina",
+        "R&B" : "R&B",
+        "Blues" : "Blues",
+        "Hip-Hop/Rap" : "Rap/Trap/Funk",
+        "Ballads/Romantic": "Balada Romantica",
+        "Children's Music" : "Musica Infantil",
+        "Classical": "Classica",
+        "Country" : "Sertanejo",
+        "Folk" : "Folk",
+        "Dance/Electronic" : "Musica Eletronica/disco",
+        "Holiday" : "Holiday",
+        "Jazz" : "Jazz",
+        "Alternative" : "Alternativa",
+        "Reggae" : "Reggae",
+        "Medieval/Renaissance" : "Musica Medieval",
+        "New Age" : "New Age" ,
+        "Religious" : "Musica Religiosa",
+        "Chanson Francaise" : "Musíca francesa",
+    ]
+    
     
     var filteredShows: [TicketmasterShow] {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {

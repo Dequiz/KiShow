@@ -35,7 +35,7 @@ class ShowEntityViewModel{
             genderShow: showTicketmaster.classifications.first(where: { $0.primary == true })?.genre?.name
             ?? showTicketmaster.classifications.first?.genre?.name
             ?? "Gênero desconhecido",
-            imageShow: showTicketmaster.images?.first?.url ?? "Teste",
+            imageShow: showTicketmaster.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Teste",
             localShow: showTicketmaster.venue?.name ?? "Local desconhecido",
             addressShow: showTicketmaster.venue?.address?.line1 ?? "Sem Nome",
             urlShow: showTicketmaster.url,
