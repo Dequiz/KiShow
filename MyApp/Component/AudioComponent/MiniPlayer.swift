@@ -14,6 +14,7 @@ import AVFoundation
 final class MiniPlayer{
     var isPlaying = false
     var progress: Double = 0
+    var currentAudioID: UUID?
     private var player: AVAudioPlayer?
     private var timer: AnyCancellable?
     private var currentURL: URL?
@@ -48,14 +49,6 @@ final class MiniPlayer{
         isPlaying = false
         stopUpdatingProgress()
     }
-    func stop(){
-        player?.stop()
-        isPlaying = false
-        progress = 0
-        stopUpdatingProgress()
-        player = nil
-        currentURL = nil
-    }
     private func startUpdatingProgress(){
         stopUpdatingProgress()
         timer = Timer.publish(every: 0.05, on: .main, in: .common)
@@ -88,4 +81,37 @@ final class MiniPlayer{
     }
     
     var playingURL : URL? {currentURL}
+    
+    func play(data: Data, id: UUID) {
+            if isPlaying, currentAudioID == id {
+                pause()
+                return
+            }
+            
+            stop()
+            
+            do {
+                player = try AVAudioPlayer(data: data)
+                currentAudioID = id
+                
+                player?.prepareToPlay()
+                player?.play()
+                isPlaying = true
+                
+                startUpdatingProgress()
+            } catch {
+                print("Playback failed: \(error)")
+                isPlaying = false
+            }
+        }
+        
+        func stop() {
+            player?.stop()
+            isPlaying = false
+            progress = 0
+            stopUpdatingProgress()
+            player = nil
+            currentURL = nil
+            currentAudioID = nil
+        }
 }
