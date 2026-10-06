@@ -20,7 +20,7 @@ class ExperienceViewModel{
         case audio
         case music
     }
-    
+    //Funçao que salva as imagens inseridos como mídia primaria no app
     func saveExperience(description: String,content: Data,mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
@@ -28,7 +28,8 @@ class ExperienceViewModel{
         let newExperience = (ExperienceEntity(type: mediaType,textContent: description,imageContent: [content]))
         context.insert(newExperience)
     }
-    
+    //Funçao que salva os vídeos inseridos como mídia primaria no app
+
     func saveExperience(description: String,content: [String],mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
@@ -37,5 +38,14 @@ class ExperienceViewModel{
         context.insert(newExperience)
     }
     
+    
+    //Funçao que salva os áudios inseridos como mídia primaria no app
+    func saveExperience(description: String,content: [Data],mediaType: TypeMidias, context: ModelContext){
+        if mediaType == .image && content.isEmpty{
+            return
+        }
+        let newExperience = (ExperienceEntity(type: mediaType,textContent: description,audioContent: content))
+        context.insert(newExperience)
+    }
     
 }
