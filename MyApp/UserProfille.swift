@@ -28,7 +28,7 @@ struct UserProfille: View {
                             
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(user?.nameUser ?? "Seu Perfil")
-                                    .font(.title)
+                                    .font(.title2)
                                     .fontWeight(.bold)
                                 
                                 Title(titleNames: TitlesNames())

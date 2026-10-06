@@ -150,6 +150,7 @@ struct PrivacyPolicy: View {
             .scrollContentBackground(.hidden)
         }
         .navigationTitle("Políticas de Privacidade")
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 

@@ -25,9 +25,11 @@ struct MyShows: View {
                                     EventView(eventoSelecionado: event)
                                 } label: {
                                    
-                                    Ticket(
-                                        ticketType: "BlueTicket",
+                                    TicketSelection(
                                         artistName: event.show?.artistShow ?? "Artista",
+                                        eventName: event.show?.nameShow ?? "Evento",
+                                        localName: event.show?.localShow ?? "Local",
+                                        dateEvent: event.show?.dataShow ?? Date()
                                     )
                                     
                                 }

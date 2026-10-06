@@ -158,6 +158,7 @@ struct ThermsOfService: View {
             .scrollContentBackground(.hidden)
         }
         .navigationTitle("Termos de Uso")
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 

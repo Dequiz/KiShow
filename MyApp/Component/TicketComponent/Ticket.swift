@@ -11,7 +11,7 @@ struct Ticket: View {
     var artistName: String = "Laufey"
     var eventName: String = "A Matter of Time Tour"
     var localName: String = "Espaço Unimed"
-    var dateEvent: String = "16-06-2023"
+    var dateEvent: Date
     
     var theme: TicketTheme = .purple
     
@@ -38,14 +38,16 @@ struct Ticket: View {
                                             .font(.system(size: 12 * scale, weight: .regular))
                                             .foregroundColor(Color(theme.Text))
                                             .padding(.top, 30 * scale)
+                                            .minimumScaleFactor(0.5)
+                                            .lineLimit(2)
                                         
-                                        Text(dateEvent)
+                                        Text(dateEvent, style: .date)
                                             .font(.system(size: 12 * scale, weight: .regular))
                                             .foregroundColor(Color(theme.Text))
+                                            .minimumScaleFactor(0.7)
+                                            .lineLimit(1)
                                     }
                                     .padding(.horizontal, 5)
-                                    .minimumScaleFactor(0.5)
-                                    .lineLimit(1)
                                 )
                             
                             Image(theme.principalArea)
@@ -64,6 +66,7 @@ struct Ticket: View {
                                     }
                                     .minimumScaleFactor(0.5)
                                     .lineLimit(1)
+                                    .padding()
                                 )
                         }
                         .padding(10 * scale)
@@ -72,10 +75,5 @@ struct Ticket: View {
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
         }
         .aspectRatio(2.2, contentMode: .fit)
-        .padding()
     }
-}
-
-#Preview {
-    Ticket()
 }

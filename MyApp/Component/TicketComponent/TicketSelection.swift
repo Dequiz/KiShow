@@ -13,9 +13,13 @@ struct TicketSelection: View {
 @State var pressed = false
 @State var upSheet = false
 private let baseWidth: CGFloat = 350.0
+var artistName: String
+var eventName: String
+var localName: String
+var dateEvent: Date
 
     var body: some View {
-        Ticket(theme: selectedTheme)
+        Ticket(artistName: artistName, eventName: eventName, localName:localName, dateEvent: dateEvent, theme: selectedTheme)
             .onLongPressGesture(minimumDuration: 0.5) { upSheet.toggle() }
             .sheet (isPresented: $upSheet) {
                 NavigationStack {
@@ -44,8 +48,4 @@ private let baseWidth: CGFloat = 350.0
         }
             
     }
-}
-
-#Preview {
-    TicketSelection()
 }
