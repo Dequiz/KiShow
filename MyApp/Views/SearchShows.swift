@@ -19,45 +19,50 @@ struct SearchShows: View {
     var body: some View {
         NavigationStack{
             
-            
-            ScrollView {
-                VStack{
-                    VStack(spacing: 1){
-                        Text("Categorias")
-                            .padding(.top)
-                            .padding(.leading)
-                            .font(.title2 .bold())
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        ScrollView(.horizontal){
-                            HStack(spacing: 5){
-                                ForEach(ticketMasterShow.genres, id:\.self){ genre in
-                                    FilterCategorie(optionGenre: ticketMasterShow.genresTranslations[genre] ?? "Gênero Inexistente"){
-                                        ticketMasterShow.addGenre(genre: genre)
-                                        TaskId = UUID()
-                                    }.background(ticketMasterShow.selectedGenres.contains(genre) ? .selectedCategorie : .categorieButton)
-                                        .cornerRadius(23)
-                                }
-                            }
+            ZStack{
+                Color("SheetBackground")
+                    .ignoresSafeArea()
+                ScrollView {
+                    VStack{
+                        VStack(spacing: 1){
+                            Text("Categorias")
+                                .padding(.top)
+                                .padding(.leading)
+                                .font(.title2 .bold())
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
-                        }.padding()
-                    }
-                    Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
-                        .padding(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                
-                NavigationStack{
-                    ShowList(ticketMasterShow: ticketMasterShow, Taskid: TaskId, genre: ticketMasterShow.selectedGenres){
-                        TaskId = UUID()
+                            ScrollView(.horizontal){
+                                HStack(spacing: 5){
+                                    ForEach(ticketMasterShow.genres, id:\.self){ genre in
+                                        FilterCategorie(optionGenre: ticketMasterShow.genresTranslations[genre] ?? "Gênero Inexistente"){
+                                            ticketMasterShow.addGenre(genre: genre)
+                                            TaskId = UUID()
+                                        }.background(ticketMasterShow.selectedGenres.contains(genre) ? .selectedCategorie : .categorieButton)
+                                            .cornerRadius(23)
+                                            .padding(.leading, 5)
+                                    }
+                                }
+                                
+                            }.padding(.top)
+                        }
+                        Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
+                            .padding(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        ShowList(ticketMasterShow: ticketMasterShow, Taskid: TaskId, genre: ticketMasterShow.selectedGenres){
+                            TaskId = UUID()
+                        }
                     }
                     
-                }
-                
-                
+                    
+                }.navigationTitle("Buscar Shows")
+                    .toolbarTitleDisplayMode(.inlineLarge)
             }
-            .navigationTitle("Buscar Shows")
-            .toolbarTitleDisplayMode(.inlineLarge)
+            
+            
+            
+            
+        }
+            
             .searchable(
                 text: Binding(
                     get: { ticketMasterShow.query },
@@ -67,8 +72,6 @@ struct SearchShows: View {
                 prompt: "Pesquise pelo show"
             )
             .searchDictationBehavior(.inline(activation: .onSelect))
-            
-        }
   
         }
     }
