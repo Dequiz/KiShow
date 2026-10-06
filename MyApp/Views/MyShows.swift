@@ -7,24 +7,35 @@
 
 import SwiftUI
 import SwiftData
+
 struct MyShows: View {
+    @Query var events: [EventEntity]
+    
     var body: some View {
-        ZStack{
+        ZStack {
             Color("AppBackground")
                 .ignoresSafeArea()
-            NavigationStack{
-                NavigationLink(destination: EventView()){
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 100,height: 100)
-                        .overlay{
-                            Text("Show")
+            
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        ForEach(events) { event in
+                           
+                                NavigationLink {
+                                    EventView(eventoSelecionado: event)
+                                } label: {
+                                   
+                                    Ticket(
+                                        ticketType: "BlueTicket",
+                                        artistName: event.show?.artistShow ?? "Artista",
+                                    )
+                                    
+                                }
+                                .buttonStyle(.plain)
+                            
                         }
-                }
-                NavigationLink(destination: EventView()) {
-                    Circle()
-                        .frame(width: 150,height: 150)
-                        .tint(.blueText)
-                    
+                    }
+                    .padding()
                 }
             }
         }

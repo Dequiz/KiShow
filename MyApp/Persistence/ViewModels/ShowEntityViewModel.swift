@@ -29,7 +29,13 @@ class ShowEntityViewModel{
                                 startTimeShow: time,
                                 city: showTicket.venue?.city?.name ?? "Desconhecido"
                                 )
-        context.insert(newShow)
+        let eventoSelecionado = EventEntity(show: newShow)
+        do{
+            context.insert(eventoSelecionado)
+            print("Inserido com sucesso")
+        }catch{
+            print("Erro ao inserir \(error)")
+        }
     }
     
     func delete(show: ShowEntity,context: ModelContext){
