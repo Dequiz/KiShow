@@ -8,6 +8,7 @@ struct ContentView: View {
                  MyShows()
             }
             Tab("Buscar",systemImage: "magnifyingglass.circle.fill"){
+                SearchShows()
                 
             }
             Tab("Perfil",systemImage: "person.crop.circle.fill"){

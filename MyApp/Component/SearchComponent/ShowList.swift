@@ -29,7 +29,7 @@ struct ShowList: View {
                     actualShow = show
                     action()
                 }label: {
-                    Show(imageName: show.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Erro",
+                    Show(imageName: show.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Teste",
                          artistName: show.attraction?.name ?? "Desconhecido",
                          dateEvent: show.dates?.start?.localDate ?? "Sem data",
                          localEvent: show.venue?.name ?? "Local Desconhecido"

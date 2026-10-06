@@ -10,7 +10,10 @@ import SwiftData
 
 struct AddShow: View {
     @Environment(\.modelContext) private var context
+    @State private var viewModel = ShowEntityViewModel()
     let ticketMasterShow: TicketmasterShow
+    
+    //@State var vielmodel = ShowEntityViewModel()
     var body: some View {
         NavigationStack{
             VStack{
@@ -51,7 +54,8 @@ struct AddShow: View {
                 
                 
                 Button{
-                    addShowToSwiftData( ticketMasterShow)
+                    viewModel.saveShow(showTicket: ticketMasterShow, context: context)
+                    
                 }label:{
                     Text("Adicionar Show")
                 }
@@ -63,15 +67,6 @@ struct AddShow: View {
         }
     }
     
-    private func addShowToSwiftData(_ show: TicketmasterShow) {
-        let entity = ShowEntityViewModel.makeEntity(from: show)
-        context.insert(entity)
-        do {
-            try context.save()
-        } catch {
-            print("Erro ao salvar: \(error)")
-        }
-    }
 }
 
 
