@@ -12,13 +12,13 @@ import SwiftUI
 func parseDate(_ string: String?) -> Date {
     guard let string else { return Date() }
     let f = DateFormatter()
-    f.dateFormat = "yyyy-MM-dd"
-    f.locale = Locale(identifier: "en_US_POSIX")
+    f.dateFormat = "dd-mm-yyyy"
+    f.locale = Locale(identifier: "pt_BR")
     return f.date(from: string) ?? Date()
 }
 
 
 func parseTime(_ time: String)->String{
-    let finalTime: String = String(time.dropLast(2))
+    let finalTime: String = String(time.dropLast(3))
     return finalTime
 }

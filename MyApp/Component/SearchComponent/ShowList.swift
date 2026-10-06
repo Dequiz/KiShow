@@ -42,16 +42,9 @@ struct ShowList: View {
                 
                 if let actualShow {
                     NavigationStack{
-                        AddShow(ticketMasterShow: actualShow)
-                            .toolbar{
-                                ToolbarItem(placement: .topBarLeading) {
-                                    Button {
-                                        isAddShow = false
-                                    } label: {
-                                        Image(systemName: "xmark")
-                                    }
-                                }
-                            }
+                        AddShow(ticketMasterShow: actualShow){
+                            isAddShow.toggle()
+                        }
                     }
                     
                 }
