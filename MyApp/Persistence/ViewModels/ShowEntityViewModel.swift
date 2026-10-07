@@ -14,7 +14,10 @@ import SwiftData
 class ShowEntityViewModel{
     
     func saveShow(showTicket: TicketmasterShow, context: ModelContext){
-        let date: Date = parseDate(showTicket.dates?.start?.localDate)
+        
+        guard let date = parseDate(showTicket.dates?.start?.localDate) else {
+            return
+        }
         let time = parseTime(showTicket.dates?.start?.localTime ?? "00:00:00")
         
         
@@ -29,6 +32,7 @@ class ShowEntityViewModel{
                                 startTimeShow: time,
                                 city: showTicket.venue?.city?.name ?? "Desconhecido"
                                 )
+        
         let eventoSelecionado = EventEntity(show: newShow)
         context.insert(eventoSelecionado)
     }

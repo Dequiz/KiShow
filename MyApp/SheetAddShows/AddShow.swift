@@ -77,7 +77,7 @@ struct AddShow: View {
                         .font(.body)
                         .bold()
 
-                        Text("\(parseDate(ticketMasterShow.dates?.start?.localDate), format: .dateTime.day().month(.twoDigits).year()) às \(parseTime(ticketMasterShow.dates?.start?.localTime ?? "00:00:00"))")
+                        Text("\(formattedDate(parseDate(ticketMasterShow.dates?.start?.localDate))) às \(parseTime(ticketMasterShow.dates?.start?.localTime ?? "00:00:00"))")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }.padding()
                     

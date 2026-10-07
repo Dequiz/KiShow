@@ -42,7 +42,7 @@ struct Show: View {
                                     
                                         .foregroundColor(.white)
                                         .font(.callout)
-                                    Text("\(dateEvent)")
+                                    Text("\(formattedDate(parseDate(dateEvent)))")
                                         .foregroundColor(.white)
                                         .font(.subheadline)
                                         .multilineTextAlignment(.leading)
