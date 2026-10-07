@@ -66,14 +66,21 @@ class TicketMasterShowViewModel{
     
     var filteredShows: [TicketmasterShow] {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return shows
+            return shows.sorted { ittem, ittem1 in
+                (ittem.attraction?.name ?? "").localizedCaseInsensitiveCompare(ittem1.attraction?.name ?? "") == .orderedAscending
+            }
         }
         let term = query.lowercased()
-        return shows.filter { s in
-            let artist = s.attraction?.name?.lowercased() ?? ""
-            let venue = s.venue?.name?.lowercased() ?? ""
-            return artist.contains(term) || venue.contains(term)
-        }
+        return shows
+            .filter { s in
+                let artist = s.attraction?.name?.lowercased() ?? ""
+                return artist.contains(term)
+            }
+            .sorted { s1, s2 in
+                let name1 = s1.attraction?.name ?? ""
+                let name2 = s2.attraction?.name ?? ""
+                return name1.localizedCaseInsensitiveCompare(name2) == .orderedAscending
+            }
     }
     
     var selectedGenres: [String] = []
