@@ -13,11 +13,13 @@ import SwiftData
 class TitleEntity {
     var idTitle: UUID
 //    var event: EventEntity?
-    var nameTitle: String
+    @Attribute(.unique) var nameTitle: String
+    var active: Bool
     
     init( nameTitle: String)
     {
         self.idTitle = UUID()
         self.nameTitle = nameTitle
+        self.active = false
     }
 }

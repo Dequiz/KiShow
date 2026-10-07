@@ -15,7 +15,7 @@ struct SearchShows: View {
         NavigationStack{
             
             ZStack{
-                Color("SheetBackground")
+                Color("AppBackground")
                     .ignoresSafeArea()
                 ScrollView {
                     VStack{

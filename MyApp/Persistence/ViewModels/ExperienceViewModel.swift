@@ -10,7 +10,6 @@ import SwiftData
 
 @Observable
 class ExperienceViewModel{
-    
     var media = MediaTypes.text
     
     enum MediaTypes : String{
@@ -20,8 +19,17 @@ class ExperienceViewModel{
         case audio
         case music
     }
+    
+    func saveExperience(event: EventEntity,description: [String],content: String,mediaType: TypeMidias, context: ModelContext){
+        if mediaType == .image && content.isEmpty{
+            return
+        }
+        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description))
+        context.insert(newExperience)
+    }
+    
     //Funçao que salva as imagens inseridos como mídia primaria no app
-    func saveExperience(event: EventEntity,description: String,content: Data,mediaType: TypeMidias, context: ModelContext){
+    func saveExperience(event: EventEntity,description: [String],content: Data,mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
         }
@@ -30,7 +38,7 @@ class ExperienceViewModel{
     }
     //Funçao que salva os vídeos inseridos como mídia primaria no app
 
-    func saveExperience(event: EventEntity,description: String,content: [String],mediaType: TypeMidias, context: ModelContext){
+    func saveExperience(event: EventEntity,description: [String],content: [String],mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
         }
@@ -40,7 +48,7 @@ class ExperienceViewModel{
     
     
     //Funçao que salva os áudios inseridos como mídia primaria no app
-    func saveExperience(event: EventEntity,description: String,content: [Data],mediaType: TypeMidias, context: ModelContext){
+    func saveExperience(event: EventEntity,description: [String],content: [Data],mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
         }
