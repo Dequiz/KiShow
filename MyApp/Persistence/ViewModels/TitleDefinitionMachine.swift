@@ -19,7 +19,10 @@ class TitleDefinitionMachine{
     func verifyCondition(_ action: UserAction,context: ModelContext){
         switch action{
         case .secretButtonClicked:
-            unlockTitle(texto: "Colecionador", context: <#T##ModelContext#>)
+            unlockTitle(texto: "Colecionador", context: context)
+        
+        case .showRegistered(totalShows: let totalShows):
+            break
         }
     }
     
