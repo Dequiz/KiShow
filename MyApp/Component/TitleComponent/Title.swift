@@ -5,9 +5,10 @@
 //  Created by Andre on 29/09/26.
 //
 import SwiftUI
-
+import SwiftData
 struct Title: View {
     var titleNames: TitlesNames
+    @Query var titles: [TitleEntity]
     @State private var upSheet = false
     @State private var presentedTitle = "Escolha Seu Título"
     
@@ -39,12 +40,12 @@ struct Title: View {
                 NavigationStack {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 12) {
-                            ForEach(titleNames.titleNames, id: \.self) { titulo in
+                            ForEach(titles, id: \.self) { titulo in
                                 Button {
-                                    presentedTitle = titulo
+                                    presentedTitle = titulo.nameTitle
                                     upSheet = false
                                 } label: {
-                                    Text(titulo)
+                                    Text(titulo.nameTitle)
                                         .font(.body)
                                         .lineLimit(1)
                                         .multilineTextAlignment(.center)

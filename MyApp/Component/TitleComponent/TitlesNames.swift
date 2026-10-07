@@ -6,17 +6,14 @@
 //
 
 struct TitlesNames{
-    var titleNames : [String] = [
-        "Colecionador",
-        "Fotografo",
-        "Escritor",
-        "Dono",
-        "Super Mary",
-        "Cantor",
-        "Cantoar",
-        "Canxtor",
-        "Carfntor",
-        "Cacfcntor",
-        "Canvctor"
+    var titles : [TitleModel] = [
+        TitleModel(title: "Colecionador"),
+        TitleModel(title: "Fotografo"),
+        TitleModel(title: "Escritor"),
+        TitleModel(title: "Dono"),
+        TitleModel(title:"Super Mary"),
+        TitleModel(title:"Super Andre"),
+        TitleModel(title:"Super Elisa"),
+        TitleModel(title:"Super Paulo")
     ]
 }

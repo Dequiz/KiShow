@@ -1,7 +1,9 @@
 import SwiftUI
+import _SwiftData_SwiftUI
 import Playgrounds
 
 struct ContentView: View {
+   
     var body: some View {
         TabView{
             Tab("Shows",systemImage: "ticket.fill"){
@@ -17,7 +19,6 @@ struct ContentView: View {
         }
         .navigationBarBackButtonHidden()
         .tint(.mainPink)
-        
     }
 }
 

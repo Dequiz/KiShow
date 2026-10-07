@@ -21,30 +21,30 @@ class ExperienceViewModel{
         case music
     }
     //Funçao que salva as imagens inseridos como mídia primaria no app
-    func saveExperience(description: String,content: Data,mediaType: TypeMidias, context: ModelContext){
+    func saveExperience(event: EventEntity,description: String,content: Data,mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,textContent: description,imageContent: [content]))
+        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description,imageContent: [content]))
         context.insert(newExperience)
     }
     //Funçao que salva os vídeos inseridos como mídia primaria no app
 
-    func saveExperience(description: String,content: [String],mediaType: TypeMidias, context: ModelContext){
+    func saveExperience(event: EventEntity,description: String,content: [String],mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,textContent: description,videoContent: content))
+        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description,videoContent: content))
         context.insert(newExperience)
     }
     
     
     //Funçao que salva os áudios inseridos como mídia primaria no app
-    func saveExperience(description: String,content: [Data],mediaType: TypeMidias, context: ModelContext){
+    func saveExperience(event: EventEntity,description: String,content: [Data],mediaType: TypeMidias, context: ModelContext){
         if mediaType == .image && content.isEmpty{
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,textContent: description,audioContent: content))
+        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description,audioContent: content))
         context.insert(newExperience)
     }
     

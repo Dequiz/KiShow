@@ -10,6 +10,10 @@ import SwiftData
 
 struct MyShows: View {
     @Query var events: [EventEntity]
+    @Query var experiences: [ExperienceEntity]
+//    @Query var shows : [EventEntity]
+    var dm = TitleDefinitionMachine()
+    @Environment(\.modelContext) var context
     
     var body: some View {
         ZStack {
@@ -41,5 +45,12 @@ struct MyShows: View {
                 }
             }
         }
+        .task {
+            if events.count == 1{
+                dm.unlockTitle(texto: "Colecionador", context: context)
+            }
+            
+        }
+
     }
 }

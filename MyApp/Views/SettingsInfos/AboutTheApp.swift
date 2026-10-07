@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AboutTheApp: View {
+    @State var dm = TitleDefinitionMachine()
+    @Environment(\.modelContext) var context
     var body: some View {
         ZStack (alignment: .top){
             Color("AppBackground")
@@ -32,10 +35,18 @@ struct AboutTheApp: View {
                         
                         Spacer()
                         
-                        Image("ArtGroup")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(minWidth: 320, minHeight: 320)
+                        Button{
+                            dm.unlockTitle(texto: "Super Mary",context: context)
+                            dm.unlockTitle(texto: "Super Paulo",context: context)
+                            dm.unlockTitle(texto: "Super Andre",context: context)
+                            dm.unlockTitle(texto: "Super Elisa",context: context)
+                        } label: {
+                            Image("ArtGroup")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(minWidth: 320, minHeight: 320)
+                        }
+                       
                         
                         Spacer()
                         

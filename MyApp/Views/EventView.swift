@@ -13,7 +13,10 @@ enum AppTheme: String, CaseIterable, Identifiable {
 
 struct EventView: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \ExperienceEntity.idExperience) var experiences: [ExperienceEntity]
+    private var experiences: [ExperienceEntity] {
+          (eventoSelecionado?.experiences ?? [])
+              .sorted { $0.idExperience.uuidString < $1.idExperience.uuidString }
+      }
     @State var selected = AppTheme.todos
     @State var player = MiniPlayer()
     @State var eventoSelecionado: EventEntity?
@@ -52,7 +55,7 @@ struct EventView: View {
                                 .frame(width: 350)
                                 .controlSize(.large)
                                 .pickerStyle(.tabs)
-                                .glassEffect()
+                                .glassEffect() 
                             }
                             .padding(.horizontal)
                         }
@@ -71,9 +74,12 @@ struct EventView: View {
                 }
             }
         }
+        .onDisappear(){
+            player.stop()
+        }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                NavigationLink(destination: AddExperience()) {
+                NavigationLink(destination: AddExperience(eventoSelecionado: eventoSelecionado!)) {
                     Image(systemName: "plus")
                 }
             }
@@ -89,10 +95,11 @@ struct EventView: View {
                    let uiImage = UIImage(data: data) {
                     Image(uiImage: uiImage)
                         .resizable()
-                        .frame(height: 200)
-                        .scaledToFill()
+                        .frame(width: 300,height: 200)
+                        .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .padding(.horizontal)
+                       
                 }
                 if let text = experience.textContent, !text.isEmpty {
                     Text(text)
