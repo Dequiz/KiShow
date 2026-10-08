@@ -102,7 +102,7 @@ struct EventView: View {
                        
                 }
                 if let text = experience.textContent, !text.isEmpty {
-                    Text(text)
+                    Text(text.first ?? "Vazio")
                 }
             }
 
@@ -113,12 +113,12 @@ struct EventView: View {
                         .padding(.horizontal)
                 }
                 if let text = experience.textContent, !text.isEmpty {
-                    Text(text)
+                    Text(text.first ?? "Vazio")
                 }
             }
 
         case .text:
-            Text(experience.textContent ?? "")
+            Text(experience.textContent?.first ?? "Vazio")
 
         case .audio:
                     if let audioData = experience.audioContent?.first {
@@ -146,7 +146,7 @@ struct EventView: View {
                     }
                     
                     if let text = experience.textContent, !text.isEmpty {
-                        Text(text)
+                        Text(text.first ?? "Vazio")
                             .padding(.horizontal)
                     }
         }

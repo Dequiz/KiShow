@@ -13,15 +13,15 @@ class TitleViewModel{
 
     
     
-    func getTitle(texto: String) -> TitleModel?{
-        return titles.titles.first(where: {$0.title == texto})
-    }
-    
-    func setTitleActive(texto: String){
-        var titleInProgress = getTitle(texto: texto)
-        titleInProgress?.active = true
-    }
-    
-    
-    
+//    func getTitle(texto: String) -> TitleModel?{
+//        return titles.titles.first(where: {$0.title == texto})
+//    }
+//    
+//    func setTitleActive(texto: String){
+//        var titleInProgress = getTitle(texto: texto)
+//        titleInProgress?.active = true
+//    }
+//    
+//    
+//    
 }

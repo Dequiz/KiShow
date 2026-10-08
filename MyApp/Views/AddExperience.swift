@@ -16,6 +16,8 @@ struct AddExperience: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     @State var eventoSelecionado: EventEntity
+    var dm = TitleDefinitionMachine()
+    @Query var experiencies : [ExperienceEntity]
     @State var videoPicker = VideoPickerView()
     @State private var experiencia = ""
     @State private var isShowingVideoPicker = false
@@ -28,7 +30,11 @@ struct AddExperience: View {
     var body: some View {
         ZStack{
             Color.appBackground
+                .ignoresSafeArea()
             VStack{
+                if viewModel.media == .text{
+                    TextField("Texto",text: $experiencia)
+                }
                 if viewModel.media == .photo{
                     PhotosPicker(selection: $itemSelecionado, matching: .images) {
                         if let imagemCarregada {
@@ -49,6 +55,7 @@ struct AddExperience: View {
                                 }
                         }
                     }
+                    TextField("Texto",text: $experiencia)
                 } else if viewModel.media == .video {
                     VStack {
                         switch videoPicker.videoImportState {
@@ -101,6 +108,7 @@ struct AddExperience: View {
                                     .frame(maxWidth: .infinity, minHeight: 300)
                             }
                         }
+                        TextField("Texto",text: $experiencia)
                     }
                 }else if viewModel.media == .audio{
                     Spacer()
@@ -127,22 +135,25 @@ struct AddExperience: View {
                         } label:{
                             Image(systemName: rec.isRecording ? "mic.slash.fill" : "mic.fill")
                         }
+                        TextField("Texto",text: $experiencia)
                     }
                     .frame(width: 200)
                     .padding()
                   
                 }
-                TextField("Texto",text: $experiencia)
+               
                     MidiaPicker(viewModel: viewModel, alignment: .bottomTrailing)
+                Spacer()
             }
                     }
-        .ignoresSafeArea()
 
         .task{
             rec.requestPermission{ _ in
             recordings = recordingList()
             }
         }
+      
+
         .onChange(of: rec.isRecording) { isRecording in
             if isRecording{
                 player.stop()
@@ -166,17 +177,17 @@ struct AddExperience: View {
                         }
                         switch viewModel.media{
                         case .photo:
-                            viewModel.saveExperience(event: eventoSelecionado, description: experiencia, content: (imagemCarregada?.jpegData(compressionQuality: 0.5)) ?? Data(), mediaType: media, context: modelContext)
+                            viewModel.saveExperience(event: eventoSelecionado, description: [experiencia], content: (imagemCarregada?.jpegData(compressionQuality: 0.5)) ?? Data(), mediaType: media, context: modelContext)
                         case .video:
                             if case .success(_, let videoURL) = videoPicker.videoImportState {
                                 let fileName = videoURL.lastPathComponent // Ex: "7C4B1-23F.mp4"
-                                viewModel.saveExperience(event: eventoSelecionado, description: experiencia, content: [fileName], mediaType: .video, context: modelContext)
+                                viewModel.saveExperience(event: eventoSelecionado, description: [experiencia], content: [fileName], mediaType: .video, context: modelContext)
                             }
                         case .text:
-                            print("Oi")
+                            viewModel.saveExperience(event: eventoSelecionado, description: [experiencia], content: experiencia, mediaType: .text, context: modelContext)
                         case .audio:
                                 if let url = rec.fileURL, let audioData = try? Data(contentsOf: url) {
-                                    viewModel.saveExperience(event: eventoSelecionado, description: experiencia,
+                                    viewModel.saveExperience(event: eventoSelecionado, description: [experiencia],
                                                              content: [audioData],
                                                              mediaType: .audio,
                                                              context: modelContext)
