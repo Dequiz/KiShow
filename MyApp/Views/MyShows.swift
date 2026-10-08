@@ -16,35 +16,38 @@ struct MyShows: View {
     @Environment(\.modelContext) var context
     
     var body: some View {
-        ZStack {
-            Color("AppBackground")
-                .ignoresSafeArea()
+        
             
             NavigationStack {
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(events) { event in
-                           
-                                NavigationLink {
-                                    EventView(eventoSelecionado: event)
-                                } label: {
-                                   
-                                    TicketSelection(
-                                        artistName: event.show?.artistShow ?? "Artista",
-                                        eventName: event.show?.nameShow ?? "Evento",
-                                        localName: event.show?.localShow ?? "Local",
-                                        dateEvent: event.show?.dataShow ?? Date()
-                                    )
-                                    
-                                }
-                                .buttonStyle(.plain)
-                            
+                ZStack {
+                    Color("AppBackground")
+                        .ignoresSafeArea()
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            ForEach(events) { event in
+                               
+                                    NavigationLink {
+                                        EventView(eventoSelecionado: event)
+                                    } label: {
+                                       
+                                        TicketSelection(
+                                            artistName: event.show?.artistShow ?? "Artista",
+                                            eventName: event.show?.nameShow ?? "Evento",
+                                            localName: event.show?.localShow ?? "Local",
+                                            dateEvent: event.show?.dataShow ?? Date()
+                                        )
+                                        
+                                    }
+                                    .buttonStyle(.plain)
+                                
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
+                
             }
-        }
+        
         .task {
             if events.count == 1{
                 dm.unlockTitle(texto: "Colecionador", context: context)
@@ -54,3 +57,5 @@ struct MyShows: View {
 
     }
 }
+
+
