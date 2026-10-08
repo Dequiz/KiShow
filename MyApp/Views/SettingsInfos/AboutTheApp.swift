@@ -10,6 +10,7 @@ import SwiftData
 
 struct AboutTheApp: View {
     @State var dm = TitleDefinitionMachine()
+    @State var countButtonClick = 0
     @Environment(\.modelContext) var context
     var body: some View {
         ZStack (alignment: .top){
@@ -36,10 +37,7 @@ struct AboutTheApp: View {
                         Spacer()
                         
                         Button{
-                            dm.unlockTitle(texto: "Super Mary",context: context)
-                            dm.unlockTitle(texto: "Super Paulo",context: context)
-                            dm.unlockTitle(texto: "Super Andre",context: context)
-                            dm.unlockTitle(texto: "Super Elisa",context: context)
+                            countButtonClick += 1
                         } label: {
                             Image("ArtGroup")
                                 .resizable()
@@ -61,6 +59,9 @@ struct AboutTheApp: View {
                 .toolbarTitleDisplayMode(.inline)
             }
         }
+        .task(id: countButtonClick) {
+            dm.processAction(.secretButtonClicked(clickButton: countButtonClick), context: context)
+                }
     }
 }
 

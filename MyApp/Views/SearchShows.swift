@@ -10,17 +10,12 @@ import SwiftUI
 
 struct SearchShows: View {
     @State private var ticketMasterShow = TicketMasterShowViewModel()
-    
-    
-    
     @State var TaskId: UUID = UUID()
-    
-    
     var body: some View {
         NavigationStack{
             
             ZStack{
-                Color("SheetBackground")
+                Color("AppBackground")
                     .ignoresSafeArea()
                 ScrollView {
                     VStack{
@@ -58,22 +53,17 @@ struct SearchShows: View {
                     .toolbarTitleDisplayMode(.inlineLarge)
             }
             
-            
-            
-            
-        }
-            
-            .searchable(
-                text: Binding(
-                    get: { ticketMasterShow.query },
-                    set: { ticketMasterShow.query = $0 }
-                ),
-                placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Pesquise pelo show"
-            )
-            .searchDictationBehavior(.inline(activation: .onSelect))
-  
-        }
+        }.searchable(
+            text: Binding(
+                get: { ticketMasterShow.query },
+                set: { ticketMasterShow.query = $0 }
+            ),
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Pesquise pelo show"
+        )
+        .searchDictationBehavior(.inline(activation: .onSelect))
+
+    }
     }
         
 

@@ -14,7 +14,10 @@ import SwiftData
 class ShowEntityViewModel{
     
     func saveShow(showTicket: TicketmasterShow, context: ModelContext){
-        let date: Date = parseDate(showTicket.dates?.start?.localDate)
+        
+        guard let date = parseDate(showTicket.dates?.start?.localDate) else {
+            return
+        }
         let time = parseTime(showTicket.dates?.start?.localTime ?? "00:00:00")
         
         
@@ -29,16 +32,27 @@ class ShowEntityViewModel{
                                 startTimeShow: time,
                                 city: showTicket.venue?.city?.name ?? "Desconhecido"
                                 )
+        
         let eventoSelecionado = EventEntity(show: newShow)
-        do{
-            context.insert(eventoSelecionado)
-            print("Inserido com sucesso")
-        }catch{
-            print("Erro ao inserir \(error)")
+        context.insert(eventoSelecionado)
+        
+        do {
+            try context.save()
+        } catch {
+            print("Erro ao salvar utilizador: \(error.localizedDescription)")
         }
     }
     
     func delete(show: ShowEntity,context: ModelContext){
         context.delete(show)
+    }
+    func contains(showTicket: TicketmasterShow, shows: [ShowEntity]) -> Bool{
+        
+        for show in shows {
+            if showTicket.name == show.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.dataShow{
+                return true
+            }
+        }
+        return false
     }
 }
