@@ -16,6 +16,7 @@ class TitleDefinitionMachine{
     }
      var titleVm = TitleViewModel()
     
+
     func verifyCondition(_ action: UserAction,context: ModelContext){
         switch action{
         case .secretButtonClicked:
