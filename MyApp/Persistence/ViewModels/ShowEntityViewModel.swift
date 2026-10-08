@@ -43,13 +43,10 @@ class ShowEntityViewModel{
         }
     }
     
-    func delete(show: ShowEntity,context: ModelContext){
-        context.delete(show)
-    }
-    func contains(showTicket: TicketmasterShow, shows: [ShowEntity]) -> Bool{
+    func contains(showTicket: TicketmasterShow, shows: [EventEntity]) -> Bool{
         
         for show in shows {
-            if showTicket.name == show.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.dataShow{
+            if showTicket.name == show.show?.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.show?.dataShow{
                 return true
             }
         }
