@@ -11,9 +11,10 @@ import SwiftData
 
 
 @Observable
-class ShowEntityViewModel{
-    
+class EventEntityViewModel{
     func saveShow(showTicket: TicketmasterShow, context: ModelContext){
+        
+        
         
         guard let date = parseDate(showTicket.dates?.start?.localDate) else {
             return
