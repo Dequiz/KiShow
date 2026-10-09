@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import AVKit
+import SimpleToast
 
 enum AppTheme: String, CaseIterable, Identifiable {
     case todos = "Todos"
@@ -14,6 +15,11 @@ enum AppTheme: String, CaseIterable, Identifiable {
 struct EventView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) var context
+    @State private var showToast = false
+    @State private var calendarToastMessage = ""
+    @State private var calendarToastSucceeded = false
+    @State private var isAddingToCalendar = false
+    private let toastOption = SimpleToastOptions(alignment: .top,hideAfter: 2,backdrop: Color.black.opacity(0.2),animation: .default,modifierType: .slide)
 
     private var experiences: [ExperienceEntity] {
         (eventoSelecionado.experiences ?? [])
@@ -108,6 +114,21 @@ struct EventView: View {
                 }
             }
         }
+        .simpleToast(isPresented: $showToast, options: toastOption, content: {
+            HStack(spacing: 10) {
+                Image(systemName: calendarToastSucceeded ? "calendar.badge.checkmark" : "calendar")
+                    .font(.callout)
+                Text(calendarToastMessage)
+                    .font(.callout)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(16)
+            .background(calendarToastSucceeded ? Color.mainPurple : Color.red)
+            .foregroundStyle(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .frame(maxWidth: 360)
+            .padding(.horizontal, 16)
+        })
         
         .onDisappear(){
             player.stop()
@@ -120,10 +141,48 @@ struct EventView: View {
         }
        
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
                 NavigationLink(destination: AddExperience(eventoSelecionado: eventoSelecionado)) {
                     Image(systemName: "plus")
                 }
+                Button {
+                    guard !isAddingToCalendar else { return }
+                    let nomeShow = eventoSelecionado.show?.nameShow ?? "Show"
+                    let dateShow = eventoSelecionado.show?.dataShow ?? Date()
+                    let title = "Show do: \(nomeShow)"
+                    isAddingToCalendar = true
+                    Task {
+                        let result = await manager.criarCompromisso(
+                            titulo: title,
+                            dataInicio: dateShow,
+                            dataFim: dateShow
+                        )
+                        switch result {
+                        case .added:
+                            calendarToastMessage = "Show: \(nomeShow) foi adicionado ao calendário."
+                            calendarToastSucceeded = true
+                        case .alreadyExists:
+                            calendarToastMessage = "Show: \(nomeShow) já está no calendário."
+                            calendarToastSucceeded = false
+                        case .accessDenied:
+                            calendarToastMessage = "Sem permissão para acessar o calendário."
+                            calendarToastSucceeded = false
+                        case .failed(let message):
+                            calendarToastMessage = "Não foi possível adicionar o show: \(message)"
+                            calendarToastSucceeded = false
+                        }
+                        isAddingToCalendar = false
+                        showToast = true
+                    }
+                } label: {
+                    if isAddingToCalendar {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "calendar")
+                    }
+                }
+                .disabled(isAddingToCalendar)
+                .accessibilityLabel("Adicionar show ao calendário")
             }
         }
         .sheet(isPresented: $isShowingExperienceEditor) {

@@ -41,10 +41,40 @@ struct Address: Decodable {
     let line1: String?
 }
 
+struct VenueLocation: Decodable {
+    let latitude: Double?
+    let longitude: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case latitude
+        case longitude
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        latitude = Self.decodeCoordinate(from: container, forKey: .latitude)
+        longitude = Self.decodeCoordinate(from: container, forKey: .longitude)
+    }
+
+    private static func decodeCoordinate(
+        from container: KeyedDecodingContainer<CodingKeys>,
+        forKey key: CodingKeys
+    ) -> Double? {
+        if let number = try? container.decode(Double.self, forKey: key) {
+            return number
+        }
+        if let string = try? container.decode(String.self, forKey: key) {
+            return Double(string)
+        }
+        return nil
+    }
+}
+
 struct Venue: Decodable {
     let name: String?
     let city: City?
     let address: Address?
+    let location: VenueLocation?
 }
 
 struct Attraction: Decodable{
@@ -81,6 +111,14 @@ struct TicketmasterShow: Decodable, Identifiable {
 
     var venue: Venue? {
         embedded?.venues?.first
+    }
+
+    var latitude: Double? {
+        venue?.location?.latitude
+    }
+
+    var longitude: Double? {
+        venue?.location?.longitude
     }
     
     var attraction: Attraction? {
