@@ -53,22 +53,41 @@ struct AddShow: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading)
                     
-                    VStack{
-                        HStack{
-                            Image(systemName: "mappin.and.ellipse")
-                            Text("Localização")
-                                
-                        }.font(.body)
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Localização", systemImage: "mappin.and.ellipse")
+                            .font(.body.bold())
                         Text("\(ticketMasterShow.venue?.address?.line1 ?? "Sem Rua") | \(ticketMasterShow.venue?.name ?? "Sem Local")")
-                            .underline()
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Text(ticketMasterShow.venue?.city?.name ?? "Sem Cidade")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
-                    
+
+                        if let latitude = ticketMasterShow.latitude,
+                           let longitude = ticketMasterShow.longitude,
+                           (-90.0...90.0).contains(latitude),
+                           (-180.0...180.0).contains(longitude) {
+                            Text("Lat. \(latitude.formatted(.number.precision(.fractionLength(4)))) · Long. \(longitude.formatted(.number.precision(.fractionLength(4))))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            NavigationLink {
+                                MapView(
+                                    latitude: latitude,
+                                    longitude: longitude,
+                                    placeName: ticketMasterShow.venue?.name ?? ticketMasterShow.name
+                                )
+                            } label: {
+                                Label("Ver localização no mapa", systemImage: "map")
+                                    .font(.subheadline.weight(.semibold))
+                            }
+                            .padding(.top, 4)
+                        } else {
+                            Text("Coordenadas do local não disponíveis.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                     VStack{
                         HStack{
                             Image(systemName: "calendar")

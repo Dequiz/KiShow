@@ -31,7 +31,9 @@ class EventEntityViewModel{
                                 addressShow: showTicket.venue?.address?.line1 ?? "Desconhecido",
                                 urlShow: showTicket.url,
                                 startTimeShow: time,
-                                city: showTicket.venue?.city?.name ?? "Desconhecido"
+                                city: showTicket.venue?.city?.name ?? "Desconhecido",
+                                latitude: showTicket.latitude,
+                                longitude: showTicket.longitude
                                 )
         
         let eventoSelecionado = EventEntity(show: newShow)

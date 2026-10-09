@@ -1,45 +1,73 @@
-//
-//  CalendarManager.swift
-//  MyApp
-//
-//  Created by Andre on 09/10/26.
-//
-
 import Foundation
 import EventKit
 
-class CalendarManager {
-    let eventStore = EKEventStore()
-    
-    /// Solicita permissão e cria um compromisso no calendário nativo
-    func criarCompromisso(titulo: String, dataInicio: Date, dataFim: Date, notas: String? = nil) async {
+enum CalendarEventResult {
+    case added
+    case alreadyExists
+    case accessDenied
+    case failed(String)
+}
+
+final class CalendarManager {
+    private let eventStore = EKEventStore()
+
+    func criarCompromisso(
+        titulo: String,
+        dataInicio: Date,
+        dataFim: Date,
+        notas: String? = nil
+    ) async -> CalendarEventResult {
         do {
-            // 1. Solicitar permissão de escrita (Ideal para iOS 17+)
-            let permissaoConcedida = try await eventStore.requestWriteOnlyAccessToEvents()
-            
-            guard permissaoConcedida else {
-                print("Acesso ao calendário foi negado pelo usuário.")
-                return
+            let accessGranted = try await eventStore.requestFullAccessToEvents()
+            guard accessGranted else { return .accessDenied }
+
+            if eventoJaExiste(titulo: titulo, data: dataInicio) {
+                return .alreadyExists
             }
-            
-            // 2. Criar o objeto de evento
-            let novoEvento = EKEvent(eventStore: eventStore)
-            novoEvento.title = titulo
-            novoEvento.startDate = dataInicio
-            novoEvento.endDate = dataFim
-            novoEvento.notes = notas
-            
-            // Define o calendário padrão para novos eventos (iCloud, Google, etc.)
-            novoEvento.calendar = eventStore.defaultCalendarForNewEvents
-            
-            // 3. Salvar o evento no calendário
-            // span: .thisEvent significa que altera apenas este compromisso (e não uma série recorrente)
-            try eventStore.save(novoEvento, span: .thisEvent)
-            
-            print("Compromisso '\(titulo)' criado com sucesso!")
-            
+
+            let event = EKEvent(eventStore: eventStore)
+            event.title = titulo.trimmingCharacters(in: .whitespacesAndNewlines)
+            event.startDate = dataInicio
+            event.endDate = dataFim > dataInicio
+                ? dataFim
+                : dataInicio.addingTimeInterval(60 * 60)
+            event.notes = notas
+            event.calendar = eventStore.defaultCalendarForNewEvents
+
+            try eventStore.save(event, span: .thisEvent)
+            return .added
         } catch {
-            print("Erro ao interagir com o calendário: \(error.localizedDescription)")
+            return .failed(error.localizedDescription)
         }
+    }
+
+    private func eventoJaExiste(titulo: String, data: Date) -> Bool {
+        let calendar = Calendar.current
+        let dayStart = calendar.startOfDay(for: data)
+        guard let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) else {
+            return false
+        }
+
+        let predicate = eventStore.predicateForEvents(
+            withStart: dayStart,
+            end: dayEnd,
+            calendars: nil
+        )
+        let expectedTitle = normalizar(titulo)
+        var possibleTitles: Set<String> = [expectedTitle]
+        let showPrefix = normalizar("Show do:") + " "
+        if expectedTitle.hasPrefix(showPrefix) {
+            possibleTitles.insert(String(expectedTitle.dropFirst(showPrefix.count)))
+        } else {
+            possibleTitles.insert(showPrefix + expectedTitle)
+        }
+        return eventStore.events(matching: predicate).contains { event in
+            possibleTitles.contains(normalizar(event.title ?? ""))
+        }
+    }
+
+    private func normalizar(_ value: String) -> String {
+        value.trimmingCharacters(in: .whitespacesAndNewlines)
+            .folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
     }
 }
