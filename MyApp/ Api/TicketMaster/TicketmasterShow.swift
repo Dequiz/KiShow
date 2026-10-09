@@ -75,6 +75,7 @@ struct Venue: Decodable {
     let city: City?
     let address: Address?
     let location: VenueLocation?
+    let timezone: String?
 }
 
 struct Attraction: Decodable{

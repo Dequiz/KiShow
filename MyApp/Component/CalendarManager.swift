@@ -15,7 +15,8 @@ final class CalendarManager {
         titulo: String,
         dataInicio: Date,
         dataFim: Date,
-        notas: String? = nil
+        notas: String? = nil,
+        timeZone: TimeZone? = nil
     ) async -> CalendarEventResult {
         do {
             let accessGranted = try await eventStore.requestFullAccessToEvents()
@@ -31,6 +32,7 @@ final class CalendarManager {
             event.endDate = dataFim > dataInicio
                 ? dataFim
                 : dataInicio.addingTimeInterval(60 * 60)
+            event.timeZone = timeZone ?? .current
             event.notes = notas
             event.calendar = eventStore.defaultCalendarForNewEvents
 
