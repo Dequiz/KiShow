@@ -11,12 +11,11 @@ import SwiftData
 struct AddShow: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel = ShowEntityViewModel()
+    @State private var viewModel = EventEntityViewModel()
     @Query var events: [EventEntity]
     let ticketMasterShow: TicketmasterShow
     var action: () -> Void
     
-    //@State var vielmodel = ShowEntityViewModel()
     var body: some View {
         NavigationStack{
             ZStack{
