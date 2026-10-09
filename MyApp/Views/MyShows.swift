@@ -14,7 +14,50 @@ struct MyShows: View {
     var dm = TitleDefinitionMachine()
     @Environment(\.modelContext) var context
     
+    var eventosFiltrados: [EventEntity] {
+        let calendar = Calendar.current
+        let hoje = calendar.startOfDay(for: Date())
+        
+        let porPeriodo: [EventEntity]
+        switch selectPeriod {
+        case "Próximos":
+            porPeriodo = events.filter {
+                guard let data = $0.show?.dataShow else { return false }
+                return calendar.startOfDay(for: data) >= hoje
+            }
+        case "Encerrados":
+            porPeriodo = events.filter {
+                guard let data = $0.show?.dataShow else { return false }
+                return calendar.startOfDay(for: data) < hoje
+            }
+        default:
+            porPeriodo = events
+        }
+        
+        guard !searchText.isEmpty else { return porPeriodo }
+        
+        let termo = searchText
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .folding(options: .diacriticInsensitive, locale: .current)
+            .lowercased()
+        
+        return porPeriodo.filter { event in
+            let artista = event.show?.artistShow ?? ""
+            let nome = event.show?.nameShow ?? ""
+            let local = event.show?.localShow ?? ""
+            let cidade = event.show?.city ?? ""
+            
+            return [artista, nome, local, cidade].contains { campo in
+                campo
+                    .folding(options: .diacriticInsensitive, locale: .current)
+                    .lowercased()
+                    .contains(termo)
+            }
+        }
+    }
+    
     @State var selectPeriod: String = "Todos"
+    @State var searchText: String = ""
     
     var body: some View {
         NavigationStack {
@@ -33,20 +76,20 @@ struct MyShows: View {
                 .ignoresSafeArea()
                     
                     
-                if events.isEmpty{
+                if eventosFiltrados.isEmpty{
                     VStack{
                         Image(.guria1)
                             .resizable()
                             .frame(maxWidth: 263)
                             .frame(height: 279)
-                        Text("Você ainda não possui nenhum show")
+                        Text("Você ainda não possui nenhum show \(selectPeriod != "Todos" ? selectPeriod: "")")
                             .font(.title2)
                             .foregroundStyle(.secondary)
                     }
                 }else{
                     ScrollView {
                         VStack(spacing: 16) {
-                            ForEach(events) { event in
+                            ForEach(eventosFiltrados) { event in
                                 NavigationLink {
                                     EventView(eventoSelecionado: event)
                                 } label: {
@@ -73,6 +116,7 @@ struct MyShows: View {
                 }
                 
             }.navigationTitle("Meus Shows")
+                .searchable(text: $searchText)
                 .toolbarTitleDisplayMode(.inlineLarge)
                 .toolbar{
                     ToolbarItem(placement: .topBarTrailing) {
