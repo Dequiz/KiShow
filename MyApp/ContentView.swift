@@ -1,4 +1,5 @@
 import SwiftUI
+import _SwiftData_SwiftUI
 import Playgrounds
 
 struct ContentView: View {
@@ -9,13 +10,14 @@ struct ContentView: View {
             }
             Tab("Buscar",systemImage: "magnifyingglass.circle.fill"){
                 SearchShows()
+                
             }
             Tab("Perfil",systemImage: "person.crop.circle.fill"){
                 UserProfille()
             }
         }
+        .navigationBarBackButtonHidden()
         .tint(.mainPink)
-        
     }
 }
 
