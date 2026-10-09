@@ -13,13 +13,22 @@ enum AppTheme: String, CaseIterable, Identifiable {
 
 struct EventView: View {
     @Environment(\.modelContext) var context
+
     private var experiences: [ExperienceEntity] {
-          (eventoSelecionado?.experiences ?? [])
+        (eventoSelecionado.experiences ?? [])
               .sorted { $0.idExperience.uuidString < $1.idExperience.uuidString }
       }
+
+    private var storyImages: [Data] {
+        (eventoSelecionado.experiences ?? [])
+            .sorted { $0.idExperience.uuidString < $1.idExperience.uuidString }
+            .compactMap { $0.imageContent?.first }
+            .prefix(5)
+            .map { $0 }
+    }
     @State var selected = AppTheme.todos
     @State var player = MiniPlayer()
-    @State var eventoSelecionado: EventEntity?
+    @State var eventoSelecionado: EventEntity
     private var filtered: [ExperienceEntity] {
         switch selected {
         case .todos:  return experiences
@@ -42,11 +51,15 @@ struct EventView: View {
                         .opacity(0.3)
                         .overlay(alignment: .bottom){
                             VStack{
-                                VinylRecord(
-                                    fullVynil: 100,
-                                    urlMusic: URL(string: eventoSelecionado?.show?.imageShow ?? "Image 1")!
-                                )
-                                Text(eventoSelecionado?.show?.nameShow ?? "Evento")
+                                NavigationLink(destination: StoryView(images:storyImages)) {
+                                    VinylRecord(
+                                        fullVynil: 100,
+                                        urlMusic: URL(string: eventoSelecionado.show?.imageShow ?? "Image 1")!
+                                    )
+                                    .disabled(true)
+                                }
+                               
+                                Text(eventoSelecionado.show?.nameShow ?? "Evento")
                                 Picker("", selection: $selected) {
                                     ForEach(AppTheme.allCases) { tipo in
                                         Text(tipo.rawValue).tag(tipo)
@@ -74,17 +87,20 @@ struct EventView: View {
                 }
             }
         }
+        
         .onDisappear(){
             player.stop()
         }
+       
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                NavigationLink(destination: AddExperience(eventoSelecionado: eventoSelecionado!)) {
+                NavigationLink(destination: AddExperience(eventoSelecionado: eventoSelecionado)) {
                     Image(systemName: "plus")
                 }
             }
         }
     }
+    
 
     @ViewBuilder
     private func row(for experience: ExperienceEntity) -> some View {
