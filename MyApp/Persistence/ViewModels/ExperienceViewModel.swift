@@ -17,7 +17,6 @@ class ExperienceViewModel{
         case photo
         case video
         case audio
-        case music
     }
     
     func saveExperience(event: EventEntity,description: [String],content: String,mediaType: TypeMidias, context: ModelContext){
@@ -49,11 +48,17 @@ class ExperienceViewModel{
     
     //Funçao que salva os áudios inseridos como mídia primaria no app
     func saveExperience(event: EventEntity,description: [String],content: [Data],mediaType: TypeMidias, context: ModelContext){
-        if mediaType == .image && content.isEmpty{
+        guard mediaType == .audio, let audioData = content.first, !audioData.isEmpty else {
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description,audioContent: content))
+        let newExperience = ExperienceEntity(type: mediaType, event: event, textContent: description, audioContent: [audioData])
         context.insert(newExperience)
+        do {
+            try context.save()
+        } catch {
+            context.delete(newExperience)
+            print("Audio persistence failed: \(error)")
+        }
     }
     
 }

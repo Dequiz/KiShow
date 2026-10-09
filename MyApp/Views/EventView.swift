@@ -12,23 +12,35 @@ enum AppTheme: String, CaseIterable, Identifiable {
 }
 
 struct EventView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) var context
 
     private var experiences: [ExperienceEntity] {
         (eventoSelecionado.experiences ?? [])
               .sorted { $0.idExperience.uuidString < $1.idExperience.uuidString }
       }
-
-    private var storyImages: [Data] {
-        (eventoSelecionado.experiences ?? [])
-            .sorted { $0.idExperience.uuidString < $1.idExperience.uuidString }
-            .compactMap { $0.imageContent?.first }
-            .prefix(5)
-            .map { $0 }
-    }
+    let manager = CalendarManager()
     @State var selected = AppTheme.todos
     @State var player = MiniPlayer()
     @State var eventoSelecionado: EventEntity
+    @State private var dailyStories: [StoryItem] = []
+    @State private var hasUnseenStories = false
+    @State private var experienceToEdit: ExperienceEntity?
+    @State private var isShowingExperienceEditor = false
+
+    private var storyDateKey: String {
+        let date = Calendar.current.dateComponents([.year, .month, .day], from: .now)
+        return String(format: "%04d-%02d-%02d", date.year ?? 0, date.month ?? 0, date.day ?? 0)
+    }
+
+    private var storySelectionKey: String {
+        "daily-stories.\(eventoSelecionado.idEvent.uuidString).\(storyDateKey)"
+    }
+
+    private var storyViewedKey: String {
+        "daily-stories-viewed.\(eventoSelecionado.idEvent.uuidString)"
+    }
+
     private var filtered: [ExperienceEntity] {
         switch selected {
         case .todos:  return experiences
@@ -51,13 +63,18 @@ struct EventView: View {
                         .opacity(0.3)
                         .overlay(alignment: .bottom){
                             VStack{
-                                NavigationLink(destination: StoryView(images:storyImages)) {
+                                NavigationLink(destination: StoryView(stories: dailyStories) {
+                                    markDailyStoriesAsViewed()
+                                }) {
                                     VinylRecord(
+                                        isTurning: hasUnseenStories,
+                                        isGoingUp: hasUnseenStories,
                                         fullVynil: 100,
                                         urlMusic: URL(string: eventoSelecionado.show?.imageShow ?? "Image 1")!
                                     )
                                     .disabled(true)
                                 }
+                                .disabled(dailyStories.isEmpty)
                                
                                 Text(eventoSelecionado.show?.nameShow ?? "Evento")
                                 Picker("", selection: $selected) {
@@ -77,7 +94,11 @@ struct EventView: View {
                         ForEach(filtered) { experience in
                             row(for: experience)
                                 .contextMenu {
-                                    Button("Excluir", role: .destructive) {
+                                    Button("Editar", systemImage: "pencil") {
+                                        experienceToEdit = experience
+                                        isShowingExperienceEditor = true
+                                    }
+                                    Button("Excluir",systemImage: "trash.fill", role: .destructive) {
                                         delete(experience)
                                     }
                                 }
@@ -91,6 +112,12 @@ struct EventView: View {
         .onDisappear(){
             player.stop()
         }
+        .onAppear(perform: refreshDailyStories)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                refreshDailyStories()
+            }
+        }
        
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
@@ -99,42 +126,116 @@ struct EventView: View {
                 }
             }
         }
+        .sheet(isPresented: $isShowingExperienceEditor) {
+            if let experienceToEdit {
+                NavigationStack {
+                    AddExperience(
+                        eventoSelecionado: eventoSelecionado,
+                        experienceToEdit: experienceToEdit
+                    )
+                }
+            }
+        }
     }
+
+    private func refreshDailyStories() {
+        let availableStories: [StoryItem] = experiences.compactMap { experience in
+            switch experience.type {
+            case .image:
+                guard let data = experience.imageContent?.first, !data.isEmpty else { return nil }
+                return .image(id: experience.idExperience, data: data)
+            case .video:
+                guard let fileName = experience.videoContent?.first else { return nil }
+                let url = URL.documentsDirectory.appending(path: fileName)
+                guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+                return .video(id: experience.idExperience, url: url)
+            case .audio, .text:
+                return nil
+            }
+        }
+
+        let defaults = UserDefaults.standard
+        let storiesByID = Dictionary(uniqueKeysWithValues: availableStories.map { ($0.id.uuidString, $0) })
+        if let savedIDs = defaults.stringArray(forKey: storySelectionKey), !savedIDs.isEmpty {
+            var selectedStories = Array(savedIDs.prefix(5)).compactMap { storiesByID[$0] }
+            let selectedIDSet = Set(selectedStories.map(\.id))
+            let remainingStories = availableStories
+                .filter { !selectedIDSet.contains($0.id) }
+                .shuffled()
+                .prefix(5 - selectedStories.count)
+            selectedStories.append(contentsOf: remainingStories)
+            dailyStories = selectedStories
+            defaults.set(dailyStories.map { $0.id.uuidString }, forKey: storySelectionKey)
+        } else {
+            let photos = availableStories.filter {
+                if case .image = $0 { return true }
+                return false
+            }.shuffled()
+            let videos = availableStories.filter {
+                if case .video = $0 { return true }
+                return false
+            }.shuffled()
+
+            var selection: [StoryItem] = []
+            if let photo = photos.first { selection.append(photo) }
+            if let video = videos.first { selection.append(video) }
+            let selectedIDs = Set(selection.map(\.id))
+            let remaining = (photos + videos)
+                .filter { !selectedIDs.contains($0.id) }
+                .shuffled()
+            selection.append(contentsOf: remaining.prefix(5 - selection.count))
+            dailyStories = selection.shuffled()
+            defaults.set(dailyStories.map { $0.id.uuidString }, forKey: storySelectionKey)
+        }
+
+        hasUnseenStories = !dailyStories.isEmpty && defaults.string(forKey: storyViewedKey) != storyDateKey
+    }
+
+    private func markDailyStoriesAsViewed() {
+        UserDefaults.standard.set(storyDateKey, forKey: storyViewedKey)
+        hasUnseenStories = false
+    }
+
     
 
     @ViewBuilder
     private func row(for experience: ExperienceEntity) -> some View {
         switch experience.type {
         case .image:
-            VStack {
+            VStack (spacing:10){
                 if let data = experience.imageContent?.first,
                    let uiImage = UIImage(data: data) {
                     Image(uiImage: uiImage)
                         .resizable()
-                        .frame(width: 300,height: 200)
                         .scaledToFit()
+                        .frame(maxWidth: 640, maxHeight: 420)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .padding(.horizontal)
-                       
                 }
+                Divider()
+                    .frame(maxWidth: 640)
                 if let text = experience.textContent, !text.isEmpty {
                     Text(text.first ?? "Vazio")
                 }
             }
+            .padding()
 
         case .video:
-            VStack {
+            VStack(spacing: 10){
                 if let fileName = experience.videoContent?.first {
                     VideoCard(fileName: fileName)
-                        .padding(.horizontal)
+                        .frame(maxWidth: 640)
+                        .frame(maxWidth: .infinity)
                 }
+                Divider()
                 if let text = experience.textContent, !text.isEmpty {
                     Text(text.first ?? "Vazio")
                 }
             }
+            .padding()
 
         case .text:
             Text(experience.textContent?.first ?? "Vazio")
+                .padding(.horizontal, 16)
 
         case .audio:
                     if let audioData = experience.audioContent?.first {
@@ -146,19 +247,26 @@ struct EventView: View {
                                     player.play(data: audioData, id: experience.idExperience)
                                 }
                             } label: {
-                                Image(systemName:player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                                Image(systemName: player.currentAudioID == experience.idExperience && player.isPlaying
+                                      ? "pause.circle.fill"
+                                      : "play.circle.fill")
                                     .foregroundColor(.white)
+                                    .font(.title2)
+                                    .frame(width: 44, height: 44)
                             }
+                            .buttonStyle(.plain)
                             ProgressView(value: (player.currentAudioID == experience.idExperience) ? player.progress : 0.0)
                                 .progressViewStyle(.linear)
                                 .tint(.white)
-                                .padding(.leading, 8)
+                                .frame(maxWidth: .infinity)
                         }
-                        .padding()
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
                         .background(Color.secondary.opacity(0.15))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .padding(.horizontal)
-                        .frame(width: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .frame(maxWidth: 300)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 16)
                     }
                     
                     if let text = experience.textContent, !text.isEmpty {
@@ -177,6 +285,7 @@ struct EventView: View {
     }
 }
 
+
 struct VideoCard: View {
     let fileName: String
     @State private var player: AVPlayer?
@@ -185,7 +294,8 @@ struct VideoCard: View {
         Group {
             if let player {
                 VideoPlayer(player: player)
-                    .frame(height: 250)
+                    .aspectRatio(16 / 9, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             } else {
                 Text("Erro ao carregar o vídeo.")
@@ -201,4 +311,7 @@ struct VideoCard: View {
         }
         .onDisappear { player?.pause() }
     }
+    
 }
+
+

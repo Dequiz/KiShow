@@ -9,14 +9,18 @@ import SwiftUI
 
 
 struct VinylRecord: View {
-    @State var isTurning = false
-    @State var isGoingUp = false
+    var isTurning = false
+    var isGoingUp = false
+    @State private var userIsTurning = false
+    @State private var userIsGoingUp = false
     let fullVynil: CGFloat
     let urlMusic : URL
     var vynilHole: CGFloat { fullVynil * 0.3 }
     var holeBorder: CGFloat { vynilHole - 5 }
     var spacingStack: CGFloat {fullVynil * 0.4}
     var spacingNotes: CGFloat {fullVynil * 0.4}
+    private var shouldTurn: Bool { isTurning || userIsTurning }
+    private var shouldRaiseNotes: Bool { isGoingUp || shouldTurn || userIsGoingUp }
     let noteColor = NoteColors()
     var body: some View {
         VStack(spacing:-spacingStack){
@@ -24,40 +28,40 @@ struct VinylRecord: View {
                 HStack(spacing: spacingNotes){
                     Image(.notaMusical)
                         .foregroundStyle(noteColor.noteColors.randomElement() ?? Color.mainPink)
-                        .offset(y: isGoingUp ? -20 : 0)
+                        .offset(y: shouldRaiseNotes ? -20 : 0)
                         .animation(
-                            isGoingUp ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
-                            value: isGoingUp
+                            shouldRaiseNotes ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
+                            value: shouldRaiseNotes
                         )
                         .padding(.top,200)
                     Image(.notaMusical)
                         .foregroundStyle(noteColor.noteColors.randomElement() ?? Color.mainPink)
-                        .offset(y: isGoingUp ? -20 : 0)
+                        .offset(y: shouldRaiseNotes ? -20 : 0)
                         .animation(
-                            isGoingUp ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
-                            value: isGoingUp
+                            shouldRaiseNotes ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
+                            value: shouldRaiseNotes
                         )
                     Image(.notaMusical)
                         .foregroundStyle(noteColor.noteColors.randomElement() ?? Color.mainPink)
-                        .offset(y: isGoingUp ? -20 : 0)
+                        .offset(y: shouldRaiseNotes ? -20 : 0)
                         .animation(
-                            isGoingUp ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
-                            value: isGoingUp
+                            shouldRaiseNotes ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
+                            value: shouldRaiseNotes
                         )
                     Image(.notaMusical)
                         .foregroundStyle(noteColor.noteColors.randomElement() ?? Color.mainPink)
-                        .offset(y: isGoingUp ? -20 : 0)
+                        .offset(y: shouldRaiseNotes ? -20 : 0)
                         .animation(
-                            isGoingUp ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
-                            value: isGoingUp
+                            shouldRaiseNotes ? Animation.linear(duration: 2).repeatForever(autoreverses: true) : Animation.linear(duration: 0),
+                            value: shouldRaiseNotes
                         )
                         .padding(.top,200)
                 }
-                .opacity(isGoingUp ? 1 : 0)
+                .opacity(shouldRaiseNotes ? 1 : 0)
             
             Button {
-                isTurning.toggle()
-                isGoingUp.toggle()
+                userIsTurning.toggle()
+                userIsGoingUp.toggle()
             } label: {
                 AsyncImage(url: urlMusic) { image in
                     image
@@ -80,10 +84,10 @@ struct VinylRecord: View {
                 .background(.black)
                 .clipShape(Circle())
                 
-                .rotationEffect(.degrees(isTurning ? 360 : 0))
+                .rotationEffect(.degrees(shouldTurn ? 360 : 0))
                 .animation(
-                    isTurning ? Animation.linear(duration: 2).repeatForever(autoreverses: false) : Animation.linear(duration: 0),
-                    value: isTurning
+                    shouldTurn ? Animation.linear(duration: 2).repeatForever(autoreverses: false) : Animation.linear(duration: 0),
+                    value: shouldTurn
                 )
             }
             
