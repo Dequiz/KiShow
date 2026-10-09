@@ -6,9 +6,22 @@
 //
 
 import SwiftUI
+import AVKit
+
+enum StoryItem: Identifiable {
+    case image(id: UUID, data: Data)
+    case video(id: UUID, url: URL)
+
+    var id: UUID {
+        switch self {
+        case .image(let id, _), .video(let id, _): id
+        }
+    }
+}
 
 struct StoryView: View {
-    let images: [Data]
+    let stories: [StoryItem]
+    var onViewed: () -> Void = {}
     private let duracao = 3.0
     private let passo = 0.03
     @State var index = 0
@@ -16,13 +29,26 @@ struct StoryView: View {
     
     var body: some View {
         ZStack {
-            if let photo = UIImage(data: images[index]) {
-                Image(uiImage: photo)
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
+            if stories.indices.contains(index) {
+                switch stories[index] {
+                case .image(_, let data):
+                    if let photo = UIImage(data: data) {
+                        Image(uiImage: photo)
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                    } else {
+                        Text("Não foi possível carregar esta foto")
+                            .foregroundStyle(.secondary)
+                    }
+                case .video(_, let url):
+                    StoryVideo(url: url, progress: $progress) {
+                        storySuperior()
+                    }
+                    .id(stories[index].id)
+                }
             } else {
-                Text("Nenhuma foto disponível")
+                Text("Nenhum story disponível")
                     .foregroundStyle(.secondary)
             }
             HStack{
@@ -47,9 +73,10 @@ struct StoryView: View {
         .task(id: index) {
             await rodarStory()
         }
+        .onAppear(perform: onViewed)
         .toolbar(.hidden,for:.tabBar)
         .toolbar {
-            ForEach(images.indices, id: \.self) { i in
+            ForEach(stories.indices, id: \.self) { i in
                 ProgressView(value: valorBarra(para: i))
                     .tint(.white)
             }
@@ -69,7 +96,7 @@ struct StoryView: View {
     //        }
     
     func storySuperior(){
-        if index >= images.count - 1{
+        if index >= stories.count - 1{
             return
         }else{
             progress += 0.2
@@ -84,6 +111,8 @@ struct StoryView: View {
     }
     
     func rodarStory() async {
+        guard !stories.isEmpty else { return }
+        if case .video = stories[index] { return }
         progress = 0
         let incremento = passo / duracao
         
@@ -97,6 +126,57 @@ struct StoryView: View {
         }
         
         storySuperior()
+    }
+}
+
+private struct StoryVideo: View {
+    let url: URL
+    @Binding var progress: Double
+    var onPlaybackEnded: () -> Void
+    @State private var player: AVPlayer?
+    @State private var endObserver: NSObjectProtocol?
+    @State private var progressObserver: Any?
+
+    var body: some View {
+        Group {
+            if let player {
+                VideoPlayer(player: player)
+                    .ignoresSafeArea()
+            } else {
+                ProgressView()
+            }
+        }
+        .onAppear {
+            let item = AVPlayerItem(url: url)
+            let videoPlayer = AVPlayer(playerItem: item)
+            player = videoPlayer
+            endObserver = NotificationCenter.default.addObserver(
+                forName: AVPlayerItem.didPlayToEndTimeNotification,
+                object: item,
+                queue: .main
+            ) { _ in
+                progress = 1
+                onPlaybackEnded()
+            }
+            progressObserver = videoPlayer.addPeriodicTimeObserver(
+                forInterval: CMTime(seconds: 0.1, preferredTimescale: 600),
+                queue: .main
+            ) { time in
+                let duration = item.duration.seconds
+                guard duration.isFinite, duration > 0 else { return }
+                progress = min(max(time.seconds / duration, 0), 1)
+            }
+            videoPlayer.play()
+        }
+        .onDisappear {
+            player?.pause()
+            if let endObserver {
+                NotificationCenter.default.removeObserver(endObserver)
+            }
+            if let progressObserver, let player {
+                player.removeTimeObserver(progressObserver)
+            }
+        }
     }
 }
 
