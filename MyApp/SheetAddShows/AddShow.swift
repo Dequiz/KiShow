@@ -12,7 +12,7 @@ struct AddShow: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = ShowEntityViewModel()
-    @Query var shows: [ShowEntity]
+    @Query var events: [EventEntity]
     let ticketMasterShow: TicketmasterShow
     var action: () -> Void
     
@@ -91,7 +91,7 @@ struct AddShow: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                     }
-                    if viewModel.contains(showTicket: ticketMasterShow, shows: shows) == false{
+                    if viewModel.contains(showTicket: ticketMasterShow, shows: events) == false{
                         ButtonComponent(buttonText: "Adicionar Show"){
                             viewModel.saveShow(showTicket: ticketMasterShow, context: context)
                             dismiss()

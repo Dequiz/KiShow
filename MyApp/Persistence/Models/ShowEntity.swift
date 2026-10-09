@@ -11,6 +11,7 @@ import SwiftData
 @Model
 
 class ShowEntity {
+    var event: EventEntity?
     var idShow: UUID
     var nameShow: String
     var dataShow: Date

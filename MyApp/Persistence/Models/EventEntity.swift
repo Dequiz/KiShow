@@ -12,6 +12,7 @@ import SwiftData
 
 class EventEntity {
     var idEvent: UUID
+    @Relationship(deleteRule: .cascade, inverse: \ShowEntity.event)
     var show: ShowEntity?
     @Relationship(deleteRule: .cascade, inverse: \ExperienceEntity.event)
         var experiences: [ExperienceEntity]?
