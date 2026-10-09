@@ -11,7 +11,7 @@ import SwiftData
 
 
 @Observable
-class ShowEntityViewModel{
+class EventEntityViewModel{
     
     func saveShow(showTicket: TicketmasterShow, context: ModelContext){
         
