@@ -16,7 +16,7 @@ struct ThermsOfService: View {
                          
                     Text("O presente Termo de Uso possui como objetivo regulamentar o modo de utilização do aplicativo KiShow,  sendo este voltado para o registro a preservação de memórias e sentimentos das experiências vividas em shows. O App é exclusivo para Iphone (sistema IOS) e disponibilizado gratuitamente na Apple Store.")
                     
-                    Text("Ao utilizar o aplicativo, o usuário aceita e concorda integralmente com todos os termos e condições que serão apresentadas nesta documentação.")
+                    Text("Ao continuar, você declara que leu e concorda com os Termos de Uso e que tomou ciência da Política de Privacidade. ")
 
                 } header: {
                     VStack (alignment: .leading) {
@@ -47,9 +47,9 @@ struct ThermsOfService: View {
                 Section {
                     Text("KiShow é um aplicativo que possibilita ao usuário encontrar novos shows que estão para acontecer no momento de utilização. É oferecido de forma totalmente gratuita, sem necessidade de compras internas no app.")
                     
-                    Text("O aplicativo faz uso da API Discovery da Ticketmaster para consultar informações públicas relacionadas a eventos e shows, as quais são utilizadas exclusivamente para apresentar opções de eventos ao usuário dentro do aplicativo. Nos responsabilizamos por disponibilizar apenas a consulta dos eventos sem enviar nenhum tipo de dado pessoal do usuário para que o acesso ocorra.")
+                    Text(" Para exibir eventos, o KiShow consulta a Discovery API da Ticketmaster. Seus dados de perfil, mídias e registros não são enviados. Como em qualquer conexão com a internet, a Ticketmaster pode receber dados técnicos da requisição (como endereço IP e informações do dispositivo) e os trata conforme a [política de privacidade da Ticketmaster]. Ao acessar links de compra, você é direcionado a um site de terceiro, regido pelos termos dele.")
                     
-                    Text("KiShow não realiza a venda, processamento ou gerenciamento de ingressos. Caso o usuário seja direcionado para uma plataforma externa para obter informações ou realizar uma compra, essa interação estará sujeita aos termos e à política de privacidade do respectivo serviço de terceiros.")
+                    Text("O KiShow não participa da venda de ingressos, ademais até então nosso aplicativo é totalmente gratuito e não há cobranças e ou vendas de produtos ou serviços. Caso haja uma modificação nessas condições o usuário será alertado com antecedência.")
                     
                     Text("Ademais, é permitido o registro e a preservação das memórias e sentimentos das experiências vividas em shows. O aplicativo permite reunir fotos, vídeos, áudios e informações sobre o evento em um único espaço, facilitando a organização, localização e revisitação dessas memórias. Sendo estes armazenados exclusivamente de forma local.")
                     
@@ -65,9 +65,9 @@ struct ThermsOfService: View {
                 .listRowBackground(Color.details)
                 
                 Section {
-                    Text("O uso do aplicativo não é recomendado para menores de 18 anos. Não nos responsabilizamos pelo uso indevido do menor de idade, ficando a cargo dos responsáveis legais a supervisão e autorização prévia para a utilização")
+                    Text("O KiShow não é direcionado a crianças e adolescentes, e menores de 18 anos devem usá-lo somente com supervisão e autorização prévia dos pais ou responsáveis legais. O aplicativo não exibe publicidade, não realiza perfilamento e não permite interação entre usuários.")
                     
-                    Text("O usuário possui apenas uma licença limitada, não exclusiva, intransferível e revogável para uso pessoal e não comercial do software. É vetada qualquer forma de distribuição, reprodução, modificação ou disponibilização do aplicativo que não seja pelo canal oficial da App Store. Qualquer outro meio de obtenção do aplicativo em outros meios será considerado pirataria.")
+                    Text("O usuário possui apenas uma licença limitada, não exclusiva, intransferível e revogável para uso pessoal e não comercial do software. É vetada qualquer forma de distribuição, reprodução, modificação ou disponibilização do aplicativo que não seja pelo canal oficial da App Store. Qualquer outro meio de obtenção do aplicativo em outros meios .constitui violação destes Termos e da legislação aplicável")
                  
                 } header: {
                     HStack{
@@ -84,7 +84,7 @@ struct ThermsOfService: View {
                     BulletTopic(text: "A utilização do aplicativo para atividades ilegais.")
                     BulletTopic(text: "Toda inserção de conteúdos que apresentem conteúdos ilícitos.")
                     BulletTopic(text: "Toda inserção de conteúdos que sejam perigosos ou danosos à saúde.")
-                    BulletTopic(text: "Toda inserção de conteúdos que mostre um indivíduo em situação vexatória ou que infrinja sua privacidade.")
+                    BulletTopic(text: "Toda inserção de conteúdos que mostre um indivíduo em situação vexatória ou que infrinja a privacidade da mesma.")
                     BulletTopic(text: "Toda inserção de conteúdos pornográficos, independente do consentimento dos envolvidos")
                     BulletTopic(text: "Toda inserção de conteúdos que infrinjam direitos autorais de terceiros.")
                  
@@ -100,7 +100,7 @@ struct ThermsOfService: View {
                 Section {
                     Text("A Equipe de Desenvolvimento KiShow têm o direito de atualizar o aplicativo, alterar ou adicionar recursos, bem como suspender, descontinuar serviços para melhorias de segurança, desempenho ou mudança de modelo de negócios.")
                     
-                    Text("Reservamo-nos o direito de atualizar os Termos de Uso através de avisos prévios no aplicativo.")
+                    Text("Reservamo-nos o direito de atualizar os Termos de Uso através de avisos prévios no aplicativo. Retificando que não há backup nem recuperação pela equipe caso desinstale, troque de aparelho ou perca o celular - em todos esses casos as memórias poderão ser apagadas, sabendo que os backups do iOS seguem as regras da Apple. Caso o aplicativo seja descontinuado ou sofrer mudanças relevantes, avisaremos com antecedência pelo aplicativo, para que você possa salvar suas memórias fora dele, caso o aplicativo ofereça esse recurso.")
                     
                 } header: {
                     HStack{
@@ -149,7 +149,7 @@ struct ThermsOfService: View {
                         Text("Lei Aplicável e Foro")
                     }
                 } footer: {
-                    Text("Vigência a partir de 23/09/2026.")
+                    Text("Vigência a partir de 12/10/2026.")
                 }
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.details)
