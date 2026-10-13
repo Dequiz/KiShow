@@ -76,7 +76,9 @@ struct EventView: View {
                                         isTurning: hasUnseenStories,
                                         isGoingUp: hasUnseenStories,
                                         fullVynil: 100,
-                                        urlMusic: URL(string: eventoSelecionado.show?.imageShow ?? "Image 1")!
+                                        image: eventoSelecionado.show?.imageShow
+                                            .flatMap { UIImage(data: $0) }
+                                            .map(Image.init(uiImage:))
                                     )
                                     .disabled(true)
                                 }

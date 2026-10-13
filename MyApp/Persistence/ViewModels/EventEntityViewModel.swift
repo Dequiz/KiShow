@@ -9,50 +9,81 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-
 @Observable
-class EventEntityViewModel{
-    func saveShow(showTicket: TicketmasterShow, context: ModelContext){
-        
-        
-        
-        guard let date = parseDate(showTicket.dates?.start?.localDate) else {
-            return
-        }
-        let time = parseTime(showTicket.dates?.start?.localTime ?? "00:00:00")
-        
-        
-        let newShow: ShowEntity = ShowEntity(nameShow: showTicket.name,
-                                 dataShow: date,
-                                 artistShow: showTicket.attraction?.name ?? "Desconhecido",
-                                 genderShow: showTicket.classifications.first?.genre?.name ?? "Desconhecido",
-                                 imageShow: showTicket.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Teste",
-                                localShow: showTicket.venue?.name ?? "Desconhecido",
-                                addressShow: showTicket.venue?.address?.line1 ?? "Desconhecido",
-                                urlShow: showTicket.url,
-                                startTimeShow: time,
-                                city: showTicket.venue?.city?.name ?? "Desconhecido",
-                                latitude: showTicket.latitude,
-                                longitude: showTicket.longitude
-                                )
-        
-        let eventoSelecionado = EventEntity(show: newShow)
-        context.insert(eventoSelecionado)
-        
-        do {
-            try context.save()
-        } catch {
-            print("Erro ao salvar utilizador: \(error.localizedDescription)")
-        }
-    }
+class EventEntityViewModel {
     
-    func contains(showTicket: TicketmasterShow, shows: [EventEntity]) -> Bool{
+    func saveCustomShow(
+        nameShow: String,
+        dataShow: Date,
+        artistShow: String,
+        genderShow: String,
+        imageData: Data?,
+        localShow: String,
+        addressShow: String,
+        urlShow: String,
+        startTime: Date,
+        city: String,
+        latitude: Double?,
+        longitude: Double?,
+        context: ModelContext
+    ) {
         
-        for show in shows {
-            if showTicket.name == show.show?.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.show?.dataShow{
-                return true
-            }
+        let calendar = Calendar.current
+        let comps = calendar.dateComponents([.hour, .minute], from: startTime)
+        let startTimeString = String(
+            format: "%02d:%02d:00",
+            comps.hour ?? 0,
+            comps.minute ?? 0
+        )
+
+        let newShow = ShowEntity(
+            nameShow: nameShow.trimmingCharacters(in: .whitespaces),
+            dataShow: dataShow,
+            artistShow: artistShow.trimmingCharacters(in: .whitespaces),
+            genderShow: genderShow.isEmpty ? "Desconhecido" : genderShow,
+            imageShow: imageData,
+            localShow: localShow.isEmpty ? "Desconhecido" : localShow,
+            addressShow: addressShow.isEmpty ? "Desconhecido" : addressShow,
+            urlShow: urlShow,
+            startTimeShow: startTimeString,
+            city: city.isEmpty ? "Desconhecido" : city,
+            latitude: latitude,
+            longitude: longitude
+        )
+
+        context.insert(EventEntity(show: newShow))
+        try? context.save()
+    }
+
+    
+    func saveShow(showTicket: TicketmasterShow, context: ModelContext) async {
+        guard let date = parseDate(showTicket.dates?.start?.localDate) else { return }
+        let time = parseTime(showTicket.dates?.start?.localTime ?? "00:00:00")
+
+        var imageData: Data? = nil
+        if let urlString = showTicket.images?
+            .max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?
+            .url,
+           let url = URL(string: urlString) {
+            imageData = try? await URLSession.shared.data(from: url).0
         }
-        return false
+
+        let newShow = ShowEntity(
+            nameShow: showTicket.name,
+            dataShow: date,
+            artistShow: showTicket.attraction?.name ?? "Desconhecido",
+            genderShow: showTicket.classifications.first?.genre?.name ?? "Desconhecido",
+            imageShow: imageData,
+            localShow: showTicket.venue?.name ?? "Desconhecido",
+            addressShow: showTicket.venue?.address?.line1 ?? "Desconhecido",
+            urlShow: showTicket.url,
+            startTimeShow: time,
+            city: showTicket.venue?.city?.name ?? "Desconhecido",
+            latitude: showTicket.latitude,
+            longitude: showTicket.longitude
+        )
+
+        context.insert(EventEntity(show: newShow))
+        try? context.save()
     }
 }
