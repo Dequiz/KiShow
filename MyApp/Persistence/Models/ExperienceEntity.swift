@@ -5,7 +5,7 @@
 //  Created by Maria Clara Fernandes Bessa on 28/09/26.
 //
 
-import Foundation
+internal import Foundation
 import SwiftData
 
 public enum TypeMidias: Codable {
