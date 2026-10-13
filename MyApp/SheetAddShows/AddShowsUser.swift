@@ -43,7 +43,7 @@ struct AddShowsUser: View {
     private var canSave: Bool {
         !nameShow.trimmingCharacters(in: .whitespaces).isEmpty &&
         !artistShow.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !genderShow.isEmpty          // ⬅️ gênero agora é obrigatório
+        !genderShow.isEmpty
     }
 
     var body: some View {
@@ -73,6 +73,7 @@ struct AddShowsUser: View {
                             .frame(height: 200)
                             .background(Color(.systemGray6))
                             .clipShape(RoundedRectangle(cornerRadius: 20))
+                            
                         }
                         .padding(.horizontal)
                         .onChange(of: selectedPhoto) { _, newItem in
@@ -83,12 +84,11 @@ struct AddShowsUser: View {
                             }
                         }
 
-                            sectionCard(title: "Informações") {
+                        sectionCard(title: "Informações") {
                             labeledField("Nome do show", text: $nameShow)
                             Divider()
                             labeledField("Artista / Banda", text: $artistShow)
                             Divider()
-
                             HStack {
                                 Text("Gênero")
                                     .foregroundStyle(.secondary)
@@ -107,7 +107,6 @@ struct AddShowsUser: View {
                                 .tint(.primary)
                             }
                         }
-
                         sectionCard(title: "Data e Hora") {
                             HStack {
                                 Text("Data").foregroundStyle(.secondary)
