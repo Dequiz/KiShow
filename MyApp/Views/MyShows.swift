@@ -58,6 +58,7 @@ struct MyShows: View {
     
     @State var selectPeriod: String = "Todos"
     @State var searchText: String = ""
+    @State var isAddShow: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -118,7 +119,19 @@ struct MyShows: View {
             }.navigationTitle("Meus Shows")
                 .searchable(text: $searchText)
                 .toolbarTitleDisplayMode(.inlineLarge)
+                .sheet(isPresented: $isAddShow){
+                    AddShowsUser()
+                }
                 .toolbar{
+                    ToolbarItem(placement: .topBarTrailing){
+                        Button{
+                            isAddShow.toggle()
+                        }label:{
+                            Image(systemName: "plus")
+                        }
+                        
+                    }
+                    
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu{
                             Button{
