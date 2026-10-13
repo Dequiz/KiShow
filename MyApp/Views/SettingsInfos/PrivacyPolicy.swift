@@ -68,14 +68,40 @@ struct PrivacyPolicy: View {
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.details)
                 
+                Section{
+                    Text("Todas as imagens, vídeos e áudios inseridos no aplicativo são processadas e armazenadas exclusivamente de forma local no dispositivo do usuário. O aplicativo não realiza upload, não armazena cópias em servidores externos e não tem acesso remoto a esses arquivos.")
+                } header: {
+                    HStack{
+                        TermsTopics(numberTerm: "4")
+                        Text(" Armazenamento e Privacidade das Mídias")
+                    }
+                }.listRowSeparator(.hidden)
+                .listRowBackground(Color.details)
+                
+                Section{
+                    Text("Os dados inseridos pelo usuário nos registros de shows são armazenados localmente no dispositivo. O aplicativo não realiza upload, não armazena cópias em servidores externos e não tem acesso remoto a esses arquivos.")
+                } header: {
+                    HStack{
+                        TermsTopics(numberTerm: "5")
+                        Text("Compartilhamento de dados")
+                    }
+                }.listRowSeparator(.hidden)
+                .listRowBackground(Color.details)
+                
                 Section {
                     Text("A proteção dos dados é estritamente feita a partir da segurança local do dispositivo, não possuindo servidores e atores externos dentro do aplicativo.")
                     
                     Text("**Adendo importante:** apesar da adoção de medidas de segurança, nenhum sistema ou dispositivo pode garantir segurança absoluta contra todos os riscos existentes.")
+                    
+                    Text("O KiShow trata dados pessoais apenas nas hipóteses previstas no art. 7º da LGPD (Lei nº 13.709/2018):")
+                    
+                    Text("Todos os dados citados acima do aplicativo coleta de informações ficam armazenados somente no seu dispositivo. A equipe do KiShow não os recebe, não tem acesso remoto a eles e não os utiliza para outras finalidades. O KiShow não utiliza ferramentas de análise de uso (analytics), relatórios de falhas (crash reports) ou publicidade.")
+                    Text("**Retenção:** os dados permanecem no dispositivo enquanto o aplicativo estiver instalado ou até que você os apague. Como não há cópias em servidores, a desinstalação, a troca de aparelho ou a perda do celular pode resultar na perda definitiva das informações. Backups do sistema operacional são geridos pela Apple.")
+                    Text("**Dados técnicos na consulta de eventos:** ao consultar a API da Ticketmaster, ela pode receber dados técnicos da conexão (como o endereço IP). A Ticketmaster atua como responsável pelo tratamento desses dados, conforme a política de privacidade dela.")
                  
                 } header: {
                     HStack{
-                        TermsTopics(numberTerm: "4")
+                        TermsTopics(numberTerm: "6")
                         Text("Proteção dos dados e segurança")
                     }
                 }
@@ -93,7 +119,7 @@ struct PrivacyPolicy: View {
                     Text("Em caso de dúvidas ou solicitações relacionadas ao tratamento de dados pessoais eventualmente realizado pela equipe responsável pelo KiShow, o usuário poderá entrar em contato por meio do endereço de e-mail disponibilizado nesta Política de Privacidade.")
                 } header: {
                     HStack{
-                        TermsTopics(numberTerm: "5")
+                        TermsTopics(numberTerm: "7")
                         Text("Direitos do Usuário")
                     }
                 }
@@ -101,10 +127,10 @@ struct PrivacyPolicy: View {
                 .listRowBackground(Color.details)
                 
                 Section {
-                    Text("O KiShow não utiliza cookies, tecnologias de rastreamento ou mecanismos de publicidade comportamental para acompanhar a atividade do usuário em outros aplicativos ou sites.")
+                    Text("O KiShow não utiliza cookies, tecnologias de rastreamento ou mecanismos de publicidade comportamental para acompanhar a atividade do usuário em outros aplicativos ou sites. Além disso, não há uso de analytics nem crash reporting.")
                 } header: {
                     HStack{
-                        TermsTopics(numberTerm: "6")
+                        TermsTopics(numberTerm: "8")
                         Text("Cookies e tecnologias de rastreamento")
                     }
                 }
@@ -120,7 +146,7 @@ struct PrivacyPolicy: View {
                     
                 } header: {
                     HStack{
-                        TermsTopics(numberTerm: "7")
+                        TermsTopics(numberTerm: "9")
                         Text("Alterações nas Políticas de Privacidade")
                     }
                 }
@@ -129,17 +155,11 @@ struct PrivacyPolicy: View {
                 
                 
                 Section {
-                    Text("**André Holovati:** andreholovati@gmail.com")
-                    
-                    Text("**Elisa Tanada:** elisa.tanada25@gmail.com")
-                    
-                    Text("**Maria Bessa:** clarafernandes597@gmail.com")
-                    
-                    Text("**Paulo Eduardo:** pauloeduardob75@gmail.com")
+                    Text("**Email:** kishowdeequipe@gmail.com")
                     
                 } header: {
                     HStack{
-                        TermsTopics(numberTerm: "8")
+                        TermsTopics(numberTerm: "10")
                         Text("Contato")
                     }
                 }
