@@ -69,8 +69,9 @@ struct MyShows: View {
                     Spacer()
                     Image(.camada1)
                         .resizable()
-                        .frame(maxWidth:500)
-                        .frame(height: 250)
+                        .scaledToFit()
+                        .frame(maxWidth:.infinity)
+                        .frame(maxHeight: 200)
                         .opacity(0.3)
 
                 }
@@ -79,13 +80,14 @@ struct MyShows: View {
                     
                 if eventosFiltrados.isEmpty{
                     VStack{
-                        Image(.guria1)
+                        Image(.eletronic)
                             .resizable()
                             .frame(maxWidth: 263)
                             .frame(height: 279)
-                        Text("Você ainda não possui nenhum show \(selectPeriod != "Todos" ? selectPeriod: "")")
+                        Text("Você ainda não possui nenhum show")
                             .font(.title2)
                             .foregroundStyle(.secondary)
+                    
                     }
                 }else{
                     ScrollView {
@@ -117,7 +119,10 @@ struct MyShows: View {
                 }
                 
             }.navigationTitle("Meus Shows")
-                .searchable(text: $searchText)
+                .searchable(text: $searchText,
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: "Pesquise pelo seu show"
+                    )
                 .toolbarTitleDisplayMode(.inlineLarge)
                 .sheet(isPresented: $isAddShow){
                     AddShowsUser()
@@ -170,6 +175,7 @@ struct MyShows: View {
                         }
                     }
                 }
+                .foregroundStyle(.primary)
                 
         }
         

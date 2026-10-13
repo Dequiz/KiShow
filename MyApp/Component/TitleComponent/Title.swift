@@ -76,6 +76,7 @@ struct Title: View {
                                     .padding()
                                     .background(Color.mainPurple)
                                     .clipShape(.capsule)
+                                    .foregroundStyle(.white)
                             }
                         }
                        
@@ -97,11 +98,12 @@ struct Title: View {
                                             .lineLimit(1)
                                             .minimumScaleFactor(0.5)
                                         if !isUnlocked {
-                                                                                   Text(progress(for: definition) ?? definition.hint)
-                                                                                       .font(.caption2)
-                                                                                       .lineLimit(1)
-                                                                                       .minimumScaleFactor(0.5)
-                                                                               }
+                                           Text(progress(for: definition) ?? definition.hint)
+                                               .font(.caption2)
+                                               .lineLimit(1)
+                                               .minimumScaleFactor(0.5)
+                                               .foregroundStyle(.secondary)
+                                       }
                                     }
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: .infinity, minHeight: 44)

@@ -167,12 +167,13 @@ struct AddShow: View {
                                     Image(systemName: "calendar")
                                     Text("Adicionar no calendário")
                                         .font(.callout)
-                                        .minimumScaleFactor(0.5)
+                                        .minimumScaleFactor(0.7)
+                                        .lineLimit(1)
                                 }
                                 .clipShape(.capsule)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 5)
-                                .background(Color.mainPurple.opacity(0.15), in: Capsule())
+                                .background(Color.mainPurple.opacity(0.5), in: Capsule())
                                 .foregroundColor(Color.white)
                             }
                             .disabled(isAddingToCalendar)
@@ -217,6 +218,7 @@ struct AddShow: View {
                         } label: {
                             Image(systemName: "xmark")
                         }
+                        .tint(.primary)
                     }
                 }
         }

@@ -147,6 +147,7 @@ struct EventView: View {
                 NavigationLink(destination: AddExperience(eventoSelecionado: eventoSelecionado)) {
                     Image(systemName: "plus")
                 }
+                .tint(.primary)
                 Button {
                     guard !isAddingToCalendar else { return }
                     let nomeShow = eventoSelecionado.show?.nameShow ?? "Show"
@@ -184,6 +185,7 @@ struct EventView: View {
                     }
                 }
                 .disabled(isAddingToCalendar)
+                .tint(.primary)
                 .accessibilityLabel("Adicionar show ao calendário")
             }
         }

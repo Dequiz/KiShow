@@ -65,6 +65,7 @@ struct AddExperience: View {
                     Button(role: .close) {
                         dismiss()
                     }
+                    .tint(.primary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {

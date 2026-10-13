@@ -32,7 +32,7 @@ struct MidiaPicker: View {
         .padding()
         .glassEffect()
         .padding([.trailing,.bottom],15)
-        .foregroundStyle(.white)
+        .foregroundStyle(.primary)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
     }
 }

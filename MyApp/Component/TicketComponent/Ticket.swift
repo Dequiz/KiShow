@@ -45,7 +45,7 @@ struct Ticket: View {
                                             .font(.system(size: 12 * scale, weight: .regular))
                                             .foregroundColor(Color(theme.Text))
                                             .minimumScaleFactor(0.7)
-                                            .lineLimit(1)
+                                            .lineLimit(2)
                                     }
                                     .padding(.horizontal, 5)
                                 )

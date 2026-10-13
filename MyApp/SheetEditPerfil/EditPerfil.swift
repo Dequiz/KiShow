@@ -69,6 +69,7 @@ var body: some View {
                        Button("", systemImage: "xmark") {
                            dismiss()
                        }
+                       .tint(.primary)
                    }
                    ToolbarItem(placement: .confirmationAction) {
                        Button("", systemImage: "checkmark") {
