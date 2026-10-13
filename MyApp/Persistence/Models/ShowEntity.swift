@@ -5,7 +5,7 @@
 //  Created by Maria Clara Fernandes Bessa on 28/09/26.
 //
 
-import Foundation
+internal import Foundation
 import SwiftData
 
 @Model
@@ -17,7 +17,7 @@ class ShowEntity {
     var dataShow: Date
     var artistShow: String
     var genderShow: String
-    var imageShow: String
+    var imageShow: Data?
     var localShow: String
     var addressShow: String
     var urlShow: String
@@ -26,7 +26,7 @@ class ShowEntity {
     var latitude: Double?
     var longitude: Double?
     
-    init(nameShow: String, dataShow: Date, artistShow: String, genderShow: String, imageShow:String, localShow: String, addressShow: String, urlShow: String, startTimeShow: String, city: String, latitude: Double? = nil, longitude: Double? = nil) {
+    init(nameShow: String, dataShow: Date, artistShow: String, genderShow: String, imageShow: Data? = nil, localShow: String, addressShow: String, urlShow: String, startTimeShow: String, city: String, latitude: Double? = nil, longitude: Double? = nil) {
         self.idShow = UUID()
         self.nameShow = nameShow
         self.dataShow = dataShow

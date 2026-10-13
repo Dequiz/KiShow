@@ -4,7 +4,7 @@
 //
 //  Created by Andre on 06/10/26.
 //
-import Foundation
+internal import Foundation
 struct TitleModel{
     var id : UUID
     var title: String

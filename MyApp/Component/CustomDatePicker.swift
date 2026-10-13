@@ -58,12 +58,6 @@ struct CustomDatePicker: View {
             }
             .frame(height: 150)
         }
-        Button {
-            print("\(selectedDay)-\(selectedMonth)-\(selectedYear)")
-        } label: {
-            Text("Teste Dia")
-        }.buttonStyle(.borderedProminent)
-
     }
 }
 

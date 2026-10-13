@@ -50,19 +50,30 @@ struct UserProfille: View {
                         
                         Spacer()
                         
-                        VStack {
-                            RoundedRectangle(cornerRadius: 25)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 200)
-                            
-                            HStack {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 200)
-                                
-                                RoundedRectangle(cornerRadius: 25)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 200)
+                        VStack(spacing: 16) {
+                            LineChart()
+                            HStack(alignment: .top, spacing: 12) {
+                                VStack(spacing: 4) {
+                                    Text("Artistas Favoritos")
+                                        .font(.headline)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    FavoriteArtists()
+                                }
+                                .frame(maxWidth: 200)
+                                .frame(height: 210)
+                                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
+                                VStack(spacing: 4) {
+                                    Text("Gêneros Favoritos")
+                                        .font(.headline)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Charts()
+                                }
+                                .frame(maxWidth: 200)
+                                .frame(height: 210)
+                                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
+                           
                             }
                         }
                     }
