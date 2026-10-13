@@ -5,7 +5,7 @@
 //  Created by Paulo Eduardo Barbosa da Silva on 29/09/26.
 //
 
-import Foundation
+internal import Foundation
 import SwiftUI
 import SwiftData
 
