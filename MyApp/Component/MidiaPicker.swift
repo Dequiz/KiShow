@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MidiaPicker: View {
-    @State var viewModel : ExperienceViewModel
+    var viewModel: ExperienceViewModel
     var alignment : Alignment
     var body: some View {
         HStack(spacing:15){
@@ -24,8 +24,8 @@ struct MidiaPicker: View {
                 viewModel.media = ExperienceViewModel.MediaTypes.audio
                 print(viewModel.media)
             }
-            Button("", systemImage: "music.note"){
-                viewModel.media = ExperienceViewModel.MediaTypes.music
+            Button("", systemImage: "text.alignleft"){
+                viewModel.media = ExperienceViewModel.MediaTypes.text
                 print(viewModel.media)
             }
         }

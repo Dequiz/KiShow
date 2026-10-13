@@ -24,7 +24,7 @@ class ExperienceEntity {
     var textContent: [String]?
     var imageContent: [Data]?
     var videoContent: [String]?
-    var audioContent: [Data]?
+    @Attribute(.externalStorage) var audioContent: [Data]?
     
     init (type: TypeMidias, event: EventEntity? = nil, textContent: [String]? = nil, imageContent: [Data]? = nil, videoContent: [String]? = nil, audioContent: [Data]? = nil) {
         self.idExperience = UUID()

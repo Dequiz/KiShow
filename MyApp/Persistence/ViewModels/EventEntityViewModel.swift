@@ -11,9 +11,10 @@ import SwiftData
 
 
 @Observable
-class ShowEntityViewModel{
-    
+class EventEntityViewModel{
     func saveShow(showTicket: TicketmasterShow, context: ModelContext){
+        
+        
         
         guard let date = parseDate(showTicket.dates?.start?.localDate) else {
             return
@@ -30,7 +31,9 @@ class ShowEntityViewModel{
                                 addressShow: showTicket.venue?.address?.line1 ?? "Desconhecido",
                                 urlShow: showTicket.url,
                                 startTimeShow: time,
-                                city: showTicket.venue?.city?.name ?? "Desconhecido"
+                                city: showTicket.venue?.city?.name ?? "Desconhecido",
+                                latitude: showTicket.latitude,
+                                longitude: showTicket.longitude
                                 )
         
         let eventoSelecionado = EventEntity(show: newShow)
@@ -43,13 +46,10 @@ class ShowEntityViewModel{
         }
     }
     
-    func delete(show: ShowEntity,context: ModelContext){
-        context.delete(show)
-    }
-    func contains(showTicket: TicketmasterShow, shows: [ShowEntity]) -> Bool{
+    func contains(showTicket: TicketmasterShow, shows: [EventEntity]) -> Bool{
         
         for show in shows {
-            if showTicket.name == show.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.dataShow{
+            if showTicket.name == show.show?.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.show?.dataShow{
                 return true
             }
         }

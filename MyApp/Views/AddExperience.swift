@@ -16,6 +16,7 @@ struct AddExperience: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     @State var eventoSelecionado: EventEntity
+    var experienceToEdit: ExperienceEntity? = nil
     var dm = TitleDefinitionMachine()
     @Query var experiencies : [ExperienceEntity]
     @State var videoPicker = VideoPickerView()
@@ -27,135 +28,31 @@ struct AddExperience: View {
    @State private var rec = Recorder()
     @State private var player = MiniPlayer()
     @State private var recordings: [URL] = []
+    @State private var didLoadExperienceForEditing = false
     var body: some View {
-        ZStack{
+        ZStack(alignment: .bottomTrailing) {
             Color.appBackground
                 .ignoresSafeArea()
-            VStack{
-                if viewModel.media == .text{
-                    TextField("Texto",text: $experiencia)
-                }
-                if viewModel.media == .photo{
-                    PhotosPicker(selection: $itemSelecionado, matching: .images) {
-                        if let imagemCarregada {
-                            Image(uiImage: imagemCarregada)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: .infinity,height: 300)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .padding()
-                        }else{
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(.secondary)
-                                .frame(width: .infinity,height: 300)
-                                .padding()
-                                .overlay() {
-                                    Image(systemName: "photo.fill")
-                                        .foregroundColor(.white)
-                                }
-                        }
-                    }
-                    TextField("Texto",text: $experiencia)
-                } else if viewModel.media == .video {
-                    VStack {
-                        switch videoPicker.videoImportState {
-                        case .success(let video, _):
-                            VideoPlayer(player: video)
-                                .frame(maxWidth: .infinity, minHeight: 300)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .padding()
-                                .contextMenu {
-                                    Button {
-                                        isShowingVideoPicker = true
-                                    } label: {
-                                        Label("Editar", systemImage: "pencil")
-                                    }
-                                    
-                                    Button(role: .destructive) {
-                                        videoPicker.videoSelection = nil
-                                    } label: {
-                                        Label("Remover", systemImage: "trash")
-                                    }
-                                }
-                                .photosPicker(
-                                    isPresented: $isShowingVideoPicker,
-                                    selection: $videoPicker.videoSelection,
-                                    matching: .videos
-                                )
-                            
-                        case .loading:
-                            ProgressView()
-                                .frame(maxWidth: .infinity, minHeight: 300)
-                            
-                        case .empty:
-                            PhotosPicker(selection: $videoPicker.videoSelection, matching: .videos) {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity, minHeight: 300)
-                                    .overlay {
-                                        Image(systemName: "video.badge.plus")
-                                            .font(.system(size: 40))
-                                            .foregroundColor(.white)
-                                    }
-                                    .padding()
-                            }
-                            
-                        case .failure:
-                            PhotosPicker(selection: $videoPicker.videoSelection, matching: .videos) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .font(.system(size: 40))
-                                    .foregroundColor(.red)
-                                    .frame(maxWidth: .infinity, minHeight: 300)
-                            }
-                        }
-                        TextField("Texto",text: $experiencia)
-                    }
-                }else if viewModel.media == .audio{
-                    Spacer()
-                    HStack{
-                        Button{
-                            player.play(rec.fileURL)
-                        } label:{
-                            Image(systemName: "play.fill")
-                        }
-                        .disabled(rec.isRecording || rec.fileURL == nil)
-                        BarVisualizer(values: rec.meterHistory,barCount: 24)
-                            .frame(height: 60)
-                            .padding(.horizontal)
-                            .background(Color.blueText)
-                            .clipShape(.capsule)
-                        
-                        Button{
-                            if rec.isRecording{
-                                rec.stop()
-                            }else{
-                                player.stop()
-                                rec.start()
-                            }
-                        } label:{
-                            Image(systemName: rec.isRecording ? "mic.slash.fill" : "mic.fill")
-                        }
-                        TextField("Texto",text: $experiencia)
-                    }
-                    .frame(width: 200)
-                    .padding()
-                  
-                }
-               
-                    MidiaPicker(viewModel: viewModel, alignment: .bottomTrailing)
-                Spacer()
+            ScrollView {
+                mediaEditor
+                    .frame(maxWidth: 560)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 112)
             }
-                    }
+            MidiaPicker(viewModel: viewModel, alignment: .bottomTrailing)
+        }
 
         .task{
+            prepareExperienceForEditing()
             rec.requestPermission{ _ in
             recordings = recordingList()
             }
         }
-      
 
-        .onChange(of: rec.isRecording) { isRecording in
-            if isRecording{
+        .onChange(of: rec.isRecording) { _, isRecording in
+            if isRecording {
                 player.stop()
             }else{
                 recordings = recordingList()
@@ -171,35 +68,12 @@ struct AddExperience: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
-                        var media = TypeMidias.text
-                        if imagemCarregada != nil{
-                            media = TypeMidias.image
-                        }
-                        switch viewModel.media{
-                        case .photo:
-                            viewModel.saveExperience(event: eventoSelecionado, description: [experiencia], content: (imagemCarregada?.jpegData(compressionQuality: 0.5)) ?? Data(), mediaType: media, context: modelContext)
-                        case .video:
-                            if case .success(_, let videoURL) = videoPicker.videoImportState {
-                                let fileName = videoURL.lastPathComponent // Ex: "7C4B1-23F.mp4"
-                                viewModel.saveExperience(event: eventoSelecionado, description: [experiencia], content: [fileName], mediaType: .video, context: modelContext)
-                            }
-                        case .text:
-                            viewModel.saveExperience(event: eventoSelecionado, description: [experiencia], content: experiencia, mediaType: .text, context: modelContext)
-                        case .audio:
-                                if let url = rec.fileURL, let audioData = try? Data(contentsOf: url) {
-                                    viewModel.saveExperience(event: eventoSelecionado, description: [experiencia],
-                                                             content: [audioData],
-                                                             mediaType: .audio,
-                                                             context: modelContext)
-                                }
-                        case .music:
-                            print("Oi")
-                        }
-                       
-                        dismiss()
+                        saveExperience()
                     }
                 }
             }
+            .navigationTitle(experienceToEdit == nil ? "Nova experiência" : "Editar experiência")
+            .navigationBarTitleDisplayMode(.inline)
             .onChange(of: itemSelecionado) { _, novoItem in
                 Task {
                     if let data = try? await novoItem?.loadTransferable(type: Data.self),
@@ -208,9 +82,234 @@ struct AddExperience: View {
                     }
                 }
             }
-       
     }
-     
+
+    private func prepareExperienceForEditing() {
+        guard !didLoadExperienceForEditing else { return }
+        didLoadExperienceForEditing = true
+        guard let experienceToEdit else { return }
+
+        experiencia = experienceToEdit.textContent?.first ?? ""
+        switch experienceToEdit.type {
+        case .image:
+            viewModel.media = .photo
+            if let imageData = experienceToEdit.imageContent?.first {
+                imagemCarregada = UIImage(data: imageData)
+            }
+        case .video:
+            viewModel.media = .video
+            if let fileName = experienceToEdit.videoContent?.first {
+                let url = URL.documentsDirectory.appending(path: fileName)
+                if FileManager.default.fileExists(atPath: url.path) {
+                    videoPicker.videoImportState = .success(AVPlayer(url: url), url)
+                }
+            }
+        case .audio:
+            viewModel.media = .audio
+        case .text:
+            viewModel.media = .text
+        }
+    }
+
+    private func saveExperience() {
+        let isNewExperience = experienceToEdit.map { _ in false } ?? true
+        let target = experienceToEdit ?? ExperienceEntity(type: .text, event: eventoSelecionado)
+        let oldVideoFile = target.type == .video ? target.videoContent?.first : nil
+
+        target.textContent = [experiencia]
+        target.imageContent = nil
+        target.videoContent = nil
+        target.audioContent = nil
+
+        var newVideoFile: String?
+        switch viewModel.media {
+        case .text:
+            target.type = .text
+        case .photo:
+            guard let image = imagemCarregada?.jpegData(compressionQuality: 0.7), !image.isEmpty else { return }
+            target.type = .image
+            target.imageContent = [image]
+        case .video:
+            guard case .success(_, let videoURL) = videoPicker.videoImportState else { return }
+            let fileName = videoURL.lastPathComponent
+            target.type = .video
+            target.videoContent = [fileName]
+            newVideoFile = fileName
+        case .audio:
+            if rec.isRecording { rec.stop() }
+            let audioData: Data?
+            if let recordingURL = rec.fileURL {
+                audioData = try? Data(contentsOf: recordingURL)
+            } else {
+                audioData = experienceToEdit?.audioContent?.first
+            }
+            guard let audioData, !audioData.isEmpty else { return }
+            target.type = .audio
+            target.audioContent = [audioData]
+        }
+
+        if isNewExperience {
+            modelContext.insert(target)
+        }
+        do {
+            try modelContext.save()
+        } catch {
+            if isNewExperience { modelContext.delete(target) }
+            print("Experience save failed: \(error)")
+            return
+        }
+
+        if let oldVideoFile, oldVideoFile != newVideoFile {
+            let oldVideoURL = URL.documentsDirectory.appending(path: oldVideoFile)
+            try? FileManager.default.removeItem(at: oldVideoURL)
+        }
+        dismiss()
+    }
+
+    @ViewBuilder
+    private var mediaEditor: some View {
+        VStack(spacing: 20) {
+            switch viewModel.media {
+            case .text:
+                descriptionField
+            case .photo:
+                PhotosPicker(selection: $itemSelecionado, matching: .images) {
+                    Group {
+                        if let imagemCarregada {
+                            Image(uiImage: imagemCarregada)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(.secondary)
+                                .overlay {
+                                    Image(systemName: "photo.fill")
+                                        .font(.system(size: 38))
+                                        .foregroundStyle(.white)
+                                }
+                        }
+                    }
+                    .aspectRatio(4 / 3, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: 360)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+                descriptionField
+            case .video:
+                videoEditor
+                descriptionField
+            case .audio:
+                audioEditor
+                descriptionField
+            }
+        }
+    }
+
+    private var descriptionField: some View {
+        TextField("Adicione uma descrição", text: $experiencia, axis: .vertical)
+            .lineLimit(2...5)
+            .padding(14)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private var videoEditor: some View {
+        switch videoPicker.videoImportState {
+        case .success(let video, _):
+            VideoPlayer(player: video)
+                .aspectRatio(16 / 9, contentMode: .fit)
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: 315)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .contextMenu {
+                    Button {
+                        isShowingVideoPicker = true
+                    } label: {
+                        Label("Editar", systemImage: "pencil")
+                    }
+                    Button(role: .destructive) {
+                        videoPicker.videoSelection = nil
+                    } label: {
+                        Label("Remover", systemImage: "trash")
+                    }
+                }
+                .photosPicker(
+                    isPresented: $isShowingVideoPicker,
+                    selection: $videoPicker.videoSelection,
+                    matching: .videos
+                )
+        case .loading:
+            ProgressView()
+                .frame(maxWidth: .infinity)
+                .aspectRatio(16 / 9, contentMode: .fit)
+                .frame(maxHeight: 315)
+        case .empty:
+            videoPickerButton(isFailure: false)
+        case .failure:
+            videoPickerButton(isFailure: true)
+        }
+    }
+
+    private func videoPickerButton(isFailure: Bool) -> some View {
+        PhotosPicker(selection: $videoPicker.videoSelection, matching: .videos) {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(.secondary)
+                .aspectRatio(16 / 9, contentMode: .fit)
+                .frame(maxWidth: .infinity)
+                .overlay {
+                    Image(systemName: isFailure ? "exclamationmark.triangle.fill" : "video.badge.plus")
+                        .font(.system(size: 38))
+                        .foregroundStyle(isFailure ? Color.red : Color.white)
+                }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var audioEditor: some View {
+        HStack(spacing: 12) {
+            Button {
+                if let recordingURL = rec.fileURL {
+                    player.play(recordingURL)
+                } else if let experienceToEdit,
+                          let audioData = experienceToEdit.audioContent?.first {
+                    player.play(data: audioData, id: experienceToEdit.idExperience)
+                }
+            } label: {
+                Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.title3)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .disabled(rec.isRecording || (rec.fileURL == nil && experienceToEdit?.audioContent?.first == nil))
+            .accessibilityLabel("Reproduzir áudio")
+
+            BarVisualizer(values: rec.meterHistory, barCount: 32)
+                .frame(maxWidth: .infinity)
+                .frame(height: 64)
+
+            Button {
+                if rec.isRecording {
+                    rec.stop()
+                } else {
+                    player.stop()
+                    rec.start()
+                }
+            } label: {
+                Image(systemName: rec.isRecording ? "stop.fill" : "mic.fill")
+                    .font(.title3)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel(rec.isRecording ? "Parar gravação" : "Iniciar gravação")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(Color.blueText.opacity(0.9), in: RoundedRectangle(cornerRadius: 20))
+        .frame(maxWidth: .infinity)
+    }
+
     func recordingList() -> [URL]{
         let dir = try? FileManager.default
             .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)

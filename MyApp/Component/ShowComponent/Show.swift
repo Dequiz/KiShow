@@ -12,7 +12,6 @@ struct Show: View {
     var imageName: String
     var artistName: String
     var dateEvent: String
-    var localEvent: String
     var city: String
     
     var body: some View {
@@ -47,7 +46,7 @@ struct Show: View {
                                         .foregroundColor(.white)
                                         .font(.subheadline)
                                         .multilineTextAlignment(.leading)
-                                    Text("\(localEvent) | \(city)")
+                                    Text(city)
                                         .foregroundColor(.white)
                                         .font(.subheadline)
                                         .multilineTextAlignment(.leading)
@@ -69,5 +68,5 @@ struct Show: View {
 }
 
 #Preview {
-    Show(imageName: "https://s1.ticketm.net/dam/a/f3b/4e5c700e-50bb-4b8c-9673-9e4f9f2bef3b_RETINA_LANDSCAPE_16_9.jpg", artistName: "Nome do Artista", dateEvent: "data", localEvent: "local", city: "Sem cidade")
+    Show(imageName: "https://s1.ticketm.net/dam/a/f3b/4e5c700e-50bb-4b8c-9673-9e4f9f2bef3b_RETINA_LANDSCAPE_16_9.jpg", artistName: "Nome do Artista", dateEvent: "data", city: "Sem cidade")
 }

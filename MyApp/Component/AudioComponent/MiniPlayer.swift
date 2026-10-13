@@ -29,11 +29,14 @@ final class MiniPlayer{
         stop()
         
         do{
+            try configureAudioSession()
             player = try AVAudioPlayer(contentsOf: url)
             currentURL = url
             
             player?.prepareToPlay()
-            player?.play()
+            guard player?.play() == true else {
+                throw PlaybackError.couldNotStart
+            }
             isPlaying = true
             
             startUpdatingProgress()
@@ -91,18 +94,35 @@ final class MiniPlayer{
             stop()
             
             do {
+                guard !data.isEmpty else { throw PlaybackError.emptyAudio }
+                try configureAudioSession()
                 player = try AVAudioPlayer(data: data)
-                currentAudioID = id
                 
                 player?.prepareToPlay()
-                player?.play()
+                guard player?.play() == true else {
+                    throw PlaybackError.couldNotStart
+                }
+                currentAudioID = id
                 isPlaying = true
                 
                 startUpdatingProgress()
             } catch {
                 print("Playback failed: \(error)")
                 isPlaying = false
+                player = nil
+                currentAudioID = nil
             }
+        }
+
+        private func configureAudioSession() throws {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true)
+        }
+
+        private enum PlaybackError: Error {
+            case emptyAudio
+            case couldNotStart
         }
         
         func stop() {
