@@ -13,6 +13,9 @@ struct AddShowsUser: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
 
+    @State private var genreSource = TicketMasterShowViewModel()
+    @State private var viewModel = EventEntityViewModel()
+
     @State private var nameShow: String = ""
     @State private var artistShow: String = ""
     @State private var genderShow: String = ""
@@ -25,7 +28,6 @@ struct AddShowsUser: View {
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var imageData: Data?
 
-    
     @State private var showToast = false
     @State private var toastMessage = ""
     @State private var toastSucceeded = false
@@ -40,7 +42,8 @@ struct AddShowsUser: View {
 
     private var canSave: Bool {
         !nameShow.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !artistShow.trimmingCharacters(in: .whitespaces).isEmpty
+        !artistShow.trimmingCharacters(in: .whitespaces).isEmpty &&
+        !genderShow.isEmpty          // ⬅️ gênero agora é obrigatório
     }
 
     var body: some View {
@@ -79,16 +82,32 @@ struct AddShowsUser: View {
                                 }
                             }
                         }
-                        sectionCard(title: "Informações") {
+
+                            sectionCard(title: "Informações") {
                             labeledField("Nome do show", text: $nameShow)
                             Divider()
                             labeledField("Artista / Banda", text: $artistShow)
-                                
                             Divider()
-                            labeledField("Gênero", text: $genderShow)
-                                
+
+                            HStack {
+                                Text("Gênero")
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 120, alignment: .leading)
+
+                                Picker("", selection: $genderShow) {
+                                    Text("Selecione").tag("")
+                                    ForEach(genreSource.genres, id: \.self) { genre in
+                                        Text(genreSource.genresTranslations[genre] ?? genre)
+                                            .tag(genre)
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                .labelsHidden()
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .tint(.primary)
+                            }
                         }
-                        
+
                         sectionCard(title: "Data e Hora") {
                             HStack {
                                 Text("Data").foregroundStyle(.secondary)
@@ -112,11 +131,11 @@ struct AddShowsUser: View {
                             Divider()
                             labeledField("Cidade", text: $city)
                         }
-
-                        ButtonComponent(buttonText: "Adicionar Show"){
+                        ButtonComponent(buttonText: "Adicionar Show") {
                             save()
-                            dismiss()
                         }
+                        .disabled(!canSave)
+                        .padding(.bottom, 30)
                     }
                     .padding(.top, 12)
                 }
@@ -185,45 +204,28 @@ struct AddShowsUser: View {
 
 
     private func save() {
-        let calendar = Calendar.current
-        let timeComponents = calendar.dateComponents([.hour, .minute], from: startTimeShow)
-        let startTime = String(
-            format: "%02d:%02d:00",
-            timeComponents.hour ?? 0,
-            timeComponents.minute ?? 0
-        )
-
-
-        let newShow = ShowEntity(
-            nameShow: nameShow.trimmingCharacters(in: .whitespaces),
+        viewModel.saveCustomShow(
+            nameShow: nameShow,
             dataShow: dataShow,
-            artistShow: artistShow.trimmingCharacters(in: .whitespaces),
-            genderShow: genderShow.isEmpty ? "Desconhecido" : genderShow,
-            imageShow: imageData?.base64EncodedString() ?? "", // ver observação abaixo
-            localShow: localShow.isEmpty ? "Desconhecido" : localShow,
-            addressShow: addressShow.isEmpty ? "Desconhecido" : addressShow,
+            artistShow: artistShow,
+            genderShow: genderShow,
+            imageData: imageData,
+            localShow: localShow,
+            addressShow: addressShow,
             urlShow: "",
-            startTimeShow: startTime,
-            city: city.isEmpty ? "Desconhecido" : city,
-            latitude: 0.0,
-            longitude: 0.0
+            startTime: startTimeShow,
+            city: city,
+            latitude: nil,
+            longitude: nil,
+            context: context
         )
 
-        context.insert(EventEntity(show: newShow))
+        toastMessage = "Show \"\(nameShow)\" adicionado!"
+        toastSucceeded = true
+        showToast = true
 
-        do {
-            try context.save()
-            toastMessage = "Show \"\(nameShow)\" adicionado!"
-            toastSucceeded = true
-            showToast = true
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                dismiss()
-            }
-        } catch {
-            toastMessage = "Erro ao salvar: \(error.localizedDescription)"
-            toastSucceeded = false
-            showToast = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            dismiss()
         }
     }
 }

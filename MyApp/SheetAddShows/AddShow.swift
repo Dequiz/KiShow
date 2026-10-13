@@ -191,8 +191,10 @@ struct AddShow: View {
                         }
                         if !isAlreadyAdded{
                             ButtonComponent(buttonText: "Adicionar Show"){
-                                viewModel.saveShow(showTicket: ticketMasterShow, context: context)
-                                dismiss()
+                                Task {
+                                   await viewModel.saveShow(showTicket: ticketMasterShow, context: context)
+                                   dismiss()
+                               }
                             }
                         }
                         
