@@ -119,6 +119,15 @@ struct MyShows: View {
                 .searchable(text: $searchText)
                 .toolbarTitleDisplayMode(.inlineLarge)
                 .toolbar{
+                    ToolbarItem(placement: .topBarTrailing){
+                        NavigationLink{
+                            AddShowsUser()
+                        }label:{
+                            Image(systemName: "plus")
+                        }
+                        
+                    }
+                    
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu{
                             Button{

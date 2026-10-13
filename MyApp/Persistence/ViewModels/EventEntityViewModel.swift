@@ -45,14 +45,4 @@ class EventEntityViewModel{
             print("Erro ao salvar utilizador: \(error.localizedDescription)")
         }
     }
-    
-    func contains(showTicket: TicketmasterShow, shows: [EventEntity]) -> Bool{
-        
-        for show in shows {
-            if showTicket.name == show.show?.nameShow && parseDate(showTicket.dates?.start?.localDate) == show.show?.dataShow{
-                return true
-            }
-        }
-        return false
-    }
 }

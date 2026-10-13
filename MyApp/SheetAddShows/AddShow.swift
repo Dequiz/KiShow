@@ -13,7 +13,22 @@ struct AddShow: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = EventEntityViewModel()
-    @Query var events: [EventEntity]
+    @Query private var matchingEvents: [EventEntity]
+    init(ticketMasterShow: TicketmasterShow, action: @escaping () -> Void) {
+        self.ticketMasterShow = ticketMasterShow
+        self.action = action
+
+        let name = ticketMasterShow.name
+        let date = parseDate(ticketMasterShow.dates?.start?.localDate) ?? .distantPast
+
+        _matchingEvents = Query(
+            filter: #Predicate<EventEntity> { event in
+                event.show?.nameShow == name &&
+                event.show?.dataShow == date
+            }
+        )
+    }
+    private var isAlreadyAdded: Bool { !matchingEvents.isEmpty }
     @State private var showToast = false
     @State private var calendarToastMessage = ""
     @State private var calendarToastSucceeded = false
@@ -174,7 +189,7 @@ struct AddShow: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                         }
-                        if viewModel.contains(showTicket: ticketMasterShow, shows: events) == false{
+                        if !isAlreadyAdded{
                             ButtonComponent(buttonText: "Adicionar Show"){
                                 viewModel.saveShow(showTicket: ticketMasterShow, context: context)
                                 dismiss()
@@ -221,3 +236,5 @@ struct AddShow: View {
         
     }
 }
+
+
