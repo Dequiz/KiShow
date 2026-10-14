@@ -11,7 +11,7 @@ import AVKit
 struct SplashScreenView: View {
     
     var onFinished: () -> Void
-        @State private var player = AVPlayer(url: Bundle.main.url(forResource: "KiShow", withExtension: "mp4")!)
+        @State private var player = AVPlayer(url: Bundle.main.url(forResource: "KiShowSplash", withExtension: "mp4")!)
 
         var body: some View {
             VideoPlayer(player: player)
