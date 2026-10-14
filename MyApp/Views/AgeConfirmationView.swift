@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AgeConfirmationView: View {
     @Environment(\.modelContext) private var modelContext
-    @State  var viewModel : AgeConfirmationViewModel
+    @Bindable var viewModel: AgeConfirmationViewModel
     var body: some View {
         ZStack{
             Color.appBackground
@@ -25,37 +25,53 @@ struct AgeConfirmationView: View {
                 }
                 Spacer()
                 VStack(alignment: .leading){
-                    Text("Nos diga sua data de nascimento")
+                    Text("Seu perfil está pronto")
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
-                    Text("A data do seu nascimento será utilizada somente internamente no aplicativo para apresentação do seu perfil")
+                    Text("Seus dados de perfil ficam armazenados localmente neste dispositivo.")
                         .font(.caption)
                         .fontWeight(.regular)
                         .frame(width: 255)
                 }
                 Spacer()
-                CustomDatePicker(
-                    selectedDay: $viewModel.daySelected,
-                    selectedMonth: $viewModel.monthSelected,
-                    selectedYear: $viewModel.yearSelected
-                )
                 Spacer()
-                ButtonComponent(buttonText: "Continuar"){
-                    viewModel.saveUser(username: viewModel.username, context: modelContext)
+                ZStack {
+                    Image(.camada1)
+                        .resizable()
+                        .frame(width: 500, height: 250)
+                        .opacity(0.3)
+
+                    ButtonComponent(buttonText: "Começar") {
+                            viewModel.saveUser(username: viewModel.username, context: modelContext)
+                        }
+                        .disabled(viewModel.username.isEmpty)
+                        .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
                 }
-                Spacer()
-                
             }
-            
+
         }
         .ignoresSafeArea()
         .navigationDestination(isPresented: $viewModel.navigateToNextScreen) {
             ContentView()
         }
-        
+        .background {
+            Color.clear
+                .tint(.primary)
+                .alert("Não foi possível criar o perfil", isPresented: $viewModel.saveFailed) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Tente novamente.")
+                }
+        }
+
     }
-    
-    
-    
-   
+
+
+
+
+}
+#Preview {
+    @Previewable @Environment(\.modelContext) var context
+    @Previewable @State var viewModel = AgeConfirmationViewModel()
+    AgeConfirmationView( viewModel: viewModel)
 }

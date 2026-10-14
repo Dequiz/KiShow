@@ -74,10 +74,14 @@ struct AddExperience: View {
             }
             .navigationTitle(experienceToEdit == nil ? "Nova experiência" : "Editar experiência")
             .navigationBarTitleDisplayMode(.inline)
-            .alert("Acesso ao microfone", isPresented: $isShowingMicrophonePermissionAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Para gravar uma lembrança em áudio, permita o acesso ao microfone nos Ajustes do dispositivo.")
+            .background {
+                Color.clear
+                    .tint(.primary)
+                    .alert("Acesso ao microfone", isPresented: $isShowingMicrophonePermissionAlert) {
+                        Button("OK", role: .cancel) { }
+                    } message: {
+                        Text("Para gravar uma lembrança em áudio, permita o acesso ao microfone nos Ajustes do dispositivo.")
+                    }
             }
             .onChange(of: itemSelecionado) { _, novoItem in
                 Task {
@@ -160,7 +164,6 @@ struct AddExperience: View {
             try modelContext.save()
         } catch {
             if isNewExperience { modelContext.delete(target) }
-            print("Experience save failed: \(error)")
             return
         }
 
@@ -216,6 +219,8 @@ struct AddExperience: View {
             .lineLimit(2...5)
             .padding(14)
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .foregroundStyle(Color.primary)
+            .tint(.mainPink)
             .frame(maxWidth: .infinity)
     }
 

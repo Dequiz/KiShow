@@ -10,8 +10,16 @@ import SwiftUI
 
 @Observable
 class TicketMasterShowViewModel{
+    enum LoadState {
+        case idle
+        case loading
+        case loaded
+        case failed
+    }
+
     var shows: [TicketmasterShow] = []
     var query: String = ""
+    var loadState: LoadState = .idle
     
     let genres = [
         "Pop",
@@ -105,19 +113,23 @@ class TicketMasterShowViewModel{
     }
 
     func fetchConcert(genre1: String, genre2: String = "") async {
-        
-        if genre2.isEmpty {
-            shows = await WebService().downloadAllShows(genre: genre1)
-            return
+        loadState = .loading
+        do {
+            let combined: [TicketmasterShow]
+            if genre2.isEmpty {
+                combined = try await WebService().downloadAllShows(genre: genre1)
+            } else {
+                async let request1 = WebService().downloadAllShows(genre: genre1)
+                async let request2 = WebService().downloadAllShows(genre: genre2)
+                combined = try await request1 + request2
+            }
+            var seen = Set<String>()
+            shows = combined.filter { seen.insert($0.id).inserted }
+            loadState = .loaded
+        } catch {
+            shows = []
+            loadState = .failed
         }
-        async let requsition1 = WebService().downloadAllShows(genre: genre1)
-        async let requsition2 = WebService().downloadAllShows(genre: genre2)
-        let combined = await requsition1 + requsition2
-        
-        
-        
-        var seen = Set<String>()
-        shows = combined.filter { seen.insert($0.id).inserted}
     }
     
 }

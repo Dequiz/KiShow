@@ -12,6 +12,7 @@ import SimpleToast
 struct AddShow: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @State private var viewModel = EventEntityViewModel()
     @Query private var matchingEvents: [EventEntity]
     init(ticketMasterShow: TicketmasterShow, action: @escaping () -> Void) {
@@ -34,6 +35,8 @@ struct AddShow: View {
     @State private var toastSucceeded = false
     @State private var isAddingToCalendar = false
     @State private var isSavingShow = false
+    @State private var showExternalLinkConfirmation = false
+    @State private var pendingExternalURL: URL?
     let manager = CalendarManager()
     private let toastOption = SimpleToastOptions(alignment: .top,hideAfter: 2,backdrop: Color.black.opacity(0.2),animation: .default,modifierType: .slide)
     let ticketMasterShow: TicketmasterShow
@@ -184,10 +187,14 @@ struct AddShow: View {
                        
                         
                         if let url = URL(string: ticketMasterShow.url){
-                            Link(destination: url){
+                            Button {
+                                pendingExternalURL = url
+                                showExternalLinkConfirmation = true
+                            } label: {
                                 Image(systemName: "link")
                                 Text("Compre agora no site da ticket master")
                             }
+//                            .buttonStyle(.plain)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                         }
@@ -254,6 +261,23 @@ struct AddShow: View {
             .frame(maxWidth: 360)
             .padding(.horizontal, 16)
         })
+        .background {
+            Color.clear
+                .tint(.primary)
+                .alert("Você está saindo do KiShow", isPresented: $showExternalLinkConfirmation) {
+                    Button("Continuar") {
+                        if let pendingExternalURL {
+                            openURL(pendingExternalURL)
+                        }
+                        pendingExternalURL = nil
+                    }
+                    Button("Cancelar", role: .cancel) {
+                        pendingExternalURL = nil
+                    }
+                } message: {
+                    Text("Você será redirecionado para uma página externa da Ticketmaster.")
+                }
+            }
         
     }
 }

@@ -49,10 +49,7 @@ class VideoPickerView{
     private func loadTransferableVideo(from videoSelection: PhotosPickerItem) -> Progress {
             return videoSelection.loadTransferable(type: VideoType.self) { result in
                 DispatchQueue.main.async {
-                    guard videoSelection == self.videoSelection else {
-                        print("Falhou em selecionar o item")
-                        return
-                    }
+                    guard videoSelection == self.videoSelection else { return }
                     
                     switch result {
                     case .success(let profileVideo?):

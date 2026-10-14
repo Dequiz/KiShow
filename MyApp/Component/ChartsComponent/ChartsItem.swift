@@ -24,11 +24,18 @@ struct ChartsItem: View {
                                )
                     .frame(width: diameter, height: diameter)
                     .overlay{
-                        Text("\(gender)\n\(Int((share * 100).rounded()))%")
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(Color.white)
-                            .font(.system(size: min(16, max(10, diameter * 0.13))))
-                            .fontWeight(.bold)
+                        VStack(spacing: 2) {
+                            Text(gender)
+                                .lineLimit(2)
+                                .truncationMode(.tail)
+                            Text("\(Int((share * 100).rounded()))%")
+                                .lineLimit(1)
+                        }
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(Color.white)
+                        .font(.system(size: min(15, max(8, diameter * 0.16)), weight: .bold))
+                        .minimumScaleFactor(0.55)
+                        .padding(diameter * 0.12)
                     }
         }
     }
