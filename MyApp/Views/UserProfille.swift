@@ -84,12 +84,16 @@ struct UserProfille: View {
                                             .lineLimit(1)
                                             .minimumScaleFactor(0.65)
                                             .frame(maxWidth: .infinity)
+                                            .offset(y:15)
+                                        Spacer()
                                         if event.count > 0 {
                                             FavoriteArtists()
                                         } else {
                                             Text("Você ainda não possui shows adicionados")
                                                 .padding()
                                         }
+                                        Spacer()
+
                                     }
                                     .padding(.horizontal, 12)
                                     .frame(width: cardWidth, height: 210)

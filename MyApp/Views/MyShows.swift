@@ -99,9 +99,8 @@ struct MyShows: View {
                     Spacer()
                     Image(.camada1)
                         .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth:.infinity)
-                        .frame(maxHeight: 200)
+                        .frame(width:500,height: 250)
+                        .rotationEffect(.degrees(0))
                         .opacity(0.3)
 
                 }
@@ -120,31 +119,37 @@ struct MyShows: View {
                     
                     }
                 }else{
-                    ScrollView {
-                        VStack(spacing: 16) {
-                            ForEach(eventosFiltrados) { event in
-                                NavigationLink {
-                                    EventView(eventoSelecionado: event)
-                                } label: {
-                                    TicketSelection(
-                                        artistName: event.show?.artistShow ?? "Artista",
-                                        eventName: event.show?.nameShow ?? "Evento",
-                                        localName: event.show?.localShow ?? "Local",
-                                        dateEvent: event.show?.dataShow ?? Date(),
-                                        event: event
-                                    ).padding()
-                                        .swipeActions(edge: .trailing) {
-                                            Button(role: .destructive) {
-                                                deleteShow(event)
-                                            } label: {
-                                                Label("Excluir", systemImage: "trash")
-                                            }
-                                        
+                    GeometryReader { geometry in
+                        let ticketWidth = max(0, min(350, geometry.size.width - 32))
+
+                        ScrollView {
+                            VStack(spacing: 16) {
+                                ForEach(eventosFiltrados) { event in
+                                    NavigationLink {
+                                        EventView(eventoSelecionado: event)
+                                    } label: {
+                                        TicketSelection(
+                                            artistName: event.show?.artistShow ?? "Artista",
+                                            eventName: event.show?.nameShow ?? "Evento",
+                                            localName: event.show?.localShow ?? "Local",
+                                            dateEvent: event.show?.dataShow ?? Date(),
+                                            event: event
+                                        )
+                                        .frame(width: ticketWidth)
                                     }
-                                    
+                                    .buttonStyle(.plain)
+                                    .frame(maxWidth: .infinity)
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            deleteShow(event)
+                                        } label: {
+                                            Label("Excluir", systemImage: "trash")
+                                        }
+                                    }
                                 }
-                                .buttonStyle(.plain)
                             }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
                         }
                     }
                 }

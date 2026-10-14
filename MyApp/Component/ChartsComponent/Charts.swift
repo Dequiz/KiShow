@@ -23,9 +23,9 @@ struct Charts: View{
             ZStack {
                 ForEach(Array(chartsValues.enumerated()), id: \.element.id) { index, value in
                     let share = CGFloat(value.count) / CGFloat(total)
-                    let diameter = min(geometry.size.width * 0.43,
-                                       max(geometry.size.width * 0.23,
-                                           geometry.size.width * (0.20 + 0.42 * sqrt(share))))
+                    let maximumDiameter = min(geometry.size.width * 0.43,
+                                              geometry.size.height * 0.72)
+                    let diameter = maximumDiameter * share
                     ChartsItem(share: share, gender: value.gender, diameter: diameter)
                         .position(x: geometry.size.width * positions[index % positions.count].x,
                                   y: geometry.size.height * positions[index % positions.count].y)
