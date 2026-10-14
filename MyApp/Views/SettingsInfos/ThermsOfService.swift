@@ -67,7 +67,7 @@ struct ThermsOfService: View {
                 Section {
                     Text("O KiShow não é direcionado a crianças e adolescentes, e menores de 18 anos devem usá-lo somente com supervisão e autorização prévia dos pais ou responsáveis legais. O aplicativo não exibe publicidade, não realiza perfilamento e não permite interação entre usuários.")
                     
-                    Text("O usuário possui apenas uma licença limitada, não exclusiva, intransferível e revogável para uso pessoal e não comercial do software. É vetada qualquer forma de distribuição, reprodução, modificação ou disponibilização do aplicativo que não seja pelo canal oficial da App Store. Qualquer outro meio de obtenção do aplicativo em outros meios .constitui violação destes Termos e da legislação aplicável")
+                    Text("O usuário possui apenas uma licença limitada, não exclusiva, intransferível e revogável para uso pessoal e não comercial do software. É permitido compilar o aplicativo e utilizar o código fonte no desenvolvimento de outro software desde que não utilize as artes, a interface gráfica e nada da identidade visual do aplicativo. Fora isso é vetado a reprodução, modificação ou disponibilização do aplicativo que não seja pelo canal oficial da App Store. Qualquer outro meio de obtenção do aplicativo em outros meios constitui violação destes Termos e da legislação aplicável.")
                  
                 } header: {
                     HStack{
@@ -125,7 +125,9 @@ struct ThermsOfService: View {
                 
                 
                 Section {
-                    Text("Todos os direitos de propriedade intelectual e comercial relativos ao aplicativo KiShow, o que inclui códigos fontes, marcas, logos, ilustrações, interfaces e o próprio software, são de propriedade exclusiva da Equipe de Desenvolvimento KiShow, sendo esta composta por André Holovati, Elisa Tanada Giacomini da Silva, Maria Clara Fernandes Bessa e Paulo Eduardo Barbosa da Silva. ")
+                    Text("Todos os direitos de propriedade intelectual e comercial relativos ao aplicativo KiShow,exceto os dados da API Discovery da Ticketmaster, inclui códigos fontes, marcas, logos, ilustrações, interfaces e o próprio software, são de propriedade exclusiva da Equipe de Desenvolvimento do KiShow. Sendo por este composto por André Holovati, Elisa Tanada Giacomini da Silva, Maria Clara Fernandes Bessa e Paulo Eduardo Barbosa da Silva.")
+                    
+                    Text("Entretanto, o código fonte apesar de ser propriedade dos desenvolvedores do KiShow, o código é disponibilizado publicamente. É permitido estudar e utilizar em outros projetos, desde que não se utilize de ilustrações, interfaces gráficas e a marca e nome KiShow.")
                     
                     Text("O acesso ao aplicativo não confere ao usuário quaisquer direitos a propriedade intelectual ou comercial do mesmo, Exceto pelo direito limitado, revogável e não exclusivo de uso do aplicativo em conformidade com este Termo de Uso.")
                     
