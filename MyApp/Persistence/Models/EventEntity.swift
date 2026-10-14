@@ -12,13 +12,15 @@ import SwiftData
 
 class EventEntity {
     var idEvent: UUID
+    var ticketThemeRawValue: String?
     @Relationship(deleteRule: .cascade, inverse: \ShowEntity.event)
     var show: ShowEntity?
     @Relationship(deleteRule: .cascade, inverse: \ExperienceEntity.event)
         var experiences: [ExperienceEntity]?
     
-    init(show:ShowEntity? = nil) {
+    init(show: ShowEntity? = nil, ticketThemeRawValue: String = "Purple") {
         self.idEvent = UUID()
+        self.ticketThemeRawValue = ticketThemeRawValue
         self.show = show
     }
 }

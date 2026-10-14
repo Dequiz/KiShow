@@ -32,7 +32,6 @@ struct EventView: View {
     @State private var dailyStories: [StoryItem] = []
     @State private var hasUnseenStories = false
     @State private var experienceToEdit: ExperienceEntity?
-    @State private var isShowingExperienceEditor = false
 
     private var storyDateKey: String {
         let date = Calendar.current.dateComponents([.year, .month, .day], from: .now)
@@ -85,15 +84,15 @@ struct EventView: View {
                                 .disabled(dailyStories.isEmpty)
                                
                                 Text(eventoSelecionado.show?.nameShow ?? "Evento")
-                                Picker("", selection: $selected) {
-                                    ForEach(AppTheme.allCases) { tipo in
-                                        Text(tipo.rawValue).tag(tipo)
-                                    }
+                                if #available(iOS 27.0, *) {
+                                    themePicker
+                                        .pickerStyle(.tabs)
+                                        .glassEffect()
+                                } else {
+                                    themePicker
+                                        .pickerStyle(.segmented)
+                                        .glassEffect()
                                 }
-                                .frame(width: 350)
-                                .controlSize(.large)
-                                .pickerStyle(.tabs)
-                                .glassEffect() 
                             }
                             .padding(.horizontal)
                         }
@@ -104,7 +103,6 @@ struct EventView: View {
                                 .contextMenu {
                                     Button("Editar", systemImage: "pencil") {
                                         experienceToEdit = experience
-                                        isShowingExperienceEditor = true
                                     }
                                     Button("Excluir",systemImage: "trash.fill", role: .destructive) {
                                         delete(experience)
@@ -189,16 +187,24 @@ struct EventView: View {
                 .accessibilityLabel("Adicionar show ao calendário")
             }
         }
-        .sheet(isPresented: $isShowingExperienceEditor) {
-            if let experienceToEdit {
-                NavigationStack {
-                    AddExperience(
-                        eventoSelecionado: eventoSelecionado,
-                        experienceToEdit: experienceToEdit
-                    )
-                }
+        .sheet(item: $experienceToEdit) { experience in
+            NavigationStack {
+                AddExperience(
+                    eventoSelecionado: eventoSelecionado,
+                    experienceToEdit: experience
+                )
             }
         }
+    }
+
+    private var themePicker: some View {
+        Picker("", selection: $selected) {
+            ForEach(AppTheme.allCases) { tipo in
+                Text(tipo.rawValue).tag(tipo)
+            }
+        }
+        .frame(width: 350)
+        .controlSize(.large)
     }
 
     private func refreshDailyStories() {

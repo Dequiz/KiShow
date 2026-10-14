@@ -38,6 +38,5 @@ struct ButtonComponent: View {
 
 #Preview {
     ButtonComponent(buttonText: "Clicar"){
-        print("Cliquei")
     }
 }

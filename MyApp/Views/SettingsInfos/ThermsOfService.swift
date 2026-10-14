@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct ThermsOfService: View {
+    @State private var showExternalLinkConfirmation = false
+    @Environment(\.openURL) private var openURL
+
     var body: some View {
         VStack {
             Form {
                 Section {
                     Text("Leia este Contrato com atenção e assegure-se de que entende o seu conteúdo. Caso não entenda ou não aceite alguma parte deste documento, não utilize o Serviço.")
                          
-                    Text("O presente Termo de Uso possui como objetivo regulamentar o modo de utilização do aplicativo KiShow,  sendo este voltado para o registro a preservação de memórias e sentimentos das experiências vividas em shows. O App é exclusivo para Iphone (sistema IOS) e disponibilizado gratuitamente na Apple Store.")
+                    Text("O presente Termo de Uso regulamenta o uso do KiShow, voltado ao registro e à preservação de memórias de shows. O app é destinado a iPhone e iPad (iOS) e disponibilizado gratuitamente na App Store.")
                     
                     Text("Ao continuar, você declara que leu e concorda com os Termos de Uso e que tomou ciência da Política de Privacidade. ")
 
@@ -47,7 +50,11 @@ struct ThermsOfService: View {
                 Section {
                     Text("KiShow é um aplicativo que possibilita ao usuário encontrar novos shows que estão para acontecer no momento de utilização. É oferecido de forma totalmente gratuita, sem necessidade de compras internas no app.")
                     
-                    Text(" Para exibir eventos, o KiShow consulta a Discovery API da Ticketmaster. Seus dados de perfil, mídias e registros não são enviados. Como em qualquer conexão com a internet, a Ticketmaster pode receber dados técnicos da requisição (como endereço IP e informações do dispositivo) e os trata conforme a [política de privacidade da Ticketmaster]. Ao acessar links de compra, você é direcionado a um site de terceiro, regido pelos termos dele.")
+                    Text("Para exibir eventos, o KiShow consulta a Discovery API da Ticketmaster. A consulta envia o gênero escolhido e o código do país Brasil; seus dados de perfil, mídias e registros não são enviados. Como em qualquer conexão com a internet, a Ticketmaster pode receber dados técnicos da requisição, como o endereço IP, conforme a [política de privacidade da Ticketmaster](https://privacy.ticketmaster.com/privacy-policy). Ao acessar links de compra, você é direcionado a um site de terceiro, regido pelos termos dele.")
+                        .environment(\.openURL, OpenURLAction { _ in
+                            showExternalLinkConfirmation = true
+                            return .handled
+                        })
                     
                     Text("O KiShow não participa da venda de ingressos, ademais até então nosso aplicativo é totalmente gratuito e não há cobranças e ou vendas de produtos ou serviços. Caso haja uma modificação nessas condições o usuário será alertado com antecedência.")
                     
@@ -156,6 +163,19 @@ struct ThermsOfService: View {
             }
             .background(Color.appBackground)
             .scrollContentBackground(.hidden)
+        }
+        .background {
+            Color.clear
+                .tint(.primary)
+                .alert("Você está saindo do KiShow", isPresented: $showExternalLinkConfirmation) {
+                    Button("Continuar") {
+                        guard let url = URL(string: "https://dequiz.github.io/KiShow/index.html") else { return }
+                        openURL(url)
+                    }
+                    Button("Cancelar", role: .cancel) { }
+                } message: {
+                    Text("Você será redirecionado para uma página externa com a política de privacidade.")
+                }
         }
         .navigationTitle("Termos de Uso")
         .toolbarTitleDisplayMode(.inline)

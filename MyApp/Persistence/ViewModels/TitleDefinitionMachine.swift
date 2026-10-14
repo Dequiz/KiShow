@@ -17,50 +17,55 @@ class TitleDefinitionMachine{
         case textAdded(totalText: Int)
     }
      var titleVm = TitleViewModel()
-    func processAction(_ action: UserAction,context: ModelContext){
+    func processAction(_ action: UserAction, context: ModelContext) throws -> [String] {
+        var newlyUnlocked: [String] = []
+
         switch action{
         case .secretButtonClicked(let clickButton):
             if clickButton >= 3{
-                unlockTitle(texto: "Super Mary", context: context)
-                unlockTitle(texto: "Super Andre", context: context)
-                unlockTitle(texto: "Super Elisa", context: context)
-                unlockTitle(texto: "Super Paulo", context: context)
+                for title in ["Super Mary", "Super Andre", "Super Elisa", "Super Paulo"] {
+                    if try unlockTitle(texto: title, context: context) { newlyUnlocked.append(title) }
+                }
             }
         case .showRegistered(let totalShows ):
+            if totalShows > 10 {
+                if try unlockTitle(texto: "Dono", context: context) { newlyUnlocked.append("Dono") }
+            }
             if totalShows >= 5{
-                unlockTitle(texto: "Colecionador", context: context)
+                if try unlockTitle(texto: "Colecionador", context: context) { newlyUnlocked.append("Colecionador") }
             }
             if totalShows >= 1{
-                unlockTitle(texto: "Colecionador Novato", context: context)
+                if try unlockTitle(texto: "Colecionador Novato", context: context) { newlyUnlocked.append("Colecionador Novato") }
             }
         case .photosAdded(let totalPhotos):
             if totalPhotos >= 3{
-                unlockTitle(texto: "Fotografo", context: context)
+                if try unlockTitle(texto: "Fotografo", context: context) { newlyUnlocked.append("Fotografo") }
             }
         case .textAdded(let totalText):
             if totalText >= 1{
-                unlockTitle(texto: "Escritor Jr", context: context)
+                if try unlockTitle(texto: "Escritor Jr", context: context) { newlyUnlocked.append("Escritor Jr") }
             }
             if totalText >= 1000{
-                unlockTitle(texto: "Escritor", context: context)
+                if try unlockTitle(texto: "Escritor", context: context) { newlyUnlocked.append("Escritor") }
             }
         }
+        return newlyUnlocked
     }
     
-    func unlockTitle(texto: String, context: ModelContext) {
+    func unlockTitle(texto: String, context: ModelContext) throws -> Bool {
         let descriptor = FetchDescriptor<TitleEntity>(
             predicate: #Predicate { $0.nameTitle == texto }
         )
+        let count = try context.fetchCount(descriptor)
+        guard count == 0 else { return false }
+
+        context.insert(TitleEntity(nameTitle: texto))
         do {
-            let count = try context.fetchCount(descriptor)
-            if count == 0 {
-                context.insert(TitleEntity(nameTitle: texto))
-                try context.save()
-            } else {
-                print("O título '\(texto)' já foi desbloqueado anteriormente.")
-            }
+            try context.save()
+            return true
         } catch {
-            print("Erro ao desbloquear título: \(error)")
+            context.rollback()
+            throw error
         }
     }
     

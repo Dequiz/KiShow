@@ -10,15 +10,15 @@ import SwiftData
 
 @Observable
 class AgeConfirmationViewModel {
-    var daySelected = 1
-    var monthSelected = 1
-    var yearSelected = 2006
     var navigateToNextScreen = false
+    var saveFailed = false
     var username = ""
     
     func saveUser(username: String, context: ModelContext) {
-        let age = verificarIdade(day: daySelected, month: monthSelected, year: yearSelected)
-        let newUser = UserEntity(nameUser: username, ageUser: age)
+        let displayName = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !displayName.isEmpty else { return }
+        // Keep the existing SwiftData field for backward-compatible schema storage.
+        let newUser = UserEntity(nameUser: displayName, ageUser: 0)
         
         context.insert(newUser)
         
@@ -26,22 +26,9 @@ class AgeConfirmationViewModel {
             try context.save()
             navigateToNextScreen = true
         } catch {
-            print("Erro ao salvar utilizador: \(error.localizedDescription)")
+            context.delete(newUser)
+            navigateToNextScreen = false
+            saveFailed = true
         }
-    }
-    
-    private func verificarIdade(day: Int, month: Int, year: Int) -> Int {
-        let atualDate = Calendar.current
-        let atualDay = atualDate.component(.day, from: Date())
-        let atualMonth = atualDate.component(.month, from: Date())
-        let atualYear = atualDate.component(.year, from: Date())
-        
-        var idade = atualYear - year
-        
-        if atualMonth < month || (atualMonth == month && atualDay < day) {
-            idade -= 1
-        }
-        
-        return idade
     }
 }

@@ -31,6 +31,7 @@ struct AddShowsUser: View {
     @State private var showToast = false
     @State private var toastMessage = ""
     @State private var toastSucceeded = false
+    @State private var isSavingShow = false
 
     private let toastOption = SimpleToastOptions(
         alignment: .top,
@@ -134,7 +135,7 @@ struct AddShowsUser: View {
                         ButtonComponent(buttonText: "Adicionar Show") {
                             save()
                         }
-                        .disabled(!canSave)
+                        .disabled(!canSave || isSavingShow)
                         .padding(.bottom, 30)
                     }
                     .padding(.top, 12)
@@ -199,44 +200,58 @@ struct AddShowsUser: View {
                 .keyboardType(keyboard)
                 .textInputAutocapitalization(.sentences)
                 .autocorrectionDisabled()
+                .foregroundStyle(Color.primary)
+                .tint(.mainPink)
         }
     }
 
 
     private func save() {
-        viewModel.saveCustomShow(
-            nameShow: nameShow,
-            dataShow: dataShow,
-            artistShow: artistShow,
-            genderShow: genderShow,
-            imageData: imageData,
-            localShow: localShow,
-            addressShow: addressShow,
-            urlShow: "",
-            startTime: startTimeShow,
-            city: city,
-            latitude: nil,
-            longitude: nil,
-            context: context
-        )
+        guard canSave, !isSavingShow else { return }
+        isSavingShow = true
 
-        toastMessage = "Show \"\(nameShow)\" adicionado!"
-        toastSucceeded = true
-        showToast = true
+        do {
+            try viewModel.saveCustomShow(
+                nameShow: nameShow,
+                dataShow: dataShow,
+                artistShow: artistShow,
+                genderShow: genderShow,
+                imageData: imageData,
+                localShow: localShow,
+                addressShow: addressShow,
+                urlShow: "",
+                startTime: startTimeShow,
+                city: city,
+                latitude: nil,
+                longitude: nil,
+                context: context
+            )
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            dismiss()
+            toastMessage = "Show de: \(artistShow) foi adicionado com sucesso."
+            toastSucceeded = true
+            showToast = true
+            Task {
+                try? await Task.sleep(nanoseconds: 2_200_000_000)
+                dismiss()
+            }
+        } catch {
+            isSavingShow = false
+            toastMessage = "Não foi possível adicionar o show de: \(artistShow). \(error.localizedDescription)"
+            toastSucceeded = false
+            showToast = true
         }
     }
 }
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(
-        for: EventEntity.self, ShowEntity.self,
-        configurations: config
-    )
-
-    return AddShowsUser()
-        .modelContainer(container)
+    do {
+        let container = try ModelContainer(
+            for: EventEntity.self, ShowEntity.self,
+            configurations: config
+        )
+        return AnyView(AddShowsUser().modelContainer(container))
+    } catch {
+        return AnyView(Text("Não foi possível carregar a prévia."))
+    }
 }

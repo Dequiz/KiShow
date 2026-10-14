@@ -36,32 +36,32 @@ struct NameConfirmationView: View {
                             .frame(width: 255)
                     }
                     Spacer()
-                    TextField("Ex: Maria",text: $viewModel.username)
+                    TextField("Ex: Maria", text: $viewModel.username)
                         .frame(maxWidth: 300)
                         .padding()
                         .background(.gray.opacity(0.1))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.primary)
+                        .tint(.mainPink)
                         .clipShape(.capsule)
                     Spacer()
-                    Image(.camada1)
-                        .resizable()
-                        .frame(width:500,height: 250)
-                        .rotationEffect(.degrees(0))
-                        .opacity(0.3)
-                        .overlay{
-                            NavigationLink(destination: AgeConfirmationView(viewModel: viewModel)) {
-                                HStack{
-                                    Text("Continuar")
-                                    Image(systemName: "chevron.right")
-                                }
-                                
-                                .foregroundStyle(Color.white)
-                                .frame(width: 300,height: 44)
-                                .clipShape(.capsule)
+                    ZStack {
+                        Image(.camada1)
+                            .resizable()
+                            .frame(width: 500, height: 250)
+                            .opacity(0.3)
+
+                        NavigationLink(destination: AgeConfirmationView(viewModel: viewModel)) {
+                            HStack {
+                                Text("Continuar")
+                                Image(systemName: "chevron.right")
                             }
-                           .disabled(viewModel.username.isEmpty)
-                           .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
+                            .foregroundStyle(Color.white)
+                            .frame(width: 300, height: 44)
+                            .clipShape(.capsule)
                         }
+                        .disabled(viewModel.username.isEmpty)
+                        .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
+                    }
                     }
                 }
             .ignoresSafeArea()
@@ -71,6 +71,5 @@ struct NameConfirmationView: View {
 
 
 #Preview {
-    let viewModel = AgeConfirmationViewModel()
     NameConfirmationView(isAble: false)
 }

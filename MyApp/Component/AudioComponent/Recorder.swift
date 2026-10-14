@@ -66,7 +66,8 @@ final class Recorder{
             startMetering()
         }
         catch{
-            print("Startfailed: \(error)")
+            isRecording = false
+            recorder = nil
         }
     }
     private func startMetering(){

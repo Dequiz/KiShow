@@ -22,6 +22,7 @@ struct AddExperience: View {
     @State var videoPicker = VideoPickerView()
     @State private var experiencia = ""
     @State private var isShowingVideoPicker = false
+    @State private var isShowingMicrophonePermissionAlert = false
     @State private var itemSelecionado: PhotosPickerItem? = nil
         @State private var imagemCarregada: UIImage? = nil
     @State var viewModel = ExperienceViewModel()
@@ -46,9 +47,7 @@ struct AddExperience: View {
 
         .task{
             prepareExperienceForEditing()
-            rec.requestPermission{ _ in
             recordings = recordingList()
-            }
         }
 
         .onChange(of: rec.isRecording) { _, isRecording in
@@ -75,6 +74,15 @@ struct AddExperience: View {
             }
             .navigationTitle(experienceToEdit == nil ? "Nova experiência" : "Editar experiência")
             .navigationBarTitleDisplayMode(.inline)
+            .background {
+                Color.clear
+                    .tint(.primary)
+                    .alert("Acesso ao microfone", isPresented: $isShowingMicrophonePermissionAlert) {
+                        Button("OK", role: .cancel) { }
+                    } message: {
+                        Text("Para gravar uma lembrança em áudio, permita o acesso ao microfone nos Ajustes do dispositivo.")
+                    }
+            }
             .onChange(of: itemSelecionado) { _, novoItem in
                 Task {
                     if let data = try? await novoItem?.loadTransferable(type: Data.self),
@@ -156,7 +164,6 @@ struct AddExperience: View {
             try modelContext.save()
         } catch {
             if isNewExperience { modelContext.delete(target) }
-            print("Experience save failed: \(error)")
             return
         }
 
@@ -212,6 +219,8 @@ struct AddExperience: View {
             .lineLimit(2...5)
             .padding(14)
             .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .foregroundStyle(Color.primary)
+            .tint(.mainPink)
             .frame(maxWidth: .infinity)
     }
 
@@ -295,7 +304,14 @@ struct AddExperience: View {
                     rec.stop()
                 } else {
                     player.stop()
-                    rec.start()
+                    rec.requestPermission { granted in
+                        guard granted else {
+                            isShowingMicrophonePermissionAlert = true
+                            return
+                        }
+                        rec.start()
+                        recordings = recordingList()
+                    }
                 }
             } label: {
                 Image(systemName: rec.isRecording ? "stop.fill" : "mic.fill")

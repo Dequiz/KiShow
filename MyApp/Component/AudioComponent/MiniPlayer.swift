@@ -42,7 +42,6 @@ final class MiniPlayer{
             startUpdatingProgress()
         }
         catch{
-            print("Playback failed: \(error)")
             isPlaying = false
         }
     }
@@ -107,7 +106,6 @@ final class MiniPlayer{
                 
                 startUpdatingProgress()
             } catch {
-                print("Playback failed: \(error)")
                 isPlaying = false
                 player = nil
                 currentAudioID = nil
