@@ -1,11 +1,12 @@
 import SwiftUI
 import SwiftData
+import AVKit
 
 @main
 struct MyApp: App {
     var body: some Scene {
         WindowGroup {
-            Selecionadora()
+            SplashCoordinator()
         }
         .modelContainer(for: [
             UserEntity.self,
@@ -14,6 +15,24 @@ struct MyApp: App {
             TitleEntity.self,
             ShowEntity.self
         ])
+    }
+}
+
+struct SplashCoordinator: View {
+    @State private var showSplash = true
+
+    var body: some View {
+        ZStack {
+            if showSplash {
+                SplashScreenView {
+                    withAnimation {
+                        showSplash = false
+                    }
+                }
+            } else {
+                Selecionadora()
+            }
+        }
     }
 }
 
