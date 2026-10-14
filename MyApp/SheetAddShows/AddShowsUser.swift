@@ -135,10 +135,6 @@ struct AddShowsUser: View {
                             labeledField("Cidade", text: $city)
                         }
                         .listRowBackground(Color.details)
-                        ButtonComponent(buttonText: "Adicionar Show") {
-                            save()
-                        }
-                        .disabled(!canSave || isSavingShow)
                         .padding(.bottom, 30)
                     }
                     .padding(.top, 12)
@@ -151,6 +147,14 @@ struct AddShowsUser: View {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark")
                     }
+                }
+                ToolbarItem(placement: .topBarTrailing){
+                    Button {
+                        save()
+                    }label: {
+                        Image(systemName: "checkmark")
+                    }
+                    .disabled(!canSave || isSavingShow)
                 }
             }
         }
