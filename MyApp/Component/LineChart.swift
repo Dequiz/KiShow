@@ -15,8 +15,8 @@ private struct ShowsMonth: Identifiable {
 }
 
 struct LineChart: View {
-    private let monthSlotWidth: CGFloat = 88
-    private let chartHeight: CGFloat = 285
+    private let monthSlotWidth: CGFloat = 60
+    private let chartHeight: CGFloat = 190
     @Environment(\.modelContext) private var context
     @State private var viewModel = LineChartViewModel()
     @State private var showDates: [Date] = []
@@ -152,12 +152,13 @@ struct LineChart: View {
                     }
                     .chartYAxisLabel(position: .leading, alignment: .center) {
                         Text("Quantidade de vezes \nque foi a um show")
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(Color.text)
                             .fixedSize()
                             .lineLimit(2 )
                             .padding(.vertical, 14)
                             .padding(.horizontal, 10)
+                            .rotationEffect(.degrees(180))
                     }
                     .foregroundStyle(Color.mainPink)
                     .frame(width: chartWidth, height: chartHeight)

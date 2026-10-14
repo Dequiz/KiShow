@@ -40,11 +40,18 @@ struct AgeConfirmationView: View {
                     selectedYear: $viewModel.yearSelected
                 )
                 Spacer()
-                ButtonComponent(buttonText: "Continuar"){
-                    viewModel.saveUser(username: viewModel.username, context: modelContext)
-                }
-                Spacer()
-                
+                Image(.camada1)
+                    .resizable()
+                    .frame(width:500,height: 250)
+                    .rotationEffect(.degrees(0))
+                    .opacity(0.3)
+                    .overlay{
+                        ButtonComponent(buttonText: "Continuar"){
+                            viewModel.saveUser(username: viewModel.username, context: modelContext)
+                        }
+                       .disabled(viewModel.username.isEmpty)
+                       .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
+                    }
             }
             
         }

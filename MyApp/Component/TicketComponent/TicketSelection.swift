@@ -32,7 +32,10 @@ let event: EventEntity
 
     var body: some View {
         Ticket(artistName: artistName, eventName: eventName, localName:localName, dateEvent: dateEvent, theme: selectedTheme)
-            .onLongPressGesture(minimumDuration: 0.5) { upSheet.toggle() }
+            .simultaneousGesture(
+                LongPressGesture(minimumDuration: 0.5)
+                    .onEnded { _ in upSheet = true }
+            )
             .sheet (isPresented: $upSheet) {
                 NavigationStack {
                     ScrollView(.horizontal, showsIndicators: false) {

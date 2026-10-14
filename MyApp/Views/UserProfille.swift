@@ -23,10 +23,10 @@ struct UserProfille: View {
                     .ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(spacing: 20) {
+                    VStack(spacing: 18) {
                         HStack(spacing: 15) {
                             
-                            ProfileIcon(user: user, size: 90)
+                            ProfileIcon(user: user, size: 94)
                             
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(user?.nameUser ?? "Seu Perfil")
@@ -50,12 +50,12 @@ struct UserProfille: View {
                             }
                         }
                         
-                        Spacer()
-                        
-                        VStack(spacing: 16) {
+                        .padding(.bottom, 24)
+
+                        VStack(spacing: 28) {
                             VStack(alignment: .leading){
                                 Text("Frequência de Shows")
-                                    .font(.system(size: 24, weight: .semibold))
+                                    .font(.system(size: 20, weight: .semibold))
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.65)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -69,9 +69,9 @@ struct UserProfille: View {
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                            .frame(minHeight: 290)
+                            .frame(height: 305)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
-                            .padding()
+                            .padding(.horizontal, 4)
                             GeometryReader { geometry in
                                 let spacing: CGFloat = 12
                                 let cardWidth = (geometry.size.width - spacing) / 2
@@ -96,7 +96,7 @@ struct UserProfille: View {
 
                                     }
                                     .padding(.horizontal, 12)
-                                    .frame(width: cardWidth, height: 210)
+                                    .frame(width: cardWidth, height: 205)
                                     .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
 
                                     VStack(spacing: 4) {
@@ -113,11 +113,11 @@ struct UserProfille: View {
                                         }
                                     }
                                     .padding(.horizontal, 12)
-                                    .frame(width: cardWidth, height: 210)
+                                    .frame(width: cardWidth, height: 205)
                                     .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
                                 }
                             }
-                            .frame(height: 210)
+                            .frame(height: 205)
                         }
                     }
                     .padding(20)
