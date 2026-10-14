@@ -66,6 +66,8 @@ struct UserProfille: View {
                                 }else{
                                     Text("Você ainda não possui shows adicionados")
                                         .padding()
+                                        .foregroundStyle(.secondary)
+
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -91,6 +93,8 @@ struct UserProfille: View {
                                         } else {
                                             Text("Você ainda não possui shows adicionados")
                                                 .padding()
+                                                .foregroundStyle(.secondary)
+
                                         }
                                         Spacer()
 
@@ -110,6 +114,7 @@ struct UserProfille: View {
                                         } else {
                                             Text("Você ainda não possui shows adicionados")
                                                 .padding()
+                                                .foregroundStyle(.secondary)
                                         }
                                     }
                                     .padding(.horizontal, 12)
