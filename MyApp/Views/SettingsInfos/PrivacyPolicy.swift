@@ -35,11 +35,10 @@ struct PrivacyPolicy: View {
                 .listRowBackground(Color.details)
                 
                 Section {
-                    BulletTopic(text: "Nome Completo;")
-                    BulletTopic(text: "Idade;")
-                    BulletTopic(text: "Imagens;")
-                    BulletTopic(text: "Videos;")
-                    BulletTopic(text: "Audios.")
+                    BulletTopic(text: "Nome de exibição e idade calculada a partir da data de nascimento informada;")
+                    BulletTopic(text: "Fotos e vídeos escolhidos pelo usuário;")
+                    BulletTopic(text: "Áudios e textos adicionados às experiências de shows;")
+                    BulletTopic(text: "Dados dos shows registrados pelo usuário.")
                     
                 } header: {
                     HStack{
@@ -51,11 +50,15 @@ struct PrivacyPolicy: View {
                 .listRowBackground(Color.details)
                 
                 Section {
-                    Text("**Dados de Perfil (Nome Completo e data de nascimento):** Coletados exclusivamente para a criação e personalização da experiência do usuário dentro do aplicativo. ")
+                    Text("**Perfil (nome e idade):** O app solicita um nome de exibição e a data de nascimento para calcular a idade. O nome e a idade calculada ficam no armazenamento local do aplicativo; a data de nascimento não é salva.")
                     
-                    Text("**Arquivos de Mídia (Imagens, Vídeos e Áudios):** O aplicativo solicita permissão de acesso à câmera, galeria e microfone para permitir que o usuário crie registros e guarde recordações dos shows aos quais compareceu.")
+                    Text("**Fotos e vídeos:** Para anexar uma foto ou vídeo, o app usa o seletor de mídia do iOS. Você escolhe quais itens compartilhar com o app; ele não solicita acesso geral à fototeca nem usa a câmera.")
                     
-                    Text("**Arquivos de áudio (uso do microfone):** Utilizados quando necessário para a gravação de conteúdos em áudio ou para captura de áudio associada aos vídeos.")
+                    Text("**Áudios:** O microfone só é solicitado quando você inicia uma gravação de áudio para uma experiência.")
+
+                    Text("**Calendário:** Ao tocar em adicionar show ao calendário, o app solicita acesso ao Calendário para verificar se já existe um evento semelhante e, se você autorizar, adicionar o show. O conteúdo dos demais eventos não é salvo pelo KiShow nem enviado aos nossos servidores.")
+
+                    Text("**Consulta de eventos:** O app envia à Discovery API da Ticketmaster o gênero escolhido e o código do país Brasil para buscar eventos. A Ticketmaster também recebe dados técnicos da conexão, como o endereço IP. Nome, idade, mídias e registros pessoais não são incluídos na consulta.")
                     
                     Text("Todas as imagens, vídeos e áudios inseridos no aplicativo são processadas e armazenados exclusivamente de forma local no dispositivo do usuário. O aplicativo não realiza upload, não armazena cópias em servidores externos e não tem acesso remoto a esses arquivos.")
                     

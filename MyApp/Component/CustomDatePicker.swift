@@ -9,10 +9,33 @@ import SwiftUI
 
 
 struct CustomDatePicker: View {
-    var dateDay = Calendar.current.component(.day, from: Date())
     @Binding var selectedDay: Int
-        @Binding var selectedMonth: Int
-        @Binding var selectedYear: Int
+    @Binding var selectedMonth: Int
+    @Binding var selectedYear: Int
+
+    private var latestSelectableMonth: Int {
+        selectedYear == Calendar.current.component(.year, from: .now)
+            ? Calendar.current.component(.month, from: .now)
+            : 12
+    }
+
+    private var daysInSelectedMonth: Int {
+        var components = DateComponents()
+        components.year = selectedYear
+        components.month = selectedMonth
+        components.day = 1
+        guard let date = Calendar.current.date(from: components),
+              let range = Calendar.current.range(of: .day, in: .month, for: date) else {
+            return 31
+        }
+        let lastDay = range.count
+        let calendar = Calendar.current
+        if selectedYear == calendar.component(.year, from: .now),
+           selectedMonth == calendar.component(.month, from: .now) {
+            return min(lastDay, calendar.component(.day, from: .now))
+        }
+        return lastDay
+    }
   
     var body: some View {
         HStack{
@@ -21,7 +44,7 @@ struct CustomDatePicker: View {
                     .font(.headline)
                 Picker("Dia",selection: $selectedDay){
                     
-                    ForEach(1...31, id: \.self){ day in
+                    ForEach(1...daysInSelectedMonth, id: \.self){ day in
                         Text("\(day)").tag(day)
                     }
                 }
@@ -35,8 +58,8 @@ struct CustomDatePicker: View {
                     .font(.headline)
                 Picker("Mês",selection: $selectedMonth){
                     
-                    ForEach(1...12, id: \.self){ day in
-                        Text("\(day)").tag(day)
+                    ForEach(1...latestSelectableMonth, id: \.self){ month in
+                        Text("\(month)").tag(month)
                     }
                 }
                 .pickerStyle(.wheel)
@@ -45,18 +68,25 @@ struct CustomDatePicker: View {
             .frame(height: 150)
 
             VStack(){
-                Text("Dia")
+                Text("Ano")
                     .font(.headline)
-                Picker("Dia",selection: $selectedYear){
+                Picker("Ano",selection: $selectedYear){
                     
-                    ForEach(1900...Calendar.current.component(.year, from: Date()), id: \.self){ day in
-                        Text(String("\(day)")).tag(day)
+                    ForEach(1900...Calendar.current.component(.year, from: Date()), id: \.self){ year in
+                        Text(String("\(year)")).tag(year)
                     }
                 }
                 .pickerStyle(.wheel)
                 .frame(width: 100)
             }
             .frame(height: 150)
+        }
+        .onChange(of: selectedMonth) { _, _ in
+            selectedDay = min(selectedDay, daysInSelectedMonth)
+        }
+        .onChange(of: selectedYear) { _, _ in
+            selectedMonth = min(selectedMonth, latestSelectableMonth)
+            selectedDay = min(selectedDay, daysInSelectedMonth)
         }
     }
 }

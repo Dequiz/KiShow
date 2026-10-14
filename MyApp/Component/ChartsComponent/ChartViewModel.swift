@@ -30,7 +30,19 @@ class ChartViewModel {
             let pessoas = try context.fetch(descriptor)
             
             // 4. Extraímos apenas os nomes em um Array de Strings
-            let todosOsNomes = pessoas.map { $0.show?.genderShow ?? "Gênero" }
+            let todosOsNomes = pessoas.compactMap { pessoa -> String? in
+                guard let nome = pessoa.show?.genderShow
+                    .trimmingCharacters(in: .whitespacesAndNewlines),
+                      !nome.isEmpty else {
+                    return nil
+                }
+
+                let nomeNormalizado = nome.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+                let valoresInvalidos: Set<String> = [
+                    "undefined", "null", "unknown", "desconhecido", "genero", "genre", "n/a"
+                ]
+                return valoresInvalidos.contains(nomeNormalizado) ? nil : nome
+            }
             
             // 5. Usamos o Dictionary(grouping:by:) para agrupar e contar os iguais
             let contagemDeNomes = Dictionary(grouping: todosOsNomes, by: { $0 })
@@ -40,10 +52,12 @@ class ChartViewModel {
             appearsMore = contagemDeNomes
             ordenadoPorMaior = contagemDeNomes
                 .map { ChartItemData(gender: $0.key, count: $0.value) }
-                .sorted { $0.count > $1.count }
-            for (nome, quantidade) in contagemDeNomes {
-                       print("O nome '\(nome)' aparece \(quantidade) vezes.")
-                   }
+                .sorted { left, right in
+                    if left.count != right.count {
+                        return left.count > right.count
+                    }
+                    return left.gender.localizedCaseInsensitiveCompare(right.gender) == .orderedAscending
+                }
         } catch {
             print("Erro ao buscar dados: \(error)")
         }

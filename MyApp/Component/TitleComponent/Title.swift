@@ -27,19 +27,9 @@ struct Title: View {
         switch metric {
         case .shows: current = events.count
         case .photos:
-            var temporary = 0
-            for i in 0..<experiences.count{
-                if let temporary = experiences[i].imageContent?.count{
-                    current += temporary
-                }
-            }
+            current = experiences.reduce(0) { $0 + ($1.imageContent?.count ?? 0) }
         case .texte:
-            var temporary = 0
-            for i in 0..<experiences.count{
-                if let temporary = experiences[i].textContent?.count{
-                    current += temporary
-                }
-            }
+            current = experiences.reduce(0) { $0 + ($1.textContent?.count ?? 0) }
         case .characters:
             for experience in experiences {
                 if let texts = experience.textContent {

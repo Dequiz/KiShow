@@ -30,9 +30,10 @@ struct AddShow: View {
     }
     private var isAlreadyAdded: Bool { !matchingEvents.isEmpty }
     @State private var showToast = false
-    @State private var calendarToastMessage = ""
-    @State private var calendarToastSucceeded = false
+    @State private var toastMessage = ""
+    @State private var toastSucceeded = false
     @State private var isAddingToCalendar = false
+    @State private var isSavingShow = false
     let manager = CalendarManager()
     private let toastOption = SimpleToastOptions(alignment: .top,hideAfter: 2,backdrop: Color.black.opacity(0.2),animation: .default,modifierType: .slide)
     let ticketMasterShow: TicketmasterShow
@@ -130,8 +131,8 @@ struct AddShow: View {
                             Button {
                                 guard !isAddingToCalendar else { return }
                                 guard let dateShow = showStartDate else {
-                                    calendarToastMessage = "A data deste show não está disponível."
-                                    calendarToastSucceeded = false
+                                    toastMessage = "A data deste show não está disponível."
+                                    toastSucceeded = false
                                     showToast = true
                                     return
                                 }
@@ -147,17 +148,17 @@ struct AddShow: View {
                                     )
                                     switch result {
                                     case .added:
-                                        calendarToastMessage = "Show: \(nomeShow) foi adicionado ao calendário."
-                                        calendarToastSucceeded = true
+                                        toastMessage = "Show: \(nomeShow) foi adicionado ao calendário."
+                                        toastSucceeded = true
                                     case .alreadyExists:
-                                        calendarToastMessage = "Show: \(nomeShow) já está no calendário."
-                                        calendarToastSucceeded = false
+                                        toastMessage = "Show: \(nomeShow) já está no calendário."
+                                        toastSucceeded = false
                                     case .accessDenied:
-                                        calendarToastMessage = "Sem permissão para acessar o calendário."
-                                        calendarToastSucceeded = false
+                                        toastMessage = "Sem permissão para acessar o calendário."
+                                        toastSucceeded = false
                                     case .failed(let message):
-                                        calendarToastMessage = "Não foi possível adicionar o show: \(message)"
-                                        calendarToastSucceeded = false
+                                        toastMessage = "Não foi possível adicionar o show: \(message)"
+                                        toastSucceeded = false
                                     }
                                     isAddingToCalendar = false
                                     showToast = true
@@ -192,11 +193,27 @@ struct AddShow: View {
                         }
                         if !isAlreadyAdded{
                             ButtonComponent(buttonText: "Adicionar Show"){
+                                guard !isSavingShow else { return }
+                                isSavingShow = true
                                 Task {
-                                   await viewModel.saveShow(showTicket: ticketMasterShow, context: context)
-                                   dismiss()
+                                    do {
+                                        try await viewModel.saveShow(showTicket: ticketMasterShow, context: context)
+                                        let artist = ticketMasterShow.attraction?.name ?? "Desconhecido"
+                                        toastMessage = "Show de: \(artist) foi adicionado com sucesso."
+                                        toastSucceeded = true
+                                        showToast = true
+                                        try? await Task.sleep(nanoseconds: 2_200_000_000)
+                                        action()
+                                        dismiss()
+                                    } catch {
+                                        isSavingShow = false
+                                        toastMessage = "Não foi possível adicionar o show de: \(ticketMasterShow.attraction?.name ?? "Desconhecido"). \(error.localizedDescription)"
+                                        toastSucceeded = false
+                                        showToast = true
+                                    }
                                }
                             }
+                            .disabled(isSavingShow)
                         }
                         
                         
@@ -224,14 +241,14 @@ struct AddShow: View {
         }
         .simpleToast(isPresented: $showToast, options: toastOption, content: {
             HStack(spacing: 10) {
-                Image(systemName: calendarToastSucceeded ? "calendar.badge.checkmark" : "calendar")
+                Image(systemName: toastSucceeded ? "checkmark.circle" : "exclamationmark.triangle")
                     .font(.callout)
-                Text(calendarToastMessage)
+                Text(toastMessage)
                     .font(.callout)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(16)
-            .background(calendarToastSucceeded ? Color.mainPurple : Color.red)
+            .background(toastSucceeded ? Color.mainPurple : Color.red)
             .foregroundStyle(.white)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .frame(maxWidth: 360)

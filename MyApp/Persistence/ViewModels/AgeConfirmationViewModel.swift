@@ -17,8 +17,12 @@ class AgeConfirmationViewModel {
     var username = ""
     
     func saveUser(username: String, context: ModelContext) {
-        let age = verificarIdade(day: daySelected, month: monthSelected, year: yearSelected)
-        let newUser = UserEntity(nameUser: username, ageUser: age)
+        let displayName = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !displayName.isEmpty,
+              let age = calcularIdade(day: daySelected, month: monthSelected, year: yearSelected) else {
+            return
+        }
+        let newUser = UserEntity(nameUser: displayName, ageUser: age)
         
         context.insert(newUser)
         
@@ -30,18 +34,18 @@ class AgeConfirmationViewModel {
         }
     }
     
-    private func verificarIdade(day: Int, month: Int, year: Int) -> Int {
-        let atualDate = Calendar.current
-        let atualDay = atualDate.component(.day, from: Date())
-        let atualMonth = atualDate.component(.month, from: Date())
-        let atualYear = atualDate.component(.year, from: Date())
-        
-        var idade = atualYear - year
-        
-        if atualMonth < month || (atualMonth == month && atualDay < day) {
-            idade -= 1
+    private func calcularIdade(day: Int, month: Int, year: Int) -> Int? {
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+        guard let birthDate = Calendar.current.date(from: components),
+              Calendar.current.component(.year, from: birthDate) == year,
+              Calendar.current.component(.month, from: birthDate) == month,
+              Calendar.current.component(.day, from: birthDate) == day,
+              birthDate <= Date.now else {
+            return nil
         }
-        
-        return idade
+        return Calendar.current.dateComponents([.year], from: birthDate, to: .now).year
     }
 }

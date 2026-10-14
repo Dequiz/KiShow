@@ -18,10 +18,20 @@ class WebService {
             return []
         }
         
-        let urlString = "https://app.ticketmaster.com/discovery/v2/events?apikey=\(TicketMasterKey)&locale=*&countryCode=BR&classificationName=\(genre)&size=100&page=0"
-        guard let url = URL(string: urlString) else {
+        let apiKey = TicketmasterConfiguration.apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !apiKey.isEmpty,
+              var components = URLComponents(string: "https://app.ticketmaster.com/discovery/v2/events") else {
             return []
         }
+        components.queryItems = [
+            URLQueryItem(name: "apikey", value: apiKey),
+            URLQueryItem(name: "locale", value: "*"),
+            URLQueryItem(name: "countryCode", value: "BR"),
+            URLQueryItem(name: "classificationName", value: genre),
+            URLQueryItem(name: "size", value: "100"),
+            URLQueryItem(name: "page", value: "0")
+        ]
+        guard let url = components.url else { return [] }
 
         do {
             let (data, response) = try await URLSession.shared.data(from: url)

@@ -8,7 +8,7 @@
 internal import Foundation
 import SwiftData
 
-public enum TypeMidias: Codable {
+nonisolated public enum TypeMidias: Codable, Sendable {
     case image
     case video
     case audio

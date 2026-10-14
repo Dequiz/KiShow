@@ -28,7 +28,7 @@ struct TitlesNames {
         .init(name: "Fotografo", hint: "Adicione 3 Fotos", metric: .photos, goal: 3),
         .init(name: "Escritor", hint: "Escreva mais de 1000 Caracteres",metric: .characters,goal: 1000),
         .init(name: "Escritor Jr", hint: "Escreva 1 Texto",metric: .texte,goal: 1),
-        .init(name: "Dono", hint: "Adicione Mais de 10 Shows",metric: .shows,goal: 10),
+        .init(name: "Dono", hint: "Adicione Mais de 10 Shows",metric: .shows,goal: 11),
         .init(name: "Super Mary", hint: "Título secreto"),
         .init(name: "Super Andre", hint: "Título secreto"),
         .init(name: "Super Elisa", hint: "Título secreto"),

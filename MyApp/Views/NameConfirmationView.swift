@@ -71,6 +71,5 @@ struct NameConfirmationView: View {
 
 
 #Preview {
-    let viewModel = AgeConfirmationViewModel()
     NameConfirmationView(isAble: false)
 }

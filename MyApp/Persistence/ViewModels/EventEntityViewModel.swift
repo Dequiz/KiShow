@@ -9,6 +9,17 @@ internal import Foundation
 import SwiftUI
 import SwiftData
 
+enum EventSaveError: LocalizedError {
+    case missingShowDate
+
+    var errorDescription: String? {
+        switch self {
+        case .missingShowDate:
+            return "A data do show não está disponível."
+        }
+    }
+}
+
 @Observable
 class EventEntityViewModel {
     
@@ -26,7 +37,7 @@ class EventEntityViewModel {
         latitude: Double?,
         longitude: Double?,
         context: ModelContext
-    ) {
+    ) throws {
         
         let calendar = Calendar.current
         let comps = calendar.dateComponents([.hour, .minute], from: startTime)
@@ -51,13 +62,14 @@ class EventEntityViewModel {
             longitude: longitude
         )
 
-        context.insert(EventEntity(show: newShow))
-        try? context.save()
+        try persist(newShow, context: context)
     }
 
     
-    func saveShow(showTicket: TicketmasterShow, context: ModelContext) async {
-        guard let date = parseDate(showTicket.dates?.start?.localDate) else { return }
+    func saveShow(showTicket: TicketmasterShow, context: ModelContext) async throws {
+        guard let date = parseDate(showTicket.dates?.start?.localDate) else {
+            throw EventSaveError.missingShowDate
+        }
         let time = parseTime(showTicket.dates?.start?.localTime ?? "00:00:00")
 
         var imageData: Data? = nil
@@ -83,7 +95,17 @@ class EventEntityViewModel {
             longitude: showTicket.longitude
         )
 
-        context.insert(EventEntity(show: newShow))
-        try? context.save()
+        try persist(newShow, context: context)
+    }
+
+    private func persist(_ show: ShowEntity, context: ModelContext) throws {
+        let event = EventEntity(show: show)
+        context.insert(event)
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 }

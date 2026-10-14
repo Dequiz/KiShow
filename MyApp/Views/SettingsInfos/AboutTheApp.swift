@@ -7,11 +7,29 @@
 
 import SwiftUI
 import SwiftData
+import SimpleToast
 
 struct AboutTheApp: View {
     @State var dm = TitleDefinitionMachine()
     @State var countButtonClick = 0
     @Environment(\.modelContext) var context
+    @State private var showToast = false
+    @State private var toastMessage = ""
+    @State private var toastSucceeded = false
+    private let toastOption = SimpleToastOptions(
+        alignment: .top,
+        hideAfter: 2,
+        backdrop: Color.black.opacity(0.2),
+        animation: .default,
+        modifierType: .slide
+    )
+
+    private var appVersion: String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let version = info["CFBundleShortVersionString"] as? String ?? "—"
+        let build = info["CFBundleVersion"] as? String ?? "—"
+        return "\(version) (\(build))"
+    }
     var body: some View {
         ZStack (alignment: .top){
             Color("AppBackground")
@@ -31,7 +49,7 @@ struct AboutTheApp: View {
                         Spacer()
                         
                         
-                        Text("**Versão:** 1.0.0")
+                        Text("**Versão:** \(appVersion)")
                         Text("**Desenvolvido por:** Paulo Eduardo Barbosa da Silva, André Holovati, Maria Clara Fernandes Bessa e Elisa Tanada Giacomini da Silva.")
                         
                         Spacer()
@@ -60,8 +78,34 @@ struct AboutTheApp: View {
             }
         }
         .task(id: countButtonClick) {
-            dm.processAction(.secretButtonClicked(clickButton: countButtonClick), context: context)
-                }
+            do {
+                let unlocked = try dm.processAction(
+                    .secretButtonClicked(clickButton: countButtonClick),
+                    context: context
+                )
+                guard !unlocked.isEmpty else { return }
+                toastMessage = "Conquistas desbloqueadas: \(unlocked.joined(separator: ", "))."
+                toastSucceeded = true
+            } catch {
+                toastMessage = "Não foi possível desbloquear as conquistas. \(error.localizedDescription)"
+                toastSucceeded = false
+            }
+            showToast = !toastMessage.isEmpty
+        }
+        .simpleToast(isPresented: $showToast, options: toastOption) {
+            HStack(spacing: 10) {
+                Image(systemName: toastSucceeded ? "checkmark.circle" : "exclamationmark.triangle")
+                Text(toastMessage)
+                    .font(.callout)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(16)
+            .background(toastSucceeded ? Color.mainPurple : Color.red)
+            .foregroundStyle(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .frame(maxWidth: 360)
+            .padding(.horizontal, 16)
+        }
     }
 }
 

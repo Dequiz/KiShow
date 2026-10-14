@@ -32,7 +32,6 @@ struct EventView: View {
     @State private var dailyStories: [StoryItem] = []
     @State private var hasUnseenStories = false
     @State private var experienceToEdit: ExperienceEntity?
-    @State private var isShowingExperienceEditor = false
 
     private var storyDateKey: String {
         let date = Calendar.current.dateComponents([.year, .month, .day], from: .now)
@@ -104,7 +103,6 @@ struct EventView: View {
                                 .contextMenu {
                                     Button("Editar", systemImage: "pencil") {
                                         experienceToEdit = experience
-                                        isShowingExperienceEditor = true
                                     }
                                     Button("Excluir",systemImage: "trash.fill", role: .destructive) {
                                         delete(experience)
@@ -189,14 +187,12 @@ struct EventView: View {
                 .accessibilityLabel("Adicionar show ao calendário")
             }
         }
-        .sheet(isPresented: $isShowingExperienceEditor) {
-            if let experienceToEdit {
-                NavigationStack {
-                    AddExperience(
-                        eventoSelecionado: eventoSelecionado,
-                        experienceToEdit: experienceToEdit
-                    )
-                }
+        .sheet(item: $experienceToEdit) { experience in
+            NavigationStack {
+                AddExperience(
+                    eventoSelecionado: eventoSelecionado,
+                    experienceToEdit: experience
+                )
             }
         }
     }
