@@ -16,6 +16,7 @@ struct SplashScreenView: View {
         var body: some View {
             VideoPlayer(player: player)
                 .edgesIgnoringSafeArea(.all)
+                .disabled(true)
                 .onAppear {
                     player.play()
                     NotificationCenter.default.addObserver(
