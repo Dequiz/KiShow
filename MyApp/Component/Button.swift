@@ -26,8 +26,6 @@ struct ButtonComponent: View {
                 Text(buttonText)
                     .fontWeight(textWeight)
                     .foregroundStyle(colorText)
-                Image(systemName: "chevron.right")
-                    .foregroundColor(colorText)
             }
         }
         .frame(width: CGFloat(widthButton),height: CGFloat(heightButton))

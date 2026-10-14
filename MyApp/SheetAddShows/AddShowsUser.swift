@@ -72,7 +72,7 @@ struct AddShowsUser: View {
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 200)
-                            .background(Color(.systemGray6))
+                            .background(Color(.details))
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
                         .padding(.horizontal)
@@ -108,6 +108,7 @@ struct AddShowsUser: View {
                                 .tint(.primary)
                             }
                         }
+                        .listRowBackground(Color.details)
 
                         sectionCard(title: "Data e Hora") {
                             HStack {
@@ -124,6 +125,7 @@ struct AddShowsUser: View {
                                     .labelsHidden()
                             }
                         }
+                        .listRowBackground(Color.details)
 
                         sectionCard(title: "Local") {
                             labeledField("Nome do local", text: $localShow)
@@ -132,6 +134,7 @@ struct AddShowsUser: View {
                             Divider()
                             labeledField("Cidade", text: $city)
                         }
+                        .listRowBackground(Color.details)
                         ButtonComponent(buttonText: "Adicionar Show") {
                             save()
                         }

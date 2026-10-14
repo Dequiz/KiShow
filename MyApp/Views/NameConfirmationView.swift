@@ -51,10 +51,7 @@ struct NameConfirmationView: View {
                             .opacity(0.3)
 
                         NavigationLink(destination: AgeConfirmationView(viewModel: viewModel)) {
-                            HStack {
-                                Text("Continuar")
-                                Image(systemName: "chevron.right")
-                            }
+                            Text("Continuar")
                             .foregroundStyle(Color.white)
                             .frame(width: 300, height: 44)
                             .clipShape(.capsule)

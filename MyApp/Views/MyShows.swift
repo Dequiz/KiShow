@@ -256,17 +256,17 @@ struct MyShows: View {
     }
 
     private func emptyShowsState(message: String) -> some View {
-        VStack(spacing: 20) {
+        VStack() {
             Image(.eletronic)
                 .resizable()
                 .scaledToFit()
-                .frame(maxWidth: 263, maxHeight: 279)
+                .padding(.horizontal, 40)
             Text(message)
                 .font(.title2)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
-        .padding(24)
+        .padding(.bottom, 100)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 

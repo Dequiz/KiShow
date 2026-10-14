@@ -174,6 +174,7 @@ struct ThermsOfService: View {
                         guard let url = URL(string: "https://dequiz.github.io/KiShow/index.html") else { return }
                         openURL(url)
                     }
+                    
                     Button("Cancelar", role: .cancel) { }
                 } message: {
                     Text("Você será redirecionado para uma página externa com a política de privacidade.")
