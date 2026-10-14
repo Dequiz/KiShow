@@ -10,19 +10,15 @@ import SwiftData
 
 @Observable
 class AgeConfirmationViewModel {
-    var daySelected = 1
-    var monthSelected = 1
-    var yearSelected = 2006
     var navigateToNextScreen = false
+    var saveFailed = false
     var username = ""
     
     func saveUser(username: String, context: ModelContext) {
         let displayName = username.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !displayName.isEmpty,
-              let age = calcularIdade(day: daySelected, month: monthSelected, year: yearSelected) else {
-            return
-        }
-        let newUser = UserEntity(nameUser: displayName, ageUser: age)
+        guard !displayName.isEmpty else { return }
+        // Keep the existing SwiftData field for backward-compatible schema storage.
+        let newUser = UserEntity(nameUser: displayName, ageUser: 0)
         
         context.insert(newUser)
         
@@ -30,22 +26,9 @@ class AgeConfirmationViewModel {
             try context.save()
             navigateToNextScreen = true
         } catch {
-            print("Erro ao salvar utilizador: \(error.localizedDescription)")
+            context.delete(newUser)
+            navigateToNextScreen = false
+            saveFailed = true
         }
-    }
-    
-    private func calcularIdade(day: Int, month: Int, year: Int) -> Int? {
-        var components = DateComponents()
-        components.year = year
-        components.month = month
-        components.day = day
-        guard let birthDate = Calendar.current.date(from: components),
-              Calendar.current.component(.year, from: birthDate) == year,
-              Calendar.current.component(.month, from: birthDate) == month,
-              Calendar.current.component(.day, from: birthDate) == day,
-              birthDate <= Date.now else {
-            return nil
-        }
-        return Calendar.current.dateComponents([.year], from: birthDate, to: .now).year
     }
 }

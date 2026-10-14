@@ -9,9 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct Charts: View{
-    @Environment(\.modelContext) var context
-    @State var viewModel = ChartViewModel()
-    @State var chartsValues = [ChartItemData]().prefix(3)
+    @Query private var shows: [ShowEntity]
+
+    private var chartsValues: [ChartItemData] {
+        Array(ChartViewModel.contarTotalDeItens(shows: shows).prefix(3))
+    }
+
     var body: some View{
         GeometryReader { geometry in
             let total = max(chartsValues.reduce(0) { $0 + $1.count }, 1)
@@ -35,9 +38,6 @@ struct Charts: View{
         }
         .frame(maxWidth: .infinity)
         .frame(height: 155)
-        .task {
-            chartsValues = viewModel.contarTotalDeItens(context: context).prefix(3)
-        }
     }
 }
 #Preview {

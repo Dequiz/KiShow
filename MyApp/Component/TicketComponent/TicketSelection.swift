@@ -51,7 +51,7 @@ let event: EventEntity
                                         do {
                                             try context.save()
                                         } catch {
-                                            print("Erro ao salvar a cor do ticket: \(error)")
+                                            upSheet = false
                                         }
                                         upSheet.toggle()
                                     }

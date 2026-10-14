@@ -14,20 +14,20 @@ struct MidiaPicker: View {
         HStack(spacing:15){
             Button("", systemImage: "photo.fill.on.rectangle.fill"){
                 viewModel.media = ExperienceViewModel.MediaTypes.photo
-                print(viewModel.media)
             }
+            .accessibilityLabel("Adicionar foto")
             Button("", systemImage: "video.fill"){
                 viewModel.media = ExperienceViewModel.MediaTypes.video
-                print(viewModel.media)
             }
+            .accessibilityLabel("Adicionar vídeo")
             Button("", systemImage: "waveform"){
                 viewModel.media = ExperienceViewModel.MediaTypes.audio
-                print(viewModel.media)
             }
+            .accessibilityLabel("Adicionar áudio")
             Button("", systemImage: "text.alignleft"){
                 viewModel.media = ExperienceViewModel.MediaTypes.text
-                print(viewModel.media)
             }
+            .accessibilityLabel("Adicionar texto")
         }
         .padding()
         .glassEffect()

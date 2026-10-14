@@ -128,6 +128,7 @@ struct UserProfille: View {
                             Image(systemName: "gearshape.fill")
                                 .foregroundColor(.primary)
                         }
+                        .accessibilityLabel("Configurações")
                     }
                 }
                 .navigationTitle("Perfil")

@@ -39,6 +39,8 @@ var body: some View {
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .padding(.horizontal,20)
                         .background(Color.detailsSheet)
+                        .foregroundStyle(Color.primary)
+                        .tint(.mainPink)
                         .clipShape(.capsule)
                         
                     Text("Edite sua foto")
@@ -69,6 +71,7 @@ var body: some View {
                        Button("", systemImage: "xmark") {
                            dismiss()
                        }
+                       .accessibilityLabel("Cancelar edição do perfil")
                        .tint(.primary)
                    }
                    ToolbarItem(placement: .confirmationAction) {
@@ -84,6 +87,7 @@ var body: some View {
                            }
                            dismiss()
                        }
+                       .accessibilityLabel("Salvar alterações do perfil")
                        }
                    }
                }

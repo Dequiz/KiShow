@@ -20,6 +20,7 @@ struct LineChart: View {
     @Environment(\.modelContext) private var context
     @State private var viewModel = LineChartViewModel()
     @State private var showDates: [Date] = []
+    @State private var failedToLoadShows = false
     @State private var selectedYear = Calendar.current.component(.year, from: .now)
     @State private var startMonth = 1
     @State private var endMonth = 12
@@ -86,10 +87,18 @@ struct LineChart: View {
             }
             .font(.caption)
 
-            GeometryReader { geometry in
-                let chartWidth = max(geometry.size.width,
-                                     CGFloat(displayedMonths.count) * monthSlotWidth + 152)
-                ScrollView(.horizontal) {
+            if failedToLoadShows {
+                ContentUnavailableView(
+                    "Não foi possível carregar o gráfico",
+                    systemImage: "chart.xyaxis.line",
+                    description: Text("Tente novamente mais tarde.")
+                )
+                .frame(height: chartHeight)
+            } else {
+                GeometryReader { geometry in
+                    let minimumChartWidth = CGFloat(displayedMonths.count) * monthSlotWidth + 152
+                    let chartWidth = max(geometry.size.width, minimumChartWidth + monthSlotWidth / 2)
+                    ScrollView(.horizontal) {
                     Chart(chartData) { item in
                         LineMark(
                             x: .value("Mês", item.position),
@@ -102,8 +111,8 @@ struct LineChart: View {
                         )
                         .foregroundStyle(Color.white)
                     }
-                    // Half-slot gutters keep the first and last labels inside the plot area.
-                    .chartXScale(domain: -0.5...(Double(displayedMonths.count) - 0.5))
+                    // Reserve a full slot after the last point so its month label stays inside the plot.
+                    .chartXScale(domain: -0.5...Double(displayedMonths.count))
                     // Keep the largest data point and its tick label away from the top clip edge.
                     .chartYScale(domain: 0...Double(max(yAxisMaximum + 1, 1)))
                     .chartXAxis {
@@ -163,14 +172,20 @@ struct LineChart: View {
                     .foregroundStyle(Color.mainPink)
                     .frame(width: chartWidth, height: chartHeight)
                     .padding(.leading, 32)
+                    }
+                    .scrollIndicators(.hidden)
                 }
-                .scrollIndicators(.hidden)
+                .frame(height: chartHeight)
             }
-            .frame(height: chartHeight)
         }
         .padding(.horizontal, 12)
         .task {
-            showDates = viewModel.buscarDatasDosShows(context: context)
+            if let dates = viewModel.buscarDatasDosShows(context: context) {
+                showDates = dates
+                failedToLoadShows = false
+            } else {
+                failedToLoadShows = true
+            }
             if let latestYear = availableYears.last {
                 selectedYear = latestYear
             }

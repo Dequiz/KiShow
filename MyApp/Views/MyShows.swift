@@ -181,6 +181,7 @@ struct MyShows: View {
                     } label: {
                         Image(systemName: "plus")
                     }
+                    .accessibilityLabel("Adicionar show")
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -218,6 +219,7 @@ struct MyShows: View {
                     } label: {
                         Image(systemName: "line.horizontal.3.decrease")
                     }
+                    .accessibilityLabel("Filtrar shows")
                 }
             }
             .foregroundStyle(.primary)

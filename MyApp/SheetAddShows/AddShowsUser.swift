@@ -200,6 +200,8 @@ struct AddShowsUser: View {
                 .keyboardType(keyboard)
                 .textInputAutocapitalization(.sentences)
                 .autocorrectionDisabled()
+                .foregroundStyle(Color.primary)
+                .tint(.mainPink)
         }
     }
 
@@ -243,11 +245,13 @@ struct AddShowsUser: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(
-        for: EventEntity.self, ShowEntity.self,
-        configurations: config
-    )
-
-    return AddShowsUser()
-        .modelContainer(container)
+    do {
+        let container = try ModelContainer(
+            for: EventEntity.self, ShowEntity.self,
+            configurations: config
+        )
+        return AnyView(AddShowsUser().modelContainer(container))
+    } catch {
+        return AnyView(Text("Não foi possível carregar a prévia."))
+    }
 }

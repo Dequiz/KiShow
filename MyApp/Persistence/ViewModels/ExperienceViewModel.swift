@@ -57,7 +57,6 @@ class ExperienceViewModel{
             try context.save()
         } catch {
             context.delete(newExperience)
-            print("Audio persistence failed: \(error)")
         }
     }
     

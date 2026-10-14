@@ -84,15 +84,15 @@ struct EventView: View {
                                 .disabled(dailyStories.isEmpty)
                                
                                 Text(eventoSelecionado.show?.nameShow ?? "Evento")
-                                Picker("", selection: $selected) {
-                                    ForEach(AppTheme.allCases) { tipo in
-                                        Text(tipo.rawValue).tag(tipo)
-                                    }
+                                if #available(iOS 27.0, *) {
+                                    themePicker
+                                        .pickerStyle(.tabs)
+                                        .glassEffect()
+                                } else {
+                                    themePicker
+                                        .pickerStyle(.segmented)
+                                        .glassEffect()
                                 }
-                                .frame(width: 350)
-                                .controlSize(.large)
-                                .pickerStyle(.tabs)
-                                .glassEffect() 
                             }
                             .padding(.horizontal)
                         }
@@ -195,6 +195,16 @@ struct EventView: View {
                 )
             }
         }
+    }
+
+    private var themePicker: some View {
+        Picker("", selection: $selected) {
+            ForEach(AppTheme.allCases) { tipo in
+                Text(tipo.rawValue).tag(tipo)
+            }
+        }
+        .frame(width: 350)
+        .controlSize(.large)
     }
 
     private func refreshDailyStories() {

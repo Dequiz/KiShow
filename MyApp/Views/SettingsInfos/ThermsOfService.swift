@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ThermsOfService: View {
+    @State private var showExternalLinkConfirmation = false
+    @Environment(\.openURL) private var openURL
+
     var body: some View {
         VStack {
             Form {
@@ -48,6 +51,10 @@ struct ThermsOfService: View {
                     Text("KiShow é um aplicativo que possibilita ao usuário encontrar novos shows que estão para acontecer no momento de utilização. É oferecido de forma totalmente gratuita, sem necessidade de compras internas no app.")
                     
                     Text("Para exibir eventos, o KiShow consulta a Discovery API da Ticketmaster. A consulta envia o gênero escolhido e o código do país Brasil; seus dados de perfil, mídias e registros não são enviados. Como em qualquer conexão com a internet, a Ticketmaster pode receber dados técnicos da requisição, como o endereço IP, conforme a [política de privacidade da Ticketmaster](https://privacy.ticketmaster.com/privacy-policy). Ao acessar links de compra, você é direcionado a um site de terceiro, regido pelos termos dele.")
+                        .environment(\.openURL, OpenURLAction { _ in
+                            showExternalLinkConfirmation = true
+                            return .handled
+                        })
                     
                     Text("O KiShow não participa da venda de ingressos, ademais até então nosso aplicativo é totalmente gratuito e não há cobranças e ou vendas de produtos ou serviços. Caso haja uma modificação nessas condições o usuário será alertado com antecedência.")
                     
@@ -156,6 +163,19 @@ struct ThermsOfService: View {
             }
             .background(Color.appBackground)
             .scrollContentBackground(.hidden)
+        }
+        .background {
+            Color.clear
+                .tint(.primary)
+                .alert("Você está saindo do KiShow", isPresented: $showExternalLinkConfirmation) {
+                    Button("Continuar") {
+                        guard let url = URL(string: "https://dequiz.github.io/KiShow/index.html") else { return }
+                        openURL(url)
+                    }
+                    Button("Cancelar", role: .cancel) { }
+                } message: {
+                    Text("Você será redirecionado para uma página externa com a política de privacidade.")
+                }
         }
         .navigationTitle("Termos de Uso")
         .toolbarTitleDisplayMode(.inline)
