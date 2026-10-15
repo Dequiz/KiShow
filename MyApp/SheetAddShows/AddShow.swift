@@ -108,6 +108,9 @@ struct AddShow: View {
                             } label: {
                                 Label("Ver localização no mapa", systemImage: "map")
                                     .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Color.mainPink)
+                                    .foregroundColor(Color.mainPink)
+                                    .tint(Color.mainPink)
                             }
                             .padding(.top, 4)
                         } else {
@@ -195,6 +198,9 @@ struct AddShow: View {
                                 Text("Compre agora no site da ticket master")
                             }
 //                            .buttonStyle(.plain)
+                            .foregroundStyle(Color.mainPink)
+                            .foregroundColor(Color.mainPink)
+                            .tint(Color.mainPink)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                         }

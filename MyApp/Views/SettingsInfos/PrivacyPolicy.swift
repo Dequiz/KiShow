@@ -10,6 +10,8 @@ import SwiftUI
 struct PrivacyPolicy: View {
     @Environment(\.openURL) private var openURL
     @State private var showExternalLinkConfirmation = false
+    @State private var pendingExternalURL: URL?
+    @State private var externalLinkMessage = "Você será redirecionado para uma página externa com a política de privacidade."
 
     var body: some View {
         VStack {
@@ -159,8 +161,14 @@ struct PrivacyPolicy: View {
 
 
                 Section {
-                    Text("**Email:** kishowdeequipe@gmail.com")
-                        .foregroundStyle(Color.primary)
+                    Text("**Email:** [kishowdeequipe@gmail.com](mailto:kishowdeequipe@gmail.com)")
+                        .tint(Color.mainPink)
+                        .environment(\.openURL, OpenURLAction { url in
+                            pendingExternalURL = url
+                            externalLinkMessage = "Você será direcionado ao app de e-mail para entrar em contato com a equipe do KiShow."
+                            showExternalLinkConfirmation = true
+                            return .handled
+                        })
 
                 } header: {
                     HStack{
@@ -173,9 +181,11 @@ struct PrivacyPolicy: View {
 
                 Section {
                     Button("Ver versão online") {
+                        pendingExternalURL = URL(string: "https://dequiz.github.io/KiShow/index.html")
+                        externalLinkMessage = "Você será redirecionado para uma página externa com a política de privacidade."
                         showExternalLinkConfirmation = true
                     }
-                    .foregroundStyle(Color.primary)
+                    .foregroundStyle(Color.mainPink)
                 }
                 .listRowBackground(Color.details)
 
@@ -185,21 +195,27 @@ struct PrivacyPolicy: View {
         }
         .navigationTitle("Políticas de Privacidade")
         .toolbarTitleDisplayMode(.inline)
-        .background {
-            Color.clear
-                .tint(.primary)
-                .alert("Você está saindo do KiShow", isPresented: $showExternalLinkConfirmation) {
-                    Button {
-                        guard let url = URL(string: "https://dequiz.github.io/KiShow/index.html") else { return }
-                        openURL(url)
-                    } label: {
-                        Text("Continuar")
-                    }
-                    Button("Cancelar", role: .cancel) { }
-                } message: {
-                    Text("Você será redirecionado para uma página externa com a política de privacidade.")
+        .overlay {
+            PrimaryColorAlertPresenter(
+                isPresented: $showExternalLinkConfirmation,
+                title: "Você está saindo do KiShow",
+                message: externalLinkMessage,
+                confirmTitle: "Continuar",
+                cancelTitle: "Cancelar",
+                onConfirm: {
+                    guard let url = pendingExternalURL else { return }
+                    openURL(url)
+                    pendingExternalURL = nil
+                },
+                onCancel: {
+                    pendingExternalURL = nil
                 }
-            }
+            )
+            .frame(width: 1, height: 1)
+            .opacity(0.01)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+        }
     }
 }
 
