@@ -32,7 +32,7 @@ struct ChartsItem: View {
                                 .lineLimit(1)
                         }
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Color.primary)
                         .font(.system(size: min(15, max(8, diameter * 0.16)), weight: .bold))
                         .minimumScaleFactor(0.55)
                         .padding(diameter * 0.12)

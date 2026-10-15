@@ -60,11 +60,15 @@ struct LineChart: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 monthPicker(title: "De", selection: $startMonth)
+                    .tint(.primary)
+                    .foregroundStyle(Color.primary)
                 monthPicker(title: "Até", selection: $endMonth)
+                    .tint(.primary)
+                    .foregroundStyle(Color.primary)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Ano")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                     Picker("", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
                             Text(String(year)).tag(year)
@@ -72,8 +76,8 @@ struct LineChart: View {
                     }
                     .pickerStyle(.menu)
                     .fixedSize()
-                    .tint(.white)
-                    .foregroundStyle(.white)
+                    .tint(.primary)
+                    .foregroundStyle(.primary)
                 }
 
                 Button {
@@ -83,7 +87,7 @@ struct LineChart: View {
                         .accessibilityLabel(ascending ? "Ordenar de janeiro a dezembro" : "Ordenar de dezembro a janeiro")
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             }
             .font(.caption)
 
@@ -109,7 +113,7 @@ struct LineChart: View {
                             x: .value("Mês", item.position),
                             y: .value("Shows", item.count)
                         )
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Color.primary)
                     }
                     // Reserve a full slot after the last point so its month label stays inside the plot.
                     .chartXScale(domain: -0.5...Double(displayedMonths.count))
