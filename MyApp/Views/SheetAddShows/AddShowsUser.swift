@@ -73,8 +73,11 @@ struct AddShowsUser: View {
                                             .resizable()
                                             .scaledToFill()
                                     } else {
-                                        Image(systemName: "photo.badge.plus")
-                                            .font(.largeTitle)
+                                        VStack{
+                                            Image(systemName: "photo.badge.plus")
+                                                .font(.largeTitle)
+                                            Text("Segure para escolher a imagem")
+                                        }
                                     }
                                 }
                                 .frame(maxWidth: .infinity)
