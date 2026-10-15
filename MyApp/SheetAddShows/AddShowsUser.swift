@@ -169,6 +169,14 @@ struct AddShowsUser: View {
                         Image(systemName: "xmark")
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing){
+                    Button {
+                        save()
+                    }label: {
+                        Image(systemName: "checkmark")
+                    }
+                    .disabled(!canSave || isSavingShow)
+                }
             }
         }
         .simpleToast(isPresented: $showToast, options: toastOption) {
