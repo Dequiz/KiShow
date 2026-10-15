@@ -116,9 +116,11 @@ struct EventView: View {
                                         Button("Editar", systemImage: "pencil") {
                                             experienceToEdit = experience
                                         }
+                                        .tint(.primary)
                                         Button("Excluir",systemImage: "trash.fill", role: .destructive) {
                                             delete(experience)
                                         }
+                                        .tint(.primary)
                                     }
                             }
                         }

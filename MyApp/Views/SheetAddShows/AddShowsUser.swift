@@ -100,6 +100,7 @@ struct AddShowsUser: View {
                             Text("Informações")
                             Text("(*) Campo obrigatório")
                                 .foregroundStyle(.red)
+                                .fontWeight(.regular)
                         }) {
                             HStack (spacing: 20){
                                 HStack(spacing: 2){

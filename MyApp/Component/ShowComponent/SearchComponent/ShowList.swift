@@ -21,6 +21,7 @@ struct ShowList: View {
             switch ticketMasterShow.loadState {
             case .loading:
                 ProgressView("Buscando shows…")
+                    .tint(.mainPink)
                     .padding()
             case .failed:
                 ContentUnavailableView("Nenhum show encontrado", systemImage: "music.note", description: Text("Tente outra categoria ou pesquisa."))

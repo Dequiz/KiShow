@@ -88,6 +88,7 @@ struct AddExperience: View {
                     Button(role: .confirm) {
                         saveExperience()
                     }
+                    .tint(.mainPink)
                 }
             }
             .navigationTitle(experienceToEdit == nil ? "Nova experiência" : "Editar experiência")

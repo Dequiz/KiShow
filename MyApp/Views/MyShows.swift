@@ -119,11 +119,10 @@ struct MyShows: View {
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(role: .destructive) {
+                                Button("Excluir", systemImage: "trash", role: .destructive) {
                                     deleteShow(event)
-                                } label: {
-                                    Label("Excluir", systemImage: "trash")
                                 }
+                                .tint(.mainPink)
                             }
                         }
                     }
@@ -187,6 +186,7 @@ struct MyShows: View {
                                 Text("Todos")
                                 if selectPeriod == "Todos" {
                                     Image(systemName: "checkmark.circle")
+                                        .tint(.mainPink)
                                 }
                             }
                         }
@@ -197,6 +197,7 @@ struct MyShows: View {
                                 Text("Próximos")
                                 if selectPeriod == "Próximos" {
                                     Image(systemName: "checkmark.circle")
+                                        .tint(.mainPink)
                                 }
                             }
                         }
@@ -207,6 +208,7 @@ struct MyShows: View {
                                 Text("Encerrados")
                                 if selectPeriod == "Encerrados" {
                                     Image(systemName: "checkmark.circle")
+                                        .tint(.mainPink)
                                 }
                             }
                         }
