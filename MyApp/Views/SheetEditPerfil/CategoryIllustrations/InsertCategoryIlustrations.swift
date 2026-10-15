@@ -22,13 +22,20 @@ struct InsertCategoryIlustrations: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(categoryNames.categoryNames, id: \.self) { category in
+                    let isSelected = selection == .illustration(category)
+                    
                     Button {
                         selection = .illustration(category)
                     } label: {
                         Image(category)
                             .resizable()
                             .scaledToFit()
-    
+                            .background(
+                                Circle()
+                                    .fill(isSelected ? Color.mainPink.opacity(0.3) : Color.clear)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            )
+
                     }
                 }
             }

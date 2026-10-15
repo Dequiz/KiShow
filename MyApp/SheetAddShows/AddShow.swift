@@ -218,7 +218,7 @@ struct AddShow: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbarTitleDisplayMode(.automatic)
                 .toolbar{
-                    ToolbarItem(placement: .topBarLeading) {
+                    ToolbarItem(placement: .cancellationAction) {
                         Button {
                             action()
                             dismiss()
@@ -228,9 +228,9 @@ struct AddShow: View {
                         .tint(.primary)
                     }
                     
-                    ToolbarItem(placement: .topBarTrailing){
+                    ToolbarItem(placement: .confirmationAction){
                         if !isAlreadyAdded{
-                            Button{
+                            Button("", systemImage: "checkmark"){
                                 guard !isSavingShow else { return }
                                 isSavingShow = true
                                 Task {
@@ -250,9 +250,8 @@ struct AddShow: View {
                                         showToast = true
                                     }
                                 }
-                            }label:{
-                                Image(systemName: "checkmark")
                             }
+                            .tint(.mainPink)
                             .disabled(isSavingShow)
                         }
                     }

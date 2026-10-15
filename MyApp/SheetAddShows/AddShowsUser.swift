@@ -94,12 +94,13 @@ struct AddShowsUser: View {
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets())
-                        VStack{
+                        
+                        Section(header:
+                                    HStack {
+                            Text("Informações")
                             Text("(*) Campo obrigatório")
                                 .foregroundStyle(.red)
-                        }.listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                        Section(header: Text("Informações")) {
+                        }) {
                             HStack (spacing: 20){
                                 HStack(spacing: 2){
                                     Text("Nome do show")
@@ -190,17 +191,16 @@ struct AddShowsUser: View {
             .navigationTitle("Novo Show")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark")
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing){
-                    Button {
+                ToolbarItem(placement: .confirmationAction){
+                    Button ("", systemImage: "checkmark") {
                         save()
-                    }label: {
-                        Image(systemName: "checkmark")
                     }
+                    .tint(.mainPink)
                     .disabled(!canSave || isSavingShow)
                 }
             }

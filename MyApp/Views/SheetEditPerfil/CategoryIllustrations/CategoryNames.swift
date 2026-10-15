@@ -9,10 +9,9 @@ struct CategoryNames{
     var categoryNames: [String] = [
         "Eletronic",
         "Pop",
-        "Guria 3",
-        "Guria 4",
-        "Guria 5",
-        "Guria 6",
+        "Rock",
+        "Metal",
+        "Blues",
         "Guria 7",
         "Guria 8",
         "Juvenile",
@@ -20,9 +19,9 @@ struct CategoryNames{
         "Country",
         "Guria 13",
         "Holiday",
-        "Guria 16",
+        "Jazz",
         "Medieval",
-        "Guria 19",
+        "Reggae",
         "Alternative"
         
     ]

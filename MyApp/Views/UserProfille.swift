@@ -28,10 +28,14 @@ struct UserProfille: View {
                             
                             ProfileIcon(user: user, size: 94)
                             
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(user?.nameUser ?? "Seu Perfil")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
+                            VStack(alignment: .leading, spacing: 8) {
+                                
+                                HStack {
+                                    Text(user?.nameUser ?? "Seu Perfil")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    
+                                }
                                 
                                 Title(titleNames: TitlesNames())
                             }
@@ -42,12 +46,16 @@ struct UserProfille: View {
                                 upSheet.toggle()
                             } label: {
                                 Image(systemName: "pencil.line")
-                                    .font(.title2)
+                                    .font(.title3)
                                     .foregroundStyle(Color.primary)
+                                    .padding(10)
+                                    .glassEffect()
+                                    .shadow(radius: 1)
                             }
                             .sheet(isPresented: $upSheet) {
                                EditPerfil()
                             }
+                        
                         }
                         
                         .padding(.bottom, 24)

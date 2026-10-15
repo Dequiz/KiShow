@@ -23,7 +23,7 @@ struct TitleDefinition: Identifiable {
 
 struct TitlesNames {
     let titles: [TitleDefinition] = [
-        .init(name: "Colecionador Novato", hint: "Registre 1 show", metric: .shows, goal: 1),
+        .init(name: "Novato", hint: "Registre 1 show", metric: .shows, goal: 1),
         .init(name: "Colecionador", hint: "Registre 5 shows", metric: .shows, goal: 5),
         .init(name: "Fotografo", hint: "Adicione 3 Fotos", metric: .photos, goal: 3),
         .init(name: "Escritor", hint: "Escreva mais de 1000 Caracteres",metric: .characters,goal: 1000),

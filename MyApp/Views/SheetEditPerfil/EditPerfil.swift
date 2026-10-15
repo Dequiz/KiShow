@@ -89,8 +89,10 @@ var body: some View {
                            }
                            dismiss()
                        }
+                       .tint(.mainPink)
                        .accessibilityLabel("Salvar alterações do perfil")
                        }
+                    
                    }
                }.onTapGesture {
                    focusedField = nil
@@ -101,5 +103,5 @@ var body: some View {
 }
 
 #Preview {
-    EditPerfil(changeName: "AA")
+    EditPerfil(changeName: "Test")
 }
