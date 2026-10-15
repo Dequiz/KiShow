@@ -22,15 +22,14 @@ struct ButtonComponent: View {
     
     var body: some View {
         Button(action: functionality) {
-            HStack(){
-                Text(buttonText)
-                    .fontWeight(textWeight)
-                    .foregroundStyle(colorText)
-            }
+            Text(buttonText)
+                .fontWeight(textWeight)
+                .foregroundStyle(colorText)
+                .frame(width: CGFloat(widthButton),height: CGFloat(heightButton))
+                .background(.mainPink)
+                .clipShape(.capsule)
         }
-        .frame(width: CGFloat(widthButton),height: CGFloat(heightButton))
-        .background(.mainPink)
-        .clipShape(.capsule)
+        
     }
 }
 
