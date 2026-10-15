@@ -94,11 +94,11 @@ struct MyShows: View {
         NavigationStack {
             ZStack {
                 if events.isEmpty {
-                    emptyShowsState(message: "Você ainda não possui nenhum show")
+                    emptyShowsState(message: "Você ainda não possui \n nenhum show")
                 } else if eventosFiltrados.isEmpty && searchText.isEmpty && selectPeriod != "Todos" {
                     let message = selectPeriod == "Encerrados"
-                        ? "Você ainda não possui shows encerrados"
-                        : "Você não possui shows próximos"
+                        ? "Você ainda não possui \n shows encerrados"
+                        : "Você não possui \n shows próximos"
                     emptyShowsState(message: message)
                 } else if eventosFiltrados.isEmpty {
                     ContentUnavailableView.search(text: searchText)
@@ -260,11 +260,12 @@ struct MyShows: View {
             Image(.eletronic)
                 .resizable()
                 .scaledToFit()
-                .padding(.horizontal, 40)
+                .padding(.horizontal, 60)
             Text(message)
                 .font(.title2)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .lineLimit(2)
         }
         .padding(.bottom, 100)
         .frame(maxWidth: .infinity, maxHeight: .infinity)

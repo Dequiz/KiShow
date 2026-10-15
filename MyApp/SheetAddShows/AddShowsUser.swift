@@ -44,55 +44,61 @@ struct AddShowsUser: View {
     private var canSave: Bool {
         !nameShow.trimmingCharacters(in: .whitespaces).isEmpty &&
         !artistShow.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !genderShow.isEmpty          // ⬅️ gênero agora é obrigatório
+        !genderShow.isEmpty
     }
 
     var body: some View {
         NavigationStack {
             ZStack {
-                Color("SheetBackground")
+                Color.appBackground
                     .ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 20) {
-                        PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                            ZStack {
-                                if let imageData, let uiImage = UIImage(data: imageData) {
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .scaledToFill()
-                                } else {
-                                    VStack(spacing: 8) {
+                VStack(spacing: 0) {
+                    Form {
+                        Section {
+                            PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                                ZStack {
+                                    if let imageData, let uiImage = UIImage(data: imageData) {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                    } else {
                                         Image(systemName: "photo.badge.plus")
                                             .font(.largeTitle)
-                                        Text("Adicionar foto")
-                                            .font(.footnote)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 200)
+                                .background(Color.details)
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                            }
+                            .tint(.mainPurple)
+                            
+                            .onChange(of: selectedPhoto) { _, newItem in
+                                Task {
+                                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                        imageData = data
                                     }
                                 }
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 200)
-                            .background(Color(.details))
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
-                        .padding(.horizontal)
-                        .onChange(of: selectedPhoto) { _, newItem in
-                            Task {
-                                if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                    imageData = data
-                                }
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
+
+                        Section(header: Text("Informações")) {
+                            HStack (spacing: 20){
+                                Text("Nome do show")
+                                TextField("Insira o nome do show", text: $nameShow)
                             }
-                        }
-
-                            sectionCard(title: "Informações") {
-                            labeledField("Nome do show", text: $nameShow)
-                            Divider()
-                            labeledField("Artista / Banda", text: $artistShow)
-                            Divider()
-
+                            
+                            HStack (spacing: 20){
+                                Text("Artista / Banda")
+                                TextField("Insira o artista ou banda", text: $artistShow)
+                            }
+                            
                             HStack {
                                 Text("Gênero")
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(.primary)
                                     .frame(width: 120, alignment: .leading)
 
                                 Picker("", selection: $genderShow) {
@@ -105,21 +111,20 @@ struct AddShowsUser: View {
                                 .pickerStyle(.menu)
                                 .labelsHidden()
                                 .frame(maxWidth: .infinity, alignment: .trailing)
-                                .tint(.primary)
+                                .tint(.secondary)
                             }
                         }
                         .listRowBackground(Color.details)
 
-                        sectionCard(title: "Data e Hora") {
+                        Section(header: Text("Data e Hora")) {
                             HStack {
-                                Text("Data").foregroundStyle(.secondary)
+                                Text("Data").foregroundStyle(.primary)
                                 Spacer()
                                 DatePicker("", selection: $dataShow, displayedComponents: .date)
                                     .labelsHidden()
                             }
-                            Divider()
                             HStack {
-                                Text("Horário").foregroundStyle(.secondary)
+                                Text("Horário").foregroundStyle(.primary)
                                 Spacer()
                                 DatePicker("", selection: $startTimeShow, displayedComponents: .hourAndMinute)
                                     .labelsHidden()
@@ -127,21 +132,33 @@ struct AddShowsUser: View {
                         }
                         .listRowBackground(Color.details)
 
-                        sectionCard(title: "Local") {
-                            labeledField("Nome do local", text: $localShow)
-                            Divider()
-                            labeledField("Endereço", text: $addressShow)
-                            Divider()
-                            labeledField("Cidade", text: $city)
+                        Section(header: Text("Local")) {
+                            HStack (spacing: 20){
+                                Text("Nome do local")
+                                TextField("Insira o nome do local", text: $localShow)
+                            }
+                            HStack (spacing: 20){
+                                Text("Endereço")
+                                TextField("Insira o endereço do show", text: $addressShow)
+                            }
+                            HStack (spacing: 20){
+                                Text("Cidade")
+                                TextField("Insira a cidade do show", text: $city)
+                            }
                         }
                         .listRowBackground(Color.details)
+                    }
+                    .scrollContentBackground(.hidden)
+
+                    VStack {
                         ButtonComponent(buttonText: "Adicionar Show") {
                             save()
                         }
                         .disabled(!canSave || isSavingShow)
-                        .padding(.bottom, 30)
+                        .padding(.horizontal)
+                        .padding(.vertical, 12)
                     }
-                    .padding(.top, 12)
+                    .background(Color.appBackground)
                 }
             }
             .navigationTitle("Novo Show")
@@ -169,45 +186,6 @@ struct AddShowsUser: View {
             .padding(.horizontal, 16)
         }
     }
-
-
-    @ViewBuilder
-    private func sectionCard<Content: View>(
-        title: String,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
-                .padding(.horizontal)
-            VStack(spacing: 12) {
-                content()
-            }
-            .padding()
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16))
-            .padding(.horizontal)
-        }
-    }
-
-    @ViewBuilder
-    private func labeledField(
-        _ label: String,
-        text: Binding<String>,
-        keyboard: UIKeyboardType = .default
-    ) -> some View {
-        HStack {
-            Text(label)
-                .foregroundStyle(.secondary)
-                .frame(width: 120, alignment: .leading)
-            TextField("", text: text)
-                .keyboardType(keyboard)
-                .textInputAutocapitalization(.sentences)
-                .autocorrectionDisabled()
-                .foregroundStyle(Color.primary)
-                .tint(.mainPink)
-        }
-    }
-
 
     private func save() {
         guard canSave, !isSavingShow else { return }

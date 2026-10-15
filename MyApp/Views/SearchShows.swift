@@ -38,16 +38,18 @@ struct SearchShows: View {
                                     }
                                 }
                                 
-                            }.padding(.top)
+                            }.padding(.vertical)
                         }
-                        Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
-                            .padding(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("Dados de eventos fornecidos pela Ticketmaster")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal)
+                        VStack (spacing: 5){
+                            Text("Categorias Selecionadas: \(ticketMasterShow.selectedGenres.count)/2")
+                                .padding(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text("Dados de eventos fornecidos pela Ticketmaster")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal)
+                        }
                         ShowList(ticketMasterShow: ticketMasterShow, Taskid: TaskId, genre: ticketMasterShow.selectedGenres){
                             TaskId = UUID()
                         }
