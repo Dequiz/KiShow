@@ -23,13 +23,6 @@ struct ShowList: View {
                 ProgressView("Buscando shows…")
                     .padding()
             case .failed:
-                VStack(spacing: 12) {
-                    ContentUnavailableView("Não foi possível carregar os shows", systemImage: "wifi.exclamationmark", description: Text("Verifique sua conexão e tente novamente."))
-                    Button("Tentar novamente", action: action)
-                        .buttonStyle(.borderedProminent)
-                }
-                .padding()
-            case .loaded where ticketMasterShow.filteredShows.isEmpty:
                 ContentUnavailableView("Nenhum show encontrado", systemImage: "music.note", description: Text("Tente outra categoria ou pesquisa."))
                     .padding()
             case .idle, .loaded:
