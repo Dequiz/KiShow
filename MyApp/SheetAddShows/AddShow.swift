@@ -108,6 +108,9 @@ struct AddShow: View {
                             } label: {
                                 Label("Ver localização no mapa", systemImage: "map")
                                     .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Color.mainPink)
+                                    .foregroundColor(Color.mainPink)
+                                    .tint(Color.mainPink)
                             }
                             .padding(.top, 4)
                         } else {
@@ -195,33 +198,13 @@ struct AddShow: View {
                                 Text("Compre agora no site da ticket master")
                             }
 //                            .buttonStyle(.plain)
+                            .foregroundStyle(Color.mainPink)
+                            .foregroundColor(Color.mainPink)
+                            .tint(Color.mainPink)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                         }
-                        if !isAlreadyAdded{
-                            ButtonComponent(buttonText: "Adicionar Show"){
-                                guard !isSavingShow else { return }
-                                isSavingShow = true
-                                Task {
-                                    do {
-                                        try await viewModel.saveShow(showTicket: ticketMasterShow, context: context)
-                                        let artist = ticketMasterShow.attraction?.name ?? "Desconhecido"
-                                        toastMessage = "Show de: \(artist) foi adicionado com sucesso."
-                                        toastSucceeded = true
-                                        showToast = true
-                                        try? await Task.sleep(nanoseconds: 2_200_000_000)
-                                        action()
-                                        dismiss()
-                                    } catch {
-                                        isSavingShow = false
-                                        toastMessage = "Não foi possível adicionar o show de: \(ticketMasterShow.attraction?.name ?? "Desconhecido"). \(error.localizedDescription)"
-                                        toastSucceeded = false
-                                        showToast = true
-                                    }
-                               }
-                            }
-                            .disabled(isSavingShow)
-                        }
+                        
                         
                         
                         
@@ -243,6 +226,35 @@ struct AddShow: View {
                             Image(systemName: "xmark")
                         }
                         .tint(.primary)
+                    }
+                    
+                    ToolbarItem(placement: .topBarTrailing){
+                        if !isAlreadyAdded{
+                            Button{
+                                guard !isSavingShow else { return }
+                                isSavingShow = true
+                                Task {
+                                    do {
+                                        try await viewModel.saveShow(showTicket: ticketMasterShow, context: context)
+                                        let artist = ticketMasterShow.attraction?.name ?? "Desconhecido"
+                                        toastMessage = "Show de: \(artist) foi adicionado com sucesso."
+                                        toastSucceeded = true
+                                        showToast = true
+                                        try? await Task.sleep(nanoseconds: 2_200_000_000)
+                                        action()
+                                        dismiss()
+                                    } catch {
+                                        isSavingShow = false
+                                        toastMessage = "Não foi possível adicionar o show de: \(ticketMasterShow.attraction?.name ?? "Desconhecido"). \(error.localizedDescription)"
+                                        toastSucceeded = false
+                                        showToast = true
+                                    }
+                                }
+                            }label:{
+                                Image(systemName: "checkmark")
+                            }
+                            .disabled(isSavingShow)
+                        }
                     }
                 }
         }

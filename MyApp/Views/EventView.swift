@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import AVKit
 import SimpleToast
+import TipKit
 
 enum AppTheme: String, CaseIterable, Identifiable {
     case todos = "Todos"
@@ -13,6 +14,8 @@ enum AppTheme: String, CaseIterable, Identifiable {
 }
 
 struct EventView: View {
+    
+   
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) var context
     @State private var showToast = false
@@ -55,6 +58,10 @@ struct EventView: View {
         }
     }
 
+   
+    private let favoritoTip = FavoritoTip()
+    private let eventStoryTip = EventStoryTip()
+
     var body: some View {
         ZStack{
             Color("AppBackground")
@@ -74,11 +81,13 @@ struct EventView: View {
                                     VinylRecord(
                                         isTurning: hasUnseenStories,
                                         isGoingUp: hasUnseenStories,
-                                        fullVynil: 100,
+                                        fullVynil: 150,
                                         image: eventoSelecionado.show?.imageShow
                                             .flatMap { UIImage(data: $0) }
                                             .map(Image.init(uiImage:))
                                     )
+                                    .popoverTip(eventStoryTip, arrowEdge: .top)
+                                    .tipViewStyle(CenteredTipViewStyle())
                                     .disabled(true)
                                 }
                                 .disabled(dailyStories.isEmpty)
@@ -97,20 +106,24 @@ struct EventView: View {
                             .padding(.horizontal)
                         }
                     Spacer()
-                    LazyVStack(spacing: 30) {
-                        ForEach(filtered) { experience in
-                            row(for: experience)
-                                .contextMenu {
-                                    Button("Editar", systemImage: "pencil") {
-                                        experienceToEdit = experience
+                    if filtered.isEmpty {
+                        emptyMediaPlaceholder
+                    } else {
+                        LazyVStack(spacing: 30) {
+                            ForEach(filtered) { experience in
+                                row(for: experience)
+                                    .contextMenu {
+                                        Button("Editar", systemImage: "pencil") {
+                                            experienceToEdit = experience
+                                        }
+                                        Button("Excluir",systemImage: "trash.fill", role: .destructive) {
+                                            delete(experience)
+                                        }
                                     }
-                                    Button("Excluir",systemImage: "trash.fill", role: .destructive) {
-                                        delete(experience)
-                                    }
-                                }
+                            }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                 }
             }
         }
@@ -134,6 +147,9 @@ struct EventView: View {
             player.stop()
         }
         .onAppear(perform: refreshDailyStories)
+        .onChange(of: experiences.count) { _, _ in
+            refreshDailyStories()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 refreshDailyStories()
@@ -146,6 +162,8 @@ struct EventView: View {
                     Image(systemName: "plus")
                 }
                 .tint(.primary)
+                .popoverTip(favoritoTip, arrowEdge: .top)
+                .tipViewStyle(CenteredTipViewStyle())
                 Button {
                     guard !isAddingToCalendar else { return }
                     let nomeShow = eventoSelecionado.show?.nameShow ?? "Show"
@@ -205,6 +223,29 @@ struct EventView: View {
         }
         .frame(width: 350)
         .controlSize(.large)
+    }
+
+    private var emptyMediaPlaceholder: some View {
+        VStack(spacing: 12) {
+            Image(systemName: experiences.isEmpty ? "photo.on.rectangle.angled" : "tray")
+                .font(.system(size: 42))
+                .foregroundStyle(.secondary)
+
+            Text(experiences.isEmpty ? "Nenhuma mídia adicionada" : "Nenhuma mídia nesta categoria")
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            if experiences.isEmpty {
+                Text("Toque em + para guardar uma lembrança deste show.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 48)
+        .accessibilityElement(children: .combine)
     }
 
     private func refreshDailyStories() {

@@ -11,6 +11,7 @@ import SwiftData
 import AVKit
 import Combine
 import AVFoundation
+import TipKit
 
 struct AddExperience: View {
     @Environment(\.modelContext) private var modelContext
@@ -23,6 +24,7 @@ struct AddExperience: View {
     @State private var experiencia = ""
     @State private var isShowingVideoPicker = false
     @State private var isShowingMicrophonePermissionAlert = false
+    @State private var validationMessage: String?
     @State private var itemSelecionado: PhotosPickerItem? = nil
         @State private var imagemCarregada: UIImage? = nil
     @State var viewModel = ExperienceViewModel()
@@ -51,12 +53,22 @@ struct AddExperience: View {
         }
 
         .onChange(of: rec.isRecording) { _, isRecording in
+            validationMessage = nil
             if isRecording {
                 player.stop()
             }else{
                 recordings = recordingList()
             }
         
+        }
+        .onChange(of: viewModel.media) { _, _ in
+            validationMessage = nil
+        }
+        .onChange(of: videoPicker.videoSelection) { _, _ in
+            validationMessage = nil
+        }
+        .onChange(of: experiencia) { _, _ in
+            validationMessage = nil
         }
             .navigationBarBackButtonHidden()
             .toolbar{
@@ -84,6 +96,7 @@ struct AddExperience: View {
                     }
             }
             .onChange(of: itemSelecionado) { _, novoItem in
+                validationMessage = nil
                 Task {
                     if let data = try? await novoItem?.loadTransferable(type: Data.self),
                        let uiImage = UIImage(data: data) {
@@ -121,29 +134,37 @@ struct AddExperience: View {
     }
 
     private func saveExperience() {
-        let isNewExperience = experienceToEdit.map { _ in false } ?? true
-        let target = experienceToEdit ?? ExperienceEntity(type: .text, event: eventoSelecionado)
-        let oldVideoFile = target.type == .video ? target.videoContent?.first : nil
+        let cleanedDescription = experiencia.trimmingCharacters(in: .whitespacesAndNewlines)
+        let optionalDescription: [String]? = cleanedDescription.isEmpty ? nil : [cleanedDescription]
 
-        target.textContent = [experiencia]
-        target.imageContent = nil
-        target.videoContent = nil
-        target.audioContent = nil
+        var mediaType: TypeMidias
+        var imageContent: [Data]? = nil
+        var videoContent: [String]? = nil
+        var audioContent: [Data]? = nil
 
-        var newVideoFile: String?
         switch viewModel.media {
         case .text:
-            target.type = .text
+            guard !cleanedDescription.isEmpty else {
+                validationMessage = "Escreva uma lembrança antes de salvar."
+                return
+            }
+            mediaType = .text
         case .photo:
-            guard let image = imagemCarregada?.jpegData(compressionQuality: 0.7), !image.isEmpty else { return }
-            target.type = .image
-            target.imageContent = [image]
+            guard let image = imagemCarregada?.jpegData(compressionQuality: 0.7), !image.isEmpty else {
+                validationMessage = "Adicione uma foto antes de salvar."
+                return
+            }
+            mediaType = .image
+            imageContent = [image]
         case .video:
-            guard case .success(_, let videoURL) = videoPicker.videoImportState else { return }
+            guard case .success(_, let videoURL) = videoPicker.videoImportState,
+                  hasNonEmptyFile(at: videoURL) else {
+                validationMessage = "Selecione um vídeo e aguarde o carregamento antes de salvar."
+                return
+            }
             let fileName = videoURL.lastPathComponent
-            target.type = .video
-            target.videoContent = [fileName]
-            newVideoFile = fileName
+            mediaType = .video
+            videoContent = [fileName]
         case .audio:
             if rec.isRecording { rec.stop() }
             let audioData: Data?
@@ -152,10 +173,31 @@ struct AddExperience: View {
             } else {
                 audioData = experienceToEdit?.audioContent?.first
             }
-            guard let audioData, !audioData.isEmpty else { return }
-            target.type = .audio
-            target.audioContent = [audioData]
+            guard let audioData, !audioData.isEmpty else {
+                validationMessage = "Grave um áudio antes de salvar."
+                return
+            }
+            mediaType = .audio
+            audioContent = [audioData]
         }
+
+        let isNewExperience = experienceToEdit == nil
+        let eventAlreadyHasExperiences = eventoSelecionado.experiences?.isEmpty == false
+            || experiencies.contains { $0.event?.idEvent == eventoSelecionado.idEvent }
+        let isFirstExperienceForEvent = isNewExperience && !eventAlreadyHasExperiences
+        let target = experienceToEdit ?? ExperienceEntity(type: mediaType, event: eventoSelecionado)
+        let oldType = target.type
+        let oldTextContent = target.textContent
+        let oldImageContent = target.imageContent
+        let oldVideoContent = target.videoContent
+        let oldAudioContent = target.audioContent
+        let oldVideoFile = target.type == .video ? target.videoContent?.first : nil
+
+        target.type = mediaType
+        target.textContent = optionalDescription
+        target.imageContent = imageContent
+        target.videoContent = videoContent
+        target.audioContent = audioContent
 
         if isNewExperience {
             modelContext.insert(target)
@@ -163,15 +205,39 @@ struct AddExperience: View {
         do {
             try modelContext.save()
         } catch {
-            if isNewExperience { modelContext.delete(target) }
+            if isNewExperience {
+                modelContext.delete(target)
+            } else {
+                target.type = oldType
+                target.textContent = oldTextContent
+                target.imageContent = oldImageContent
+                target.videoContent = oldVideoContent
+                target.audioContent = oldAudioContent
+            }
+            validationMessage = "Não foi possível salvar. Tente novamente."
             return
         }
 
+        if isFirstExperienceForEvent {
+            EventStoryTip.firstExperienceAdded.sendDonation()
+        }
+
+        let newVideoFile = videoContent?.first
         if let oldVideoFile, oldVideoFile != newVideoFile {
             let oldVideoURL = URL.documentsDirectory.appending(path: oldVideoFile)
             try? FileManager.default.removeItem(at: oldVideoURL)
         }
+        validationMessage = nil
         dismiss()
+    }
+
+    private func hasNonEmptyFile(at url: URL) -> Bool {
+        guard FileManager.default.fileExists(atPath: url.path),
+              let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+              let size = attributes[.size] as? NSNumber else {
+            return false
+        }
+        return size.intValue > 0
     }
 
     @ViewBuilder
@@ -210,6 +276,14 @@ struct AddExperience: View {
             case .audio:
                 audioEditor
                 descriptionField
+            }
+
+            if let validationMessage {
+                Label(validationMessage, systemImage: "exclamationmark.circle.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityAddTraits(.updatesFrequently)
             }
         }
     }

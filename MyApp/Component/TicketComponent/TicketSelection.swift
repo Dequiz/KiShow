@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct TicketSelection: View {
 
@@ -20,13 +21,22 @@ var eventName: String
 var localName: String
 var dateEvent: Date
 let event: EventEntity
+let customizeTicketTip: CustomizeTicketTip
 
-    init(artistName: String, eventName: String, localName: String, dateEvent: Date, event: EventEntity) {
+    init(
+        artistName: String,
+        eventName: String,
+        localName: String,
+        dateEvent: Date,
+        event: EventEntity,
+        customizeTicketTip: CustomizeTicketTip
+    ) {
         self.artistName = artistName
         self.eventName = eventName
         self.localName = localName
         self.dateEvent = dateEvent
         self.event = event
+        self.customizeTicketTip = customizeTicketTip
         _selectedTheme = State(initialValue: TicketTheme(rawValue: event.ticketThemeRawValue ?? "Purple") ?? .purple)
     }
 
@@ -46,6 +56,10 @@ let event: EventEntity
                                     .scaledToFit()
                                     .frame(height: 350)
                                     .onTapGesture {
+                                        if selectedTheme.rawValue != theme.rawValue {
+                                            customizeTicketTip.invalidate(reason: .actionPerformed)
+                                        }
+
                                         selectedTheme = theme
                                         event.ticketThemeRawValue = theme.rawValue
                                         do {

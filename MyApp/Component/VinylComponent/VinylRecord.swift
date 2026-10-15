@@ -63,26 +63,31 @@ struct VinylRecord: View {
                 userIsGoingUp.toggle()
             } label: {
                 ZStack {
-                    if let image {
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    } else {
-                        Color.gray
-                    }
-                    
                     Circle()
-                        .foregroundStyle(.white)
-                        .frame(width: vynilHole, height: vynilHole)
-                        .overlay {
-                            Circle()
-                                .foregroundStyle(.black)
-                                .frame(width: holeBorder, height: holeBorder)
+                        .stroke()
+                        .tint(.gray.opacity(0.5))                        .frame(width: fullVynil*0.9,height: fullVynil*0.9)
+                    Circle()
+                        .stroke()
+                        .tint(.gray.opacity(0.5))                        .frame(width: fullVynil*0.8,height: fullVynil*0.8)
+                    Circle()
+                        .stroke()
+                        .tint(.gray.opacity(0.5))                        .frame(width: fullVynil*0.7,height: fullVynil*0.7)
+                                    if let image {
+                                        image
+                                            .resizable()
+                                            .frame(width: fullVynil * 0.5,height: fullVynil * 0.5)
+                                            .scaledToFill()
+                                            .background(.appBackground)
+                                            .clipShape(.circle)
+
+                                    } else {
+                                        Color.gray
+                                    }
                         }
                 }
                 .frame(width: fullVynil, height: fullVynil)
                 .background(.black)
-                .clipShape(Circle())
+                .clipShape(.circle)
                 .rotationEffect(.degrees(shouldTurn ? 360 : 0))
                 .animation(
                     shouldTurn
@@ -94,9 +99,7 @@ struct VinylRecord: View {
         }
         
     }
-    
-}
 
 #Preview {
-    VinylRecord(fullVynil: 200, image: Image("ArtGroup"))
+    VinylRecord(fullVynil: 150, image: Image("ArtGroup"))
 }

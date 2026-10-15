@@ -8,6 +8,7 @@
 internal import Foundation
 import SwiftUI
 import SwiftData
+import TipKit
 
 enum EventSaveError: LocalizedError {
     case missingShowDate
@@ -103,6 +104,7 @@ class EventEntityViewModel {
         context.insert(event)
         do {
             try context.save()
+            CustomizeTicketTip.firstShowAdded.sendDonation()
         } catch {
             context.rollback()
             throw error

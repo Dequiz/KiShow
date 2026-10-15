@@ -1,9 +1,20 @@
 import SwiftUI
 import SwiftData
 import AVKit
+import TipKit
 
 @main
 struct MyApp: App {
+    init() {
+        #if DEBUG
+        // try? Tips.resetDatastore()
+        #endif
+
+        try? Tips.configure([
+            .displayFrequency(.immediate)
+        ])
+    }
+
     var body: some Scene {
         WindowGroup {
             SplashCoordinator()

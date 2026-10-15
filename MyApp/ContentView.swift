@@ -1,51 +1,30 @@
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
-    @State private var selectedTab: AppTab = .shows
+
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            Tab(value: .shows) {
+        TabView{
+            Tab("Shows", systemImage: "ticket.fill") {
                 MyShows()
-            } label: {
-                tabLabel("Shows", systemImage: "ticket.fill", tab: .shows)
-                    .foregroundStyle(Color.mainPink)
+                    .tint(Color(uiColor: .systemBlue))
             }
-
-            Tab(value: .search) {
+            Tab("Buscar", systemImage: "magnifyingglass.circle.fill") {
                 SearchShows()
-            } label: {
-                tabLabel("Buscar", systemImage: "magnifyingglass.circle.fill", tab: .search)
-                    .foregroundStyle(Color.mainPink)
-
+                    .tint(Color(uiColor: .systemBlue))
             }
-
-            Tab(value: .profile) {
+            Tab("Perfil", systemImage: "person.crop.circle.fill") {
                 UserProfille()
-            } label: {
-                tabLabel("Perfil", systemImage: "person.crop.circle.fill", tab: .profile)
-                    .foregroundStyle(Color.mainPink)
-
+                    .tint(Color(uiColor: .systemBlue))
             }
         }
         .tint(Color.mainPink)
         .navigationBarBackButtonHidden()
     }
-
-    private func tabLabel(_ title: String, systemImage: String, tab: AppTab) -> some View {
-        Label(title, systemImage: systemImage)
-            .foregroundStyle(selectedTab == tab ? Color.mainPink : Color.secondary)
-    }
 }
 
-private enum AppTab: Hashable {
-    case shows
-    case search
-    case profile
-}
 
 #Preview {
     ContentView()
 }
-
-

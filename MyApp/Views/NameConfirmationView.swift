@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct NameConfirmationView: View {
+    @Environment(\.modelContext) var context
     @State private var viewModel = AgeConfirmationViewModel()
     @State var isAble = false
     var body: some View{
@@ -21,9 +23,6 @@ struct NameConfirmationView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundColor(.mainPink)
                             .frame(width:80,height: 10)
-                        RoundedRectangle(cornerRadius: 10)
-                            .frame(width:80,height: 10)
-                            .foregroundStyle(.mainPink.opacity(0.5))
                     }
                     Spacer()
                     VStack(alignment: .leading){
@@ -50,15 +49,11 @@ struct NameConfirmationView: View {
                             .frame(width: 500, height: 250)
                             .opacity(0.3)
 
-                        NavigationLink(destination: AgeConfirmationView(viewModel: viewModel)) {
-                            HStack {
-                                Text("Continuar")
-                                Image(systemName: "chevron.right")
+                        ButtonComponent(buttonText: "Começar") {
+                                viewModel.saveUser(username: viewModel.username, context: context)
                             }
-                            .foregroundStyle(Color.white)
-                            .frame(width: 300, height: 44)
-                            .clipShape(.capsule)
-                        }
+                            .disabled(viewModel.username.isEmpty)
+                            .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
                         .disabled(viewModel.username.isEmpty)
                         .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
                     }
@@ -66,6 +61,9 @@ struct NameConfirmationView: View {
                 }
             .ignoresSafeArea()
             }
+        .navigationDestination(isPresented: $viewModel.navigateToNextScreen) {
+            ContentView()
+        }
         }
     }
 
