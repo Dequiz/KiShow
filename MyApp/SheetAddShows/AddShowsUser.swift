@@ -84,21 +84,37 @@ struct AddShowsUser: View {
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets())
-
+                        VStack{
+                            Text("(*) Campo obrigatório")
+                                .foregroundStyle(.red)
+                        }.listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets())
                         Section(header: Text("Informações")) {
                             HStack (spacing: 20){
-                                Text("Nome do show")
+                                HStack(spacing: 2){
+                                    Text("Nome do show")
+                                    Text("*")
+                                        .foregroundStyle(.red)
+                                }
                                 TextField("Insira o nome do show", text: $nameShow)
                             }
                             
                             HStack (spacing: 20){
-                                Text("Artista / Banda")
+                                HStack(spacing: 2){
+                                    Text("Artista / Banda")
+                                    Text("*")
+                                        .foregroundStyle(.red)
+                                }
                                 TextField("Insira o artista ou banda", text: $artistShow)
                             }
                             
                             HStack {
-                                Text("Gênero")
-                                    .foregroundStyle(.primary)
+                                HStack(spacing: 2){
+                                    Text("Gênero")
+                                        
+                                    Text("*")
+                                        .foregroundStyle(.red)
+                                }.foregroundStyle(.primary)
                                     .frame(width: 120, alignment: .leading)
 
                                 Picker("", selection: $genderShow) {
@@ -147,18 +163,9 @@ struct AddShowsUser: View {
                             }
                         }
                         .listRowBackground(Color.details)
+                        
                     }
                     .scrollContentBackground(.hidden)
-
-                    VStack {
-                        ButtonComponent(buttonText: "Adicionar Show") {
-                            save()
-                        }
-                        .disabled(!canSave || isSavingShow)
-                        .padding(.horizontal)
-                        .padding(.vertical, 12)
-                    }
-                    .background(Color.appBackground)
                 }
             }
             .navigationTitle("Novo Show")
@@ -168,6 +175,14 @@ struct AddShowsUser: View {
                     Button { dismiss() } label: {
                         Image(systemName: "xmark")
                     }
+                }
+                ToolbarItem(placement: .topBarTrailing){
+                    Button {
+                        save()
+                    }label: {
+                        Image(systemName: "checkmark")
+                    }
+                    .disabled(!canSave || isSavingShow)
                 }
             }
         }
