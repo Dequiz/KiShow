@@ -9,7 +9,9 @@ import SwiftData
 
 
 struct EditPerfil: View {
-    
+    enum Field {
+        case name
+    }
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
@@ -17,7 +19,7 @@ struct EditPerfil: View {
     var userSelected: UserEntity? {
         users.first
     }
-    
+    @FocusState private var focusedField: Field?
     @State var segmented = 0
     @State var changeName: String = ""
     @State var newPhotoSelected: Data? = nil
@@ -42,7 +44,7 @@ var body: some View {
                         .foregroundStyle(Color.primary)
                         .tint(.mainPink)
                         .clipShape(.capsule)
-                        
+                        .focused($focusedField, equals: .name)
                     Text("Edite sua foto")
                     
                     Picker("", selection: $segmented) {
@@ -90,6 +92,8 @@ var body: some View {
                        .accessibilityLabel("Salvar alterações do perfil")
                        }
                    }
+               }.onTapGesture {
+                   focusedField = nil
                }
                .presentationDragIndicator(.visible)
         }

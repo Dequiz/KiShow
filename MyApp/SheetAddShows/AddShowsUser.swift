@@ -10,8 +10,18 @@ import PhotosUI
 import SimpleToast
 
 struct AddShowsUser: View {
+    
+    enum Field {
+        case name
+        case artist
+        case local
+        case adress
+        case city
+    }
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    
+    @FocusState private var focusedField: Field?
 
     @State private var genreSource = TicketMasterShowViewModel()
     @State private var viewModel = EventEntityViewModel()
@@ -97,6 +107,7 @@ struct AddShowsUser: View {
                                         .foregroundStyle(.red)
                                 }
                                 TextField("Insira o nome do show", text: $nameShow)
+                                    .focused($focusedField, equals: .name)
                             }
                             
                             HStack (spacing: 20){
@@ -106,6 +117,7 @@ struct AddShowsUser: View {
                                         .foregroundStyle(.red)
                                 }
                                 TextField("Insira o artista ou banda", text: $artistShow)
+                                    .focused($focusedField, equals: .artist)
                             }
                             
                             HStack {
@@ -152,14 +164,17 @@ struct AddShowsUser: View {
                             HStack (spacing: 20){
                                 Text("Nome do local")
                                 TextField("Insira o nome do local", text: $localShow)
+                                    .focused($focusedField, equals: .local)
                             }
                             HStack (spacing: 20){
                                 Text("Endereço")
                                 TextField("Insira o endereço do show", text: $addressShow)
+                                    .focused($focusedField, equals: .adress)
                             }
                             HStack (spacing: 20){
                                 Text("Cidade")
                                 TextField("Insira a cidade do show", text: $city)
+                                    .focused($focusedField, equals: .city)
                             }
                         }
                         .listRowBackground(Color.details)
@@ -167,6 +182,10 @@ struct AddShowsUser: View {
                     }
                     .scrollContentBackground(.hidden)
                 }
+                .onTapGesture {
+                    focusedField = nil
+                }
+                
             }
             .navigationTitle("Novo Show")
             .navigationBarTitleDisplayMode(.inline)
