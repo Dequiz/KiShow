@@ -169,14 +169,6 @@ struct AddShowsUser: View {
                         Image(systemName: "xmark")
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing){
-                    Button {
-                        save()
-                    }label: {
-                        Image(systemName: "checkmark")
-                    }
-                    .disabled(!canSave || isSavingShow)
-                }
             }
         }
         .simpleToast(isPresented: $showToast, options: toastOption) {
@@ -220,7 +212,7 @@ struct AddShowsUser: View {
             toastSucceeded = true
             showToast = true
             Task {
-                try? await Task.sleep(nanoseconds: 2_200_000_000)
+                try? await Task.sleep(nanoseconds: 1_200_000_000)
                 dismiss()
             }
         } catch {
