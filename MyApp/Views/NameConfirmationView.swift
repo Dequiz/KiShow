@@ -9,6 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct NameConfirmationView: View {
+    enum Field {
+        case name
+    }
+    @FocusState private var focusedField: Field?
     @Environment(\.modelContext) var context
     @State private var viewModel = AgeConfirmationViewModel()
     @State var isAble = false
@@ -42,6 +46,7 @@ struct NameConfirmationView: View {
                         .foregroundStyle(Color.primary)
                         .tint(.mainPink)
                         .clipShape(.capsule)
+                        .focused($focusedField, equals: .name)
                     Spacer()
                     ZStack {
                         Image(.camada1)
@@ -58,6 +63,8 @@ struct NameConfirmationView: View {
                         .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
                     }
                     }
+                }.onTapGesture {
+                    focusedField = nil
                 }
             .ignoresSafeArea()
             }
