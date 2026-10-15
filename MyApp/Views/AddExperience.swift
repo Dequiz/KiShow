@@ -14,6 +14,9 @@ import AVFoundation
 import TipKit
 
 struct AddExperience: View {
+    enum Field {
+        case description
+    }
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     @State var eventoSelecionado: EventEntity
@@ -26,9 +29,10 @@ struct AddExperience: View {
     @State private var isShowingMicrophonePermissionAlert = false
     @State private var validationMessage: String?
     @State private var itemSelecionado: PhotosPickerItem? = nil
-        @State private var imagemCarregada: UIImage? = nil
+    @State private var imagemCarregada: UIImage? = nil
     @State var viewModel = ExperienceViewModel()
-   @State private var rec = Recorder()
+    @FocusState private var focusedField: Field?
+    @State private var rec = Recorder()
     @State private var player = MiniPlayer()
     @State private var recordings: [URL] = []
     @State private var didLoadExperienceForEditing = false
@@ -46,7 +50,9 @@ struct AddExperience: View {
             }
             MidiaPicker(viewModel: viewModel, alignment: .bottomTrailing)
         }
-
+        .onTapGesture {
+            focusedField = nil
+        }
         .task{
             prepareExperienceForEditing()
             recordings = recordingList()
@@ -296,6 +302,7 @@ struct AddExperience: View {
             .foregroundStyle(Color.primary)
             .tint(.mainPink)
             .frame(maxWidth: .infinity)
+            .focused($focusedField, equals: .description)
     }
 
     @ViewBuilder
