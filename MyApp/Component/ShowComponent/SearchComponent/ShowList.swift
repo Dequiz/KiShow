@@ -18,10 +18,6 @@ struct ShowList: View {
     var action: () -> Void
     var body: some View {
         VStack {
-            if ticketMasterShow.filteredShows.isEmpty{
-                ContentUnavailableView("Nenhum show encontrado para essa categoria", systemImage: "music.note", description: Text("Tente outra categoria ou pesquisa."))
-                    .padding()
-            }
             switch ticketMasterShow.loadState {
             case .loading:
                 ProgressView("Buscando shows…")
