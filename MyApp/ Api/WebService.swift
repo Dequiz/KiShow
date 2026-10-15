@@ -33,7 +33,7 @@ class WebService {
             URLQueryItem(name: "locale", value: "*"),
             URLQueryItem(name: "countryCode", value: "BR"),
             URLQueryItem(name: "classificationName", value: genre),
-            URLQueryItem(name: "size", value: "100"),
+            URLQueryItem(name: "size", value: "200"),
             URLQueryItem(name: "page", value: "0")
         ]
         guard let url = components.url else { throw EventSearchError.invalidResponse }
