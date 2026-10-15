@@ -8,8 +8,10 @@
 import SwiftUI
 import SwiftData
 import SimpleToast
+import TipKit
 
 struct MyShows: View {
+    private let customizeTicketTip = CustomizeTicketTip()
     @Query var events: [EventEntity]
     @Query var experiencies: [ExperienceEntity]
     @State private var dm = TitleDefinitionMachine()
@@ -109,15 +111,7 @@ struct MyShows: View {
                             NavigationLink {
                                 EventView(eventoSelecionado: event)
                             } label: {
-                                TicketSelection(
-                                    artistName: event.show?.artistShow ?? "Artista",
-                                    eventName: event.show?.nameShow ?? "Evento",
-                                    localName: event.show?.localShow ?? "Local",
-                                    dateEvent: event.show?.dataShow ?? Date(),
-                                    event: event
-                                )
-                                .frame(maxWidth: 350)
-                                .frame(maxWidth: .infinity, alignment: .center)
+                                ticketSelection(for: event)
                             }
                             .buttonStyle(.plain)
                             .navigationLinkIndicatorVisibility(.hidden)
@@ -269,6 +263,30 @@ struct MyShows: View {
         }
         .padding(.bottom, 100)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    @ViewBuilder
+    private func ticketSelection(for event: EventEntity) -> some View {
+        let ticket = TicketSelection(
+            artistName: event.show?.artistShow ?? "Artista",
+            eventName: event.show?.nameShow ?? "Evento",
+            localName: event.show?.localShow ?? "Local",
+            dateEvent: event.show?.dataShow ?? Date(),
+            event: event,
+            customizeTicketTip: customizeTicketTip
+        )
+
+        if event.id == eventosFiltrados.first?.id {
+            ticket
+                .frame(maxWidth: 350)
+                .popoverTip(customizeTicketTip, arrowEdge: .top)
+                .tipViewStyle(CenteredTipViewStyle())
+                .frame(maxWidth: .infinity, alignment: .center)
+        } else {
+            ticket
+                .frame(maxWidth: 350)
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
     }
 
     private func deleteShow(_ event: EventEntity) {

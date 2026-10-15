@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import TipKit
 struct Title: View {
     var titleNames: TitlesNames
     @Query var titles: [TitleEntity]
@@ -14,6 +15,7 @@ struct Title: View {
     @State private var upSheet = false
     @State private var presentHint = ""
     @State private var presentedTitle = "Escolha Seu Título"
+    @State private var profileTitleTip = ProfileTitleTip()
 
     let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
 
@@ -44,6 +46,7 @@ struct Title: View {
 
     var body: some View {
         Button {
+            profileTitleTip.invalidate(reason: .actionPerformed)
             upSheet.toggle()
         } label: {
             Text(presentedTitle)
@@ -54,6 +57,8 @@ struct Title: View {
                 .glassEffect()
                 .shadow(radius: 1)
         }
+        .popoverTip(profileTitleTip, arrowEdge: .top)
+        .tipViewStyle(CenteredTipViewStyle())
         .sheet(isPresented: $upSheet) {
             ZStack {
                 Color("SheetBackground").ignoresSafeArea()

@@ -17,7 +17,6 @@ class AgeConfirmationViewModel {
     func saveUser(username: String, context: ModelContext) {
         let displayName = username.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !displayName.isEmpty else { return }
-        // Keep the existing SwiftData field for backward-compatible schema storage.
         let newUser = UserEntity(nameUser: displayName, ageUser: 0)
         
         context.insert(newUser)
