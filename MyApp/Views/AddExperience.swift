@@ -265,11 +265,11 @@ struct AddExperience: View {
                                 .scaledToFill()
                         } else {
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(.secondary)
+                                .fill(.details)
                                 .overlay {
                                     Image(systemName: "photo.fill")
                                         .font(.system(size: 38))
-                                        .foregroundStyle(.white)
+                                        .foregroundStyle(.secondary)
                                 }
                         }
                     }
@@ -302,7 +302,7 @@ struct AddExperience: View {
         TextField("Adicione uma descrição", text: $experiencia, axis: .vertical)
             .lineLimit(2...5)
             .padding(14)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .background(.details, in: RoundedRectangle(cornerRadius: 14))
             .foregroundStyle(Color.primary)
             .tint(.mainPink)
             .frame(maxWidth: .infinity)
@@ -350,13 +350,13 @@ struct AddExperience: View {
     private func videoPickerButton(isFailure: Bool) -> some View {
         PhotosPicker(selection: $videoPicker.videoSelection, matching: .videos) {
             RoundedRectangle(cornerRadius: 16)
-                .fill(.secondary)
+                .fill(.details)
                 .aspectRatio(16 / 9, contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .overlay {
                     Image(systemName: isFailure ? "exclamationmark.triangle.fill" : "video.badge.plus")
                         .font(.system(size: 38))
-                        .foregroundStyle(isFailure ? Color.red : Color.white)
+                        .foregroundStyle(isFailure ? Color.red : Color.secondary)
                 }
         }
         .buttonStyle(.plain)

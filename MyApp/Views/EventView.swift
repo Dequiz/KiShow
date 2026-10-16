@@ -94,6 +94,8 @@ struct EventView: View {
                                 .disabled(dailyStories.isEmpty)
                                
                                 Text(eventoSelecionado.show?.nameShow ?? "Evento")
+                                    .fontWeight(.bold)
+                                
                                 if #available(iOS 27.0, *) {
                                     themePicker
                                         .pickerStyle(.tabs)

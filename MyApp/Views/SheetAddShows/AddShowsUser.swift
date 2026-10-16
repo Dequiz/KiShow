@@ -73,11 +73,9 @@ struct AddShowsUser: View {
                                             .resizable()
                                             .scaledToFill()
                                     } else {
-                                        VStack{
-                                            Image(systemName: "photo.badge.plus")
-                                                .font(.largeTitle)
-                                            Text("Segure para escolher a imagem")
-                                        }
+                                        Image(systemName: "photo.badge.plus")
+                                            .font(.largeTitle)
+                                            .foregroundStyle(.secondary)
                                     }
                                 }
                                 .frame(maxWidth: .infinity)
@@ -85,6 +83,7 @@ struct AddShowsUser: View {
                                 .background(Color.details)
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
                             }
+                            .buttonStyle(.plain)
                             .tint(.mainPurple)
                             
                             .onChange(of: selectedPhoto) { _, newItem in
