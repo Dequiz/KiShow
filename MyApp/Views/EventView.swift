@@ -85,9 +85,14 @@ struct EventView: View {
                             .disabled(true)
                         }
                         .disabled(dailyStories.isEmpty)
+                        
+                        Spacer()
 
                         Text(eventoSelecionado.show?.nameShow ?? "Evento")
+                            .font(.body)
                             .fontWeight(.bold)
+                        
+                        Spacer()
 
                         ColapsedList(eventoSelecionado: eventoSelecionado)
 
@@ -102,7 +107,6 @@ struct EventView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.vertical, 14)
                     .frame(maxWidth: .infinity)
                     .background {
                             Image(.camada1)
@@ -331,7 +335,6 @@ struct EventView: View {
 
         switch experience.type {
         case .image:
-                
                 VStack (spacing:10){
                     if let data = experience.imageContent?.first,
                        let uiImage = UIImage(data: data) {
@@ -408,7 +411,6 @@ struct EventView: View {
                         .frame(minHeight: 50)
                         .frame(maxWidth: 370,maxHeight: 230)
                         .background(Color.details)
-                        .padding(.top,0)
                         .clipShape(.rect(bottomLeadingRadius:25, bottomTrailingRadius: 25))
                         .offset(y:-10)
                 }
@@ -416,7 +418,6 @@ struct EventView: View {
 
         case .text:
             VStack(alignment: .leading){
-                Spacer()
                 HStack{
                     Text("Última modificação:")
                         .font(.caption)
@@ -428,6 +429,9 @@ struct EventView: View {
                         .foregroundStyle(Color.secondary)
                         .lineLimit(1)
                 }
+                
+                Spacer()
+                
                 Text(experience.textContent?.first ?? "Vazio")
             }
             .padding()

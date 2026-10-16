@@ -36,40 +36,24 @@ struct ColapsedList: View {
                 if isExpanded {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack{
-                            Text("Endereço:")
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.secondary)
-                                .font(.callout)
-                            Text("\(eventoSelecionado.show?.addressShow ?? "")")
+                            Text("**Endereço:** \(eventoSelecionado.show?.addressShow ?? "")")
                                 .foregroundStyle(Color.secondary)
                                 .font(.callout)
                         }
                         HStack{
-                            Text("Local:")
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.secondary)
-                                .font(.callout)
-                            Text("\(eventoSelecionado.show?.localShow ?? "")")
+                            Text("**Local:** \(eventoSelecionado.show?.localShow ?? "")")
                                 .foregroundStyle(Color.secondary)
                                 .font(.callout)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.75)
                         }
                         HStack{
-                            Text("Data:")
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.secondary)
-                                .font(.callout)
-                            Text("\(formattedDate(eventoSelecionado.show?.dataShow))")
+                            Text("**Data:** \(formattedDate(eventoSelecionado.show?.dataShow))")
                                 .foregroundStyle(Color.secondary)
                                 .font(.callout)
                         }
                         HStack{
-                            Text("Hora:")
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.secondary)
-                                .font(.callout)
-                            Text("\(formattedEventTime)")
+                            Text("**Hora:** \(formattedEventTime)")
                                 .foregroundStyle(Color.secondary)
                                 .font(.callout)
                         }
