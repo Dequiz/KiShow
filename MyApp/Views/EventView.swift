@@ -241,7 +241,7 @@ struct EventView: View {
                 .foregroundStyle(.primary)
 
             if experiences.isEmpty {
-                Text("Toque em + para guardar uma lembrança deste show.")
+                Text("Toque em + para guardar \numa lembrança deste show.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

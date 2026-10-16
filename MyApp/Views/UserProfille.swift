@@ -61,12 +61,13 @@ struct UserProfille: View {
                         .padding(.bottom, 24)
 
                         VStack(spacing: 28) {
-                            VStack(alignment: .leading, spacing: 18) {
+                            VStack(spacing: 18) {
                                 Text("Frequência de Shows")
-                                    .font(.title)
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.65)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(maxWidth: .infinity)
                                     .padding(.horizontal, 16)
                                     .padding(.top, 16)
                                 if event.count > 0{
@@ -75,15 +76,18 @@ struct UserProfille: View {
                                     Text("Você ainda não possui shows adicionados")
                                         .padding()
                                         .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
                                 }
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 305)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
-                            .padding(.horizontal, 4)
+                            .padding(.horizontal, 12)
+                            
                             VStack(spacing: 8) {
                                 Text("Artistas mais ouvidos")
                                     .font(.title3)
+                                    .fontWeight(.semibold)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.65)
                                     .frame(maxWidth: .infinity)
@@ -94,17 +98,20 @@ struct UserProfille: View {
                                     Text("Você ainda não possui shows adicionados")
                                         .padding()
                                         .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
                                 }
                             }
                             .padding(.bottom, 12)
+                            .padding(.horizontal, 12)
                             .frame(maxWidth: .infinity)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
 
                             VStack(spacing: 4) {
                                 Text("Gêneros mais ouvidos")
                                     .font(.title3)
+                                    .fontWeight(.semibold)
                                     .lineLimit(1)
-                                    .padding()
+                                    .padding(.top, 16)
                                     .minimumScaleFactor(0.65)
                                     .frame(maxWidth: .infinity)
                                 if event.count > 0 {
@@ -113,8 +120,10 @@ struct UserProfille: View {
                                     Text("Você ainda não possui shows adicionados")
                                         .padding()
                                         .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
                                 }
                             }
+                            .padding(.bottom, 12)
                             .padding(.horizontal, 12)
                             .frame(maxWidth: .infinity)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))

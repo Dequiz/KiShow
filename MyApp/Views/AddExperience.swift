@@ -376,6 +376,7 @@ struct AddExperience: View {
                     .font(.title3)
                     .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
+                    .foregroundStyle(.white)
             }
             .disabled(rec.isRecording || (rec.fileURL == nil && experienceToEdit?.audioContent?.first == nil))
             .accessibilityLabel("Reproduzir áudio")
@@ -403,6 +404,7 @@ struct AddExperience: View {
                     .font(.title3)
                     .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
+                    .foregroundStyle(.white)
             }
             .accessibilityLabel(rec.isRecording ? "Parar gravação" : "Iniciar gravação")
         }

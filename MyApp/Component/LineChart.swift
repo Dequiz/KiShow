@@ -67,7 +67,7 @@ struct LineChart: View {
 
                 VStack(spacing: -5) {
                     Text("Ano")
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.secondary)
                     Picker("", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
                             Text(String(year)).tag(year)
@@ -112,16 +112,16 @@ struct LineChart: View {
                     .chartXAxis {
                         AxisMarks(values: displayedMonths.indices.map(Double.init)) { axisValue in
                             AxisGridLine()
-                                .foregroundStyle(Color.text.opacity(0.22))
+                                .foregroundStyle(Color.primary.opacity(0.22))
                             AxisTick()
-                                .foregroundStyle(Color.text.opacity(0.6))
+                                .foregroundStyle(Color.primary.opacity(0.6))
                             AxisValueLabel {
                                 if let value = axisValue.as(Double.self) {
                                     let position = Int(value.rounded())
                                     if displayedMonths.indices.contains(position) {
                                         Text(monthNames[displayedMonths[position] - 1])
                                         .font(.system(size: 12))
-                                        .foregroundStyle(Color.text)
+                                        .foregroundStyle(Color.primary)
                                     }
                                 }
                             }
@@ -145,9 +145,9 @@ struct LineChart: View {
                             }
                         }
                     }
-                    .chartXAxisLabel(position: .bottom, alignment: .center) {
+                    .chartXAxisLabel(position: .bottom, alignment: .bottomLeading) {
                         Text("Período de tempo")
-                            .font(.system(size: 17, weight: .bold))
+                            .font(.system(.body, weight: .semibold))
                             .foregroundStyle(Color(uiColor: .label))
                             .fixedSize()
                             .padding(.horizontal, 14)
@@ -184,7 +184,7 @@ struct LineChart: View {
     private func monthPicker(title: String, selection: Binding<Int>) -> some View {
         VStack(spacing: -5) {
             Text(title)
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(Color.secondary)
             Picker("", selection: selection) {
                 ForEach(1...12, id: \.self) { month in
                     Text(monthNames[month - 1]).tag(month)

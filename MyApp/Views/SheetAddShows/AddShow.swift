@@ -178,7 +178,7 @@ struct AddShow: View {
                                         .lineLimit(1)
                                 }
                                 .clipShape(.capsule)
-                                .padding(.horizontal, 8)
+                                .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
                                 .background(Color.mainPurple.opacity(0.5), in: Capsule())
                                 .foregroundColor(Color.white)
@@ -186,7 +186,9 @@ struct AddShow: View {
                             .disabled(isAddingToCalendar)
                             
                            
-                        }.padding()
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom)
                        
                         
                         if let url = URL(string: ticketMasterShow.url){
@@ -197,18 +199,12 @@ struct AddShow: View {
                                 Image(systemName: "link")
                                 Text("Compre agora no site da ticket master")
                             }
-//                            .buttonStyle(.plain)
                             .foregroundStyle(Color.mainPink)
-                            .foregroundColor(Color.mainPink)
                             .tint(Color.mainPink)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
+                            .padding(.horizontal)
                         }
-                        
-                        
-                        
-                        
-                        
+         
                     }
                 }
                 
