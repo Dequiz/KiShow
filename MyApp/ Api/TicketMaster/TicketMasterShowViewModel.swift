@@ -21,6 +21,19 @@ class TicketMasterShowViewModel{
     var query: String = ""
     var loadState: LoadState = .idle
     
+    @ObservationIgnored
+    private let showsCache = NSCache<NSString, CacheEntry>()
+    
+    init() {
+       showsCache.countLimit = 10
+       showsCache.totalCostLimit = 5_000_000
+    }
+    
+    private final class CacheEntry {
+        let shows: [TicketmasterShow]
+        init(_ shows: [TicketmasterShow]) { self.shows = shows }
+    }
+    
     let genres = [
         "Pop",
         "World",
@@ -113,6 +126,14 @@ class TicketMasterShowViewModel{
     }
 
     func fetchConcert(genre1: String, genre2: String = "") async {
+        let key = cacheKey(genre1: genre1, genre2: genre2)
+        
+        if let cached = showsCache.object(forKey: key as NSString) {
+            shows = cached.shows
+            loadState = .loaded
+            return
+        }
+        
         loadState = .loading
         do {
             let combined: [TicketmasterShow]
@@ -123,13 +144,25 @@ class TicketMasterShowViewModel{
                 async let request2 = WebService().downloadAllShows(genre: genre2)
                 combined = try await request1 + request2
             }
+            
             var seen = Set<String>()
-            shows = combined.filter { seen.insert($0.id).inserted }
+            let deduped = combined.filter { seen.insert($0.id).inserted }
+            
+            // Guarda no cache com um "custo" estimado
+            let cost = MemoryLayout<TicketmasterShow>.stride * deduped.count
+            showsCache.setObject(CacheEntry(deduped), forKey: key as NSString, cost: cost)
+            
+            shows = deduped
             loadState = .loaded
         } catch {
             shows = []
             loadState = .failed
         }
+    }
+
+    private func cacheKey(genre1: String, genre2: String) -> String {
+        let parts = [genre1, genre2].filter { !$0.isEmpty }.sorted()
+        return parts.joined(separator: "|")
     }
     
 }

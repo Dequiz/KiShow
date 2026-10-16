@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 struct ContentView: View {
-
+    @State private var ticketMasterShow = TicketMasterShowViewModel()
 
     var body: some View {
         TabView{
@@ -11,7 +11,7 @@ struct ContentView: View {
                     .tint(Color(uiColor: .systemBlue))
             }
             Tab("Buscar", systemImage: "magnifyingglass.circle.fill") {
-                SearchShows()
+                SearchShows(ticketMasterShow: ticketMasterShow)
                     .tint(Color(uiColor: .systemBlue))
             }
             Tab("Perfil", systemImage: "person.crop.circle.fill") {

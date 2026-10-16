@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct SearchShows: View {
-    @State private var ticketMasterShow = TicketMasterShowViewModel()
+    @Bindable var ticketMasterShow: TicketMasterShowViewModel
     @State var TaskId: UUID = UUID()
     var body: some View {
         NavigationStack{
@@ -75,6 +75,7 @@ struct SearchShows: View {
         
 
 #Preview {
-    SearchShows()
+    let ticketMasterShow = TicketMasterShowViewModel()
+    SearchShows(ticketMasterShow: ticketMasterShow)
 
 }
