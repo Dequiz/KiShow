@@ -15,6 +15,7 @@ private struct ShowsMonth: Identifiable {
 }
 
 struct LineChart: View {
+    @Environment(\.colorScheme) var colorScheme
     private let monthSlotWidth: CGFloat = 46
     private let chartHeight: CGFloat = 190
     @Environment(\.modelContext) private var context
@@ -59,15 +60,13 @@ struct LineChart: View {
         VStack( spacing: 14) {
             HStack(spacing: 8) {
                 monthPicker(title: "De", selection: $startMonth)
-                    .tint(.primary)
-                    .foregroundStyle(Color.primary)
+                    .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                 monthPicker(title: "Até", selection: $endMonth)
-                    .tint(.primary)
-                    .foregroundStyle(Color.primary)
+                    .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
 
                 VStack(spacing: -5) {
                     Text("Ano")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                     Picker("", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
                             Text(String(year)).tag(year)
@@ -75,8 +74,8 @@ struct LineChart: View {
                     }
                     .pickerStyle(.menu)
                     .fixedSize()
-                    .tint(.primary)
-                    .foregroundStyle(.primary)
+                    .tint(Color.primary)
+                    .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                 }
 
                 Button {
@@ -112,16 +111,16 @@ struct LineChart: View {
                     .chartXAxis {
                         AxisMarks(values: displayedMonths.indices.map(Double.init)) { axisValue in
                             AxisGridLine()
-                                .foregroundStyle(Color.primary.opacity(0.22))
+                                .foregroundStyle(Color.text.opacity(0.22))
                             AxisTick()
-                                .foregroundStyle(Color.primary.opacity(0.6))
+                                .foregroundStyle(Color.text.opacity(0.6))
                             AxisValueLabel {
                                 if let value = axisValue.as(Double.self) {
                                     let position = Int(value.rounded())
                                     if displayedMonths.indices.contains(position) {
                                         Text(monthNames[displayedMonths[position] - 1])
                                         .font(.system(size: 12))
-                                        .foregroundStyle(Color.primary)
+                                        .foregroundStyle(Color.text)
                                     }
                                 }
                             }
@@ -145,10 +144,10 @@ struct LineChart: View {
                             }
                         }
                     }
-                    .chartXAxisLabel(position: .bottom, alignment: .bottomLeading) {
+                    .chartXAxisLabel(position: .bottom, alignment: .leading) {
                         Text("Período de tempo")
-                            .font(.system(.body, weight: .semibold))
-                            .foregroundStyle(Color(uiColor: .label))
+                            .font(.system(size: 17, weight: .bold))
+                            .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                             .fixedSize()
                             .padding(.horizontal, 14)
                             .padding(.vertical, 10)
@@ -184,7 +183,7 @@ struct LineChart: View {
     private func monthPicker(title: String, selection: Binding<Int>) -> some View {
         VStack(spacing: -5) {
             Text(title)
-                .foregroundStyle(Color.secondary)
+                .foregroundStyle(Color.primary)
             Picker("", selection: selection) {
                 ForEach(1...12, id: \.self) { month in
                     Text(monthNames[month - 1]).tag(month)
