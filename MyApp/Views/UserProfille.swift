@@ -61,9 +61,9 @@ struct UserProfille: View {
                         .padding(.bottom, 24)
 
                         VStack(spacing: 28) {
-                            VStack(alignment: .leading){
+                            VStack(alignment: .leading, spacing: 18) {
                                 Text("Frequência de Shows")
-                                    .font(.system(size: 20, weight: .semibold))
+                                    .font(.title)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.65)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -81,54 +81,43 @@ struct UserProfille: View {
                             .frame(height: 305)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
                             .padding(.horizontal, 4)
-                            GeometryReader { geometry in
-                                let spacing: CGFloat = 12
-                                let cardWidth = (geometry.size.width - spacing) / 2
-                                let titleSize = min(16, max(12, cardWidth * 0.085))
-
-                                HStack(alignment: .top, spacing: spacing) {
-                                    VStack(spacing: 4) {
-                                        Text("Artistas mais ouvidos")
-                                            .font(.system(size: titleSize, weight: .semibold))
-                                            .lineLimit(1)
-                                            .minimumScaleFactor(0.65)
-                                            .frame(maxWidth: .infinity)
-                                            .offset(y:15)
-                                        Spacer()
-                                        if event.count > 0 {
-                                            FavoriteArtists()
-                                        } else {
-                                            Text("Você ainda não possui shows adicionados")
-                                                .padding()
-                                                .foregroundStyle(.secondary)
-                                        }
-                                        Spacer()
-
-                                    }
-                                    .padding(.horizontal, 12)
-                                    .frame(width: cardWidth, height: 205)
-                                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
-
-                                    VStack(spacing: 4) {
-                                        Text("Gêneros mais ouvidos")
-                                            .font(.system(size: titleSize, weight: .semibold))
-                                            .lineLimit(1)
-                                            .minimumScaleFactor(0.65)
-                                            .frame(maxWidth: .infinity)
-                                        if event.count > 0 {
-                                            Charts()
-                                        } else {
-                                            Text("Você ainda não possui shows adicionados")
-                                                .padding()
-                                                .foregroundStyle(.secondary)
-                                        }
-                                    }
-                                    .padding(.horizontal, 12)
-                                    .frame(width: cardWidth, height: 205)
-                                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
+                            VStack(spacing: 8) {
+                                Text("Artistas mais ouvidos")
+                                    .font(.title3)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.65)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.top, 16)
+                                if event.count > 0 {
+                                    FavoriteArtists()
+                                } else {
+                                    Text("Você ainda não possui shows adicionados")
+                                        .padding()
+                                        .foregroundStyle(.secondary)
                                 }
                             }
-                            .frame(height: 205)
+                            .padding(.bottom, 12)
+                            .frame(maxWidth: .infinity)
+                            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
+
+                            VStack(spacing: 4) {
+                                Text("Gêneros mais ouvidos")
+                                    .font(.title3)
+                                    .lineLimit(1)
+                                    .padding()
+                                    .minimumScaleFactor(0.65)
+                                    .frame(maxWidth: .infinity)
+                                if event.count > 0 {
+                                    Charts()
+                                } else {
+                                    Text("Você ainda não possui shows adicionados")
+                                        .padding()
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .padding(.horizontal, 12)
+                            .frame(maxWidth: .infinity)
+                            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
                         }
                     }
                     .padding(20)

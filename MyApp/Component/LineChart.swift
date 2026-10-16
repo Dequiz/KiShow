@@ -15,7 +15,7 @@ private struct ShowsMonth: Identifiable {
 }
 
 struct LineChart: View {
-    private let monthSlotWidth: CGFloat = 60
+    private let monthSlotWidth: CGFloat = 46
     private let chartHeight: CGFloat = 190
     @Environment(\.modelContext) private var context
     @State private var viewModel = LineChartViewModel()
@@ -28,7 +28,7 @@ struct LineChart: View {
 
     private let monthNames = [
         "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-        "Jul", "Ago", "Set", "Out", "Nove", "Dez"
+        "Jul", "Ago", "Set", "Out", "Nov", "Dez"
     ]
 
     private var availableYears: [Int] {
@@ -37,7 +37,6 @@ struct LineChart: View {
     }
 
     private var displayedMonths: [Int] {
-        // Keep the range valid during the brief state update between the two pickers.
         let months = Array(min(startMonth, endMonth)...max(startMonth, endMonth))
         return ascending ? months : Array(months.reversed())
     }
@@ -57,7 +56,7 @@ struct LineChart: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack( spacing: 14) {
             HStack(spacing: 8) {
                 monthPicker(title: "De", selection: $startMonth)
                     .tint(.primary)
@@ -66,7 +65,7 @@ struct LineChart: View {
                     .tint(.primary)
                     .foregroundStyle(Color.primary)
 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(spacing: -5) {
                     Text("Ano")
                         .foregroundStyle(.primary)
                     Picker("", selection: $selectedYear) {
@@ -84,10 +83,12 @@ struct LineChart: View {
                     ascending.toggle()
                 } label: {
                     Image(systemName: "arrow.up.arrow.down")
-                        .accessibilityLabel(ascending ? "Ordenar de janeiro a dezembro" : "Ordenar de dezembro a janeiro")
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(Color.primary)
+                        .padding(10)
+                        .glassEffect()
                 }
-                .buttonStyle(.plain)
-                .foregroundStyle(.primary)
+                .accessibilityLabel(ascending ? "Ordenar de janeiro a dezembro" : "Ordenar de dezembro a janeiro")
             }
             .font(.caption)
 
@@ -104,20 +105,9 @@ struct LineChart: View {
                     let chartWidth = max(geometry.size.width, minimumChartWidth + monthSlotWidth / 2)
                     ScrollView(.horizontal) {
                     Chart(chartData) { item in
-                        BarMark(
-                            x: .value("Mês", item.position),
-                            y: .value("Shows", item.count)
-                        )
-                        .foregroundStyle(Color.mainPink)
-                        PointMark(
-                            x: .value("Mês", item.position),
-                            y: .value("Shows", item.count)
-                        )
-                        .foregroundStyle(Color.primary)
+                        showMarks(for: item)
                     }
-                    // Reserve a full slot after the last point so its month label stays inside the plot.
                     .chartXScale(domain: -0.5...Double(displayedMonths.count))
-                    // Keep the largest data point and its tick label away from the top clip edge.
                     .chartYScale(domain: 0...Double(max(yAxisMaximum + 1, 1)))
                     .chartXAxis {
                         AxisMarks(values: displayedMonths.indices.map(Double.init)) { axisValue in
@@ -148,7 +138,8 @@ struct LineChart: View {
                                     ?? axisValue.as(Double.self).map { String(format: "%.0f", $0) }
                                     ?? ""
                                 Text(label)
-                                    .foregroundStyle(Color.text)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(Color(uiColor: .label))
                                     .fixedSize()
                                     .padding(.leading, 8)
                             }
@@ -157,22 +148,11 @@ struct LineChart: View {
                     .chartXAxisLabel(position: .bottom, alignment: .center) {
                         Text("Período de tempo")
                             .font(.system(size: 17, weight: .bold))
-                            .foregroundStyle(Color.text)
+                            .foregroundStyle(Color(uiColor: .label))
                             .fixedSize()
                             .padding(.horizontal, 14)
-                            .padding(.top, 12)
+                            .padding(.vertical, 10)
                     }
-                    .chartYAxisLabel(position: .leading, alignment: .center) {
-                        Text("Quantidade de vezes \nque foi a um show")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(Color.text)
-                            .fixedSize()
-                            .lineLimit(2 )
-                            .padding(.vertical, 14)
-                            .padding(.horizontal, 10)
-                            .rotationEffect(.degrees(180))
-                    }
-                    .foregroundStyle(Color.mainPink)
                     .frame(width: chartWidth, height: chartHeight)
                     .padding(.leading, 32)
                     }
@@ -202,9 +182,9 @@ struct LineChart: View {
     }
 
     private func monthPicker(title: String, selection: Binding<Int>) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(spacing: -5) {
             Text(title)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.primary)
             Picker("", selection: selection) {
                 ForEach(1...12, id: \.self) { month in
                     Text(monthNames[month - 1]).tag(month)
@@ -212,8 +192,27 @@ struct LineChart: View {
             }
             .pickerStyle(.menu)
             .fixedSize()
-            .tint(.white)
-            .foregroundStyle(.white)
+            .tint(Color.primary)
+            .foregroundStyle(Color.primary)
         }
+    }
+
+    @ChartContentBuilder
+    private func showMarks(for item: ShowsMonth) -> some ChartContent {
+        let monthPosition: Double = item.position
+        let showCount: Int = item.count
+
+        BarMark(
+            x: .value("Mês", monthPosition),
+            y: .value("Shows", showCount),
+            width: .fixed(14)
+        )
+        .foregroundStyle(Color.mainPink)
+
+        PointMark(
+            x: .value("Mês", monthPosition),
+            y: .value("Shows", showCount)
+        )
+        .foregroundStyle(Color.primary)
     }
 }

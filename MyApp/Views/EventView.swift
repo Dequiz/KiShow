@@ -352,7 +352,7 @@ struct EventView: View {
                                 .padding(.horizontal,10)
                                 Spacer()
                             }
-                            .scaledToFit    ()
+                            .scaledToFill()
                     }
                     if let text = experience.textContent, !text.isEmpty {
                         Text(text.first ?? "Vazio")
