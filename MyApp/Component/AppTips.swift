@@ -124,7 +124,7 @@ struct EventStoryTip: Tip {
     }
 
     var message: Text? {
-        Text("Fotos e vídeos deste show ficam reunidos aqui. Depois de adicionar uma mídia, toque no disco para rever suas lembranças.")
+        Text("Fotos e vídeos deste show ficam reunidos aqui, toque no disco para rever suas lembranças.")
     }
 
     var image: Image? {

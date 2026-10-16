@@ -10,9 +10,12 @@ import SwiftData
 import SimpleToast
 
 struct AddShow: View {
+    @Environment(\.openURL) private var openURL
+    @State private var showExternalLinkConfirmation = false
+    @State private var pendingExternalURL: URL?
+    @State private var externalLinkMessage = "Você será redirecionado para uma página externa com a política de privacidade."
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) private var openURL
     @State private var viewModel = EventEntityViewModel()
     @Query private var matchingEvents: [EventEntity]
     init(ticketMasterShow: TicketmasterShow, action: @escaping () -> Void) {
@@ -35,8 +38,6 @@ struct AddShow: View {
     @State private var toastSucceeded = false
     @State private var isAddingToCalendar = false
     @State private var isSavingShow = false
-    @State private var showExternalLinkConfirmation = false
-    @State private var pendingExternalURL: URL?
     let manager = CalendarManager()
     private let toastOption = SimpleToastOptions(alignment: .top,hideAfter: 2,backdrop: Color.black.opacity(0.2),animation: .default,modifierType: .slide)
     let ticketMasterShow: TicketmasterShow
@@ -194,6 +195,7 @@ struct AddShow: View {
                         if let url = URL(string: ticketMasterShow.url){
                             Button {
                                 pendingExternalURL = url
+                                externalLinkMessage = "Você será redirecionado para uma página externa com a política de privacidade."
                                 showExternalLinkConfirmation = true
                             } label: {
                                 Image(systemName: "link")
@@ -253,6 +255,27 @@ struct AddShow: View {
                     }
                 }
         }
+        .overlay {
+            PrimaryColorAlertPresenter(
+                isPresented: $showExternalLinkConfirmation,
+                title: "Você está saindo do KiShow",
+                message: externalLinkMessage,
+                confirmTitle: "Continuar",
+                cancelTitle: "Cancelar",
+                onConfirm: {
+                    guard let url = pendingExternalURL else { return }
+                    openURL(url)
+                    pendingExternalURL = nil
+                },
+                onCancel: {
+                    pendingExternalURL = nil
+                }
+            )
+            .frame(width: 1, height: 1)
+            .opacity(0.01)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+        }
         .simpleToast(isPresented: $showToast, options: toastOption, content: {
             HStack(spacing: 10) {
                 Image(systemName: toastSucceeded ? "checkmark.circle" : "exclamationmark.triangle")
@@ -268,23 +291,7 @@ struct AddShow: View {
             .frame(maxWidth: 360)
             .padding(.horizontal, 16)
         })
-        .background {
-            Color.clear
-                .tint(.primary)
-                .alert("Você está saindo do KiShow", isPresented: $showExternalLinkConfirmation) {
-                    Button("Continuar") {
-                        if let pendingExternalURL {
-                            openURL(pendingExternalURL)
-                        }
-                        pendingExternalURL = nil
-                    }
-                    Button("Cancelar", role: .cancel) {
-                        pendingExternalURL = nil
-                    }
-                } message: {
-                    Text("Você será redirecionado para uma página externa da Ticketmaster.")
-                }
-            }
+       
         
     }
 }

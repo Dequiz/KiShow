@@ -59,7 +59,6 @@ struct EventView: View {
         }
     }
 
-   
     private let favoritoTip = FavoritoTip()
     private let eventStoryTip = EventStoryTip()
 
@@ -69,45 +68,52 @@ struct EventView: View {
                 .ignoresSafeArea()
             ScrollView {
                 VStack(spacing: 10) {
-                    Image(.camada1)
-                        .resizable()
-                        .frame(width:500,height: 250)
-                        .rotationEffect(.degrees(0))
-                        .opacity(0.3)
-                        .overlay(alignment: .bottom){
-                            VStack{
-                                NavigationLink(destination: StoryView(stories: dailyStories) {
-                                    markDailyStoriesAsViewed()
-                                }) {
-                                    VinylRecord(
-                                        isTurning: hasUnseenStories,
-                                        isGoingUp: hasUnseenStories,
-                                        fullVynil: 150,
-                                        image: eventoSelecionado.show?.imageShow
-                                            .flatMap { UIImage(data: $0) }
-                                            .map(Image.init(uiImage:))
-                                    )
-                                    .popoverTip(eventStoryTip, arrowEdge: .top)
-                                    .tipViewStyle(CenteredTipViewStyle())
-                                    .disabled(true)
-                                }
-                                .disabled(dailyStories.isEmpty)
-                               
-                                Text(eventoSelecionado.show?.nameShow ?? "Evento")
-                                    .fontWeight(.bold)
-                                
-                                if #available(iOS 27.0, *) {
-                                    themePicker
-                                        .pickerStyle(.tabs)
-                                        .glassEffect()
-                                } else {
-                                    themePicker
-                                        .pickerStyle(.segmented)
-                                        .glassEffect()
-                                }
-                            }
-                            .padding(.horizontal)
+                    VStack() {
+                        NavigationLink(destination: StoryView(stories: dailyStories) {
+                            markDailyStoriesAsViewed()
+                        }) {
+                            VinylRecord(
+                                isTurning: hasUnseenStories,
+                                isGoingUp: hasUnseenStories,
+                                fullVynil: 150,
+                                image: eventoSelecionado.show?.imageShow
+                                    .flatMap { UIImage(data: $0) }
+                                    .map(Image.init(uiImage:))
+                            )
+                            .popoverTip(eventStoryTip, arrowEdge: .top)
+                            .tipViewStyle(CenteredTipViewStyle())
+                            .disabled(true)
                         }
+                        .disabled(dailyStories.isEmpty)
+
+                        Text(eventoSelecionado.show?.nameShow ?? "Evento")
+                            .fontWeight(.bold)
+
+                        ColapsedList(eventoSelecionado: eventoSelecionado)
+
+                        if #available(iOS 27.0, *) {
+                            themePicker
+                                .pickerStyle(.tabs)
+                                .glassEffect()
+                        } else {
+                            themePicker
+                                .pickerStyle(.segmented)
+                                .glassEffect()
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 14)
+                    .frame(maxWidth: .infinity)
+                    .background {
+                            Image(.camada1)
+                                .resizable()
+                                .frame(maxHeight: 600)
+                                .frame(minHeight: 400)
+                                .clipped()
+                                .opacity(0.3)
+                                .scaledToFill()
+                    }
+
                     Spacer()
                     if filtered.isEmpty {
                         emptyMediaPlaceholder
@@ -227,7 +233,7 @@ struct EventView: View {
                 Text(tipo.rawValue).tag(tipo)
             }
         }
-        .frame(width: 350)
+        .frame(maxWidth: 350)
         .controlSize(.large)
     }
 
