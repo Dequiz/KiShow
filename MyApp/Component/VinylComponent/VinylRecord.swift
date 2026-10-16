@@ -65,13 +65,13 @@ struct VinylRecord: View {
                 ZStack {
                     Circle()
                         .stroke()
-                        .tint(.gray.opacity(0.5))                        .frame(width: fullVynil*0.9,height: fullVynil*0.9)
+                        .tint(.gray)                        .frame(width: fullVynil*0.9,height: fullVynil*0.9)
                     Circle()
                         .stroke()
-                        .tint(.gray.opacity(0.5))                        .frame(width: fullVynil*0.8,height: fullVynil*0.8)
+                        .tint(.gray)                        .frame(width: fullVynil*0.8,height: fullVynil*0.8)
                     Circle()
                         .stroke()
-                        .tint(.gray.opacity(0.5))                        .frame(width: fullVynil*0.7,height: fullVynil*0.7)
+                        .tint(.gray)                        .frame(width: fullVynil*0.7,height: fullVynil*0.7)
                                     if let image {
                                         image
                                             .resizable()
