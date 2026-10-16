@@ -115,6 +115,7 @@ struct EventView: View {
                         LazyVStack(spacing: 0) {
                             ForEach(filtered) { experience in
                                 row(for: experience)
+                                    .padding(.top)
                                     .contextMenu {
                                         Button("Editar", systemImage: "pencil") {
                                             experienceToEdit = experience
@@ -336,7 +337,7 @@ struct EventView: View {
                             .overlay(alignment: .topLeading){
                                 Spacer()
                                 HStack{
-                                    Text("Data da última modificação:")
+                                    Text("Última modificação:")
                                         .font(.caption)
                                         .foregroundStyle(Color.secondary)
                                         .lineLimit(1)
@@ -378,7 +379,7 @@ struct EventView: View {
                         .overlay(alignment: .topLeading){
                             Spacer()
                             HStack{
-                                Text("Data da última modificação:")
+                                Text("Última modificação:")
                                     .font(.caption)
                                     .foregroundStyle(Color.secondary)
                                     .lineLimit(1)
@@ -405,13 +406,12 @@ struct EventView: View {
                         .offset(y:-10)
                 }
             }
-            .padding()
 
         case .text:
             VStack(alignment: .leading){
                 Spacer()
                 HStack{
-                    Text("Data da última modificação:")
+                    Text("Última modificação:")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
                         .lineLimit(1)
@@ -421,22 +421,19 @@ struct EventView: View {
                         .foregroundStyle(Color.secondary)
                         .lineLimit(1)
                 }
-                Spacer()
                 Text(experience.textContent?.first ?? "Vazio")
-                Spacer()
             }
             .padding()
             .frame(minHeight: 50)
             .frame(maxWidth: 370)
             .background(Color.details)
-        .clipShape(RoundedRectangle(cornerRadius: 25))
-        .padding(20)
+            .clipShape(RoundedRectangle(cornerRadius: 25))
 
         case .audio:
             VStack{
                 Spacer()
                 HStack{
-                    Text("Data da última modificação:")
+                    Text("Última modificação:")
                         .font(.caption)
                         .foregroundStyle(Color.secondary)
                         .lineLimit(1)
@@ -468,6 +465,7 @@ struct EventView: View {
                             .progressViewStyle(.linear)
                             .tint(.white)
                             .frame(maxWidth: .infinity)
+                            .padding(.trailing)
                     }
                    
                     Divider()
@@ -475,7 +473,7 @@ struct EventView: View {
                         .frame(maxWidth: 330)
                     if let text = experience.textContent, !text.isEmpty {
                         Text(text.first ?? "Vazio")
-                            .frame(minHeight: 100)
+                            .padding()
                     }
                 }
             }
