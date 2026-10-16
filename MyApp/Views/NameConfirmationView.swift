@@ -23,13 +23,7 @@ struct NameConfirmationView: View {
                 Color.appBackground
                 VStack{
                     Spacer()
-                    HStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(.mainPink)
-                            .frame(width:80,height: 10)
-                    }
-                    Spacer()
-                    VStack(alignment: .leading){
+                    VStack(alignment: .leading, spacing: 10){
                         Text("Nos diga como quer ser chamado(a)")
                             .font(.system(size: 20))
                             .fontWeight(.semibold)
