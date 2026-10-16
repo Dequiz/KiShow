@@ -11,7 +11,6 @@ import SwiftUI
 
 struct ShowList: View {
     let ticketMasterShow: TicketMasterShowViewModel
-    let Taskid: UUID
     var genre: [String]
     @State var isAddShow: Bool = false
     @State var actualShow: TicketmasterShow?
@@ -61,7 +60,7 @@ struct ShowList: View {
                     
                 }
             }
-            .task(id: Taskid) {
+            .task(id: genre) {
                 switch genre.count {
                 case 0:
                     await ticketMasterShow.fetchConcert(genre1: "Music")

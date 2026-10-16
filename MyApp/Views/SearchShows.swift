@@ -10,7 +10,6 @@ import SwiftUI
 
 struct SearchShows: View {
     @Bindable var ticketMasterShow: TicketMasterShowViewModel
-    @State var TaskId: UUID = UUID()
     var body: some View {
         NavigationStack{
             
@@ -31,7 +30,6 @@ struct SearchShows: View {
                                     ForEach(ticketMasterShow.genres, id:\.self){ genre in
                                         FilterCategorie(optionGenre: ticketMasterShow.genresTranslations[genre] ?? "Gênero Inexistente"){
                                             ticketMasterShow.addGenre(genre: genre)
-                                            TaskId = UUID()
                                         }.background(ticketMasterShow.selectedGenres.contains(genre) ? .selectedCategorie : .categorieButton)
                                             .cornerRadius(23)
                                             .padding(.leading, 5)
@@ -50,8 +48,8 @@ struct SearchShows: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                         }
-                        ShowList(ticketMasterShow: ticketMasterShow, Taskid: TaskId, genre: ticketMasterShow.selectedGenres){
-                            TaskId = UUID()
+                        ShowList(ticketMasterShow: ticketMasterShow, genre: ticketMasterShow.selectedGenres){
+                            
                         }
                     }
                     
