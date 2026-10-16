@@ -19,7 +19,9 @@ struct Categories: View {
                 .ignoresSafeArea()
             ScrollView {
                 VStack (alignment: .leading, spacing: 20){
-                    Text("O Kishow possui ilustrações autorais para algumas das categorias existentes, as quais são as mesmas que você pode selecionar como foto de perfil.\nConfira-as em maiores detalhes a seguir!")
+                    Text("O Kishow possui ilustrações autorais para algumas das categorias presentes no aplicativo, as quais são as mesmas que você pode selecionar como foto de perfil.")
+                        .font(.body)
+                    Text("Confira-as em maiores detalhes a seguir!")
                         .font(.body)
                     
                     Text("Categorias ilustradas")
@@ -42,6 +44,8 @@ struct Categories: View {
                         ShowCategories(categoryName: "Clássica", categoryImage: .classic)
                     }
                     .padding(.vertical, 10)
+                    
+                    Spacer()
                     
                     Text("Última atualização: 15 de Outubro de 2026")
                         .font(.body)

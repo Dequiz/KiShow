@@ -340,6 +340,7 @@ struct AddExperience: View {
                 .frame(maxWidth: .infinity)
                 .aspectRatio(16 / 9, contentMode: .fit)
                 .frame(maxHeight: 315)
+                .tint(.mainPink)
         case .empty:
             videoPickerButton(isFailure: false)
         case .failure:
