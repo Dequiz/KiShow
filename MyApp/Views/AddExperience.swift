@@ -274,7 +274,7 @@ struct AddExperience: View {
                         }
                     }
                     .aspectRatio(4 / 3, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: 320)
                     .frame(maxHeight: 360)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 }

@@ -338,8 +338,9 @@ struct EventView: View {
                         Image(uiImage: uiImage)
                             .resizable()
                             .clipped()
-                            .frame(maxWidth: 370, maxHeight: 230)
+                            .frame(maxWidth: 370, maxHeight: 500)
                             .clipShape(.rect(topLeadingRadius: 25, topTrailingRadius: 25))
+                            .scaledToFill()
                             .overlay(alignment: .topLeading){
                                 Spacer()
                                 HStack{
@@ -359,12 +360,12 @@ struct EventView: View {
                                 .padding(.horizontal,10)
                                 Spacer()
                             }
-                            .scaledToFill()
                     }
                     if let text = experience.textContent, !text.isEmpty {
                         Text(text.first ?? "Vazio")
+                            .padding()
                             .frame(minHeight: 50)
-                            .frame(maxWidth: 370,maxHeight: 230)
+                            .frame(maxWidth: 370,maxHeight: 500)
                             .background(Color.details)
                             .padding(.top,0)
                             .clipShape(.rect(bottomLeadingRadius:25, bottomTrailingRadius: 25))

@@ -79,10 +79,11 @@ struct UserProfille: View {
                                         .multilineTextAlignment(.center)
                                 }
                             }
+                            .padding(.horizontal, 12)
                             .frame(maxWidth: .infinity)
                             .frame(height: 305)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 35))
-                            .padding(.horizontal, 12)
+                            
                             
                             VStack(spacing: 8) {
                                 Text("Artistas mais ouvidos")

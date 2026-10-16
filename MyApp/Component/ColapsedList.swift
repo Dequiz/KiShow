@@ -76,7 +76,7 @@ struct ColapsedList: View {
 
                     }
                     .padding()
-                    .frame(maxWidth: 350)
+                    .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .transition(.opacity.combined(with: .move(edge: .top)))

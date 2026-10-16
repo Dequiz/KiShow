@@ -60,13 +60,13 @@ struct LineChart: View {
         VStack( spacing: 14) {
             HStack(spacing: 8) {
                 monthPicker(title: "De", selection: $startMonth)
-                    .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    .foregroundStyle(Color.secondary)
                 monthPicker(title: "Até", selection: $endMonth)
-                    .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                    .foregroundStyle(Color.secondary)
 
                 VStack(spacing: -5) {
                     Text("Ano")
-                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
+                        .foregroundStyle(Color.secondary)
                     Picker("", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
                             Text(String(year)).tag(year)
@@ -183,7 +183,7 @@ struct LineChart: View {
     private func monthPicker(title: String, selection: Binding<Int>) -> some View {
         VStack(spacing: -5) {
             Text(title)
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(Color.secondary)
             Picker("", selection: selection) {
                 ForEach(1...12, id: \.self) { month in
                     Text(monthNames[month - 1]).tag(month)
