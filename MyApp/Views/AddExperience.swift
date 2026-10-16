@@ -192,12 +192,13 @@ struct AddExperience: View {
         let eventAlreadyHasExperiences = eventoSelecionado.experiences?.isEmpty == false
             || experiencies.contains { $0.event?.idEvent == eventoSelecionado.idEvent }
         let isFirstExperienceForEvent = isNewExperience && !eventAlreadyHasExperiences
-        let target = experienceToEdit ?? ExperienceEntity(type: mediaType, event: eventoSelecionado)
+        let target = experienceToEdit ?? ExperienceEntity(type: mediaType, event: eventoSelecionado, timeStamp: Date())
         let oldType = target.type
         let oldTextContent = target.textContent
         let oldImageContent = target.imageContent
         let oldVideoContent = target.videoContent
         let oldAudioContent = target.audioContent
+        let oldTimeStamp = target.timeStamp
         let oldVideoFile = target.type == .video ? target.videoContent?.first : nil
 
         target.type = mediaType
@@ -205,6 +206,7 @@ struct AddExperience: View {
         target.imageContent = imageContent
         target.videoContent = videoContent
         target.audioContent = audioContent
+        target.timeStamp = Date()
 
         if isNewExperience {
             modelContext.insert(target)
@@ -220,6 +222,7 @@ struct AddExperience: View {
                 target.imageContent = oldImageContent
                 target.videoContent = oldVideoContent
                 target.audioContent = oldAudioContent
+                target.timeStamp = oldTimeStamp
             }
             validationMessage = "Não foi possível salvar. Tente novamente."
             return
