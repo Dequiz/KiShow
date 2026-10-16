@@ -68,7 +68,7 @@ struct EventView: View {
             Color("AppBackground")
                 .ignoresSafeArea()
             ScrollView {
-                VStack {
+                VStack(spacing: 10) {
                     Image(.camada1)
                         .resizable()
                         .frame(width:500,height: 250)
