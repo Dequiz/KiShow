@@ -27,8 +27,8 @@ struct LineChart: View {
     @State private var ascending = true
 
     private let monthNames = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+        "Jul", "Ago", "Set", "Out", "Nove", "Dez"
     ]
 
     private var availableYears: [Int] {
@@ -104,7 +104,7 @@ struct LineChart: View {
                     let chartWidth = max(geometry.size.width, minimumChartWidth + monthSlotWidth / 2)
                     ScrollView(.horizontal) {
                     Chart(chartData) { item in
-                        LineMark(
+                        BarMark(
                             x: .value("Mês", item.position),
                             y: .value("Shows", item.count)
                         )
@@ -132,7 +132,6 @@ struct LineChart: View {
                                         Text(monthNames[displayedMonths[position] - 1])
                                         .font(.system(size: 12))
                                         .foregroundStyle(Color.text)
-                                        .fixedSize()
                                     }
                                 }
                             }
