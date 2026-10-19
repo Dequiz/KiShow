@@ -35,7 +35,7 @@ class TitleDefinitionMachine{
                 if try unlockTitle(texto: "Colecionador", context: context) { newlyUnlocked.append("Colecionador") }
             }
             if totalShows >= 1{
-                if try unlockTitle(texto: "Colecionador Novato", context: context) { newlyUnlocked.append("Colecionador Novato") }
+                if try unlockTitle(texto: "Novato", context: context) { newlyUnlocked.append("Novato") }
             }
         case .photosAdded(let totalPhotos):
             if totalPhotos >= 3{
