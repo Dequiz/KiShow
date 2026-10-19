@@ -93,7 +93,7 @@ struct AddShow: View {
                             .font(.body.bold())
                         Text("\(ticketMasterShow.venue?.address?.line1 ?? "Sem Rua") | \(ticketMasterShow.venue?.name ?? "Sem Local")")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(ticketMasterShow.venue?.city?.name ?? "Sem Cidade")
+                        Text("\(ticketMasterShow.venue?.city?.name ?? "Sem Cidade") | \(ticketMasterShow.venue?.state?.stateCode ?? "Sem Estado"))
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         if let latitude = ticketMasterShow.latitude,
