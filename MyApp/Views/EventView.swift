@@ -171,16 +171,17 @@ struct EventView: View {
             player.stop()
         }
         .onAppear(perform: refreshDailyStories)
-        .onChange(of: experiences.count) { _, _ in
+        .onChange(of: experiences.count) {
             refreshDailyStories()
         }
-        .onChange(of: scenePhase) { _, phase in
+        .onChange(of: scenePhase) { phase in
             if phase == .active {
                 refreshDailyStories()
             }
         }
        
         .toolbar {
+            let nomeShow = eventoSelecionado.show?.nameShow ?? "Show"
             ToolbarItemGroup(placement: .topBarTrailing) {
                 NavigationLink(destination: AddExperience(eventoSelecionado: eventoSelecionado)) {
                     Image(systemName: "plus")
@@ -188,9 +189,27 @@ struct EventView: View {
                 .tint(.primary)
                 .popoverTip(favoritoTip, arrowEdge: .top)
                 .tipViewStyle(CenteredTipViewStyle())
+                
+                if let latitude = eventoSelecionado.show?.latitude,
+                   let longitude = eventoSelecionado.show?.longitude,
+                (-90.0...90.0).contains(latitude),
+                (-180.0...180.0).contains(longitude) {
+                 NavigationLink {
+                     MapView(
+                         latitude: latitude,
+                         longitude: longitude,
+                         placeName: eventoSelecionado.show?.localShow ?? "Local"
+                     )
+                 } label: {
+                    Image(systemName: "map")
+                     .tint(.primary)
+                 }
+                 .tint(.primary)
+             }
+                
                 Button {
                     guard !isAddingToCalendar else { return }
-                    let nomeShow = eventoSelecionado.show?.nameShow ?? "Show"
+                  
                     let dateShow = eventoSelecionado.show?.dataShow ?? Date()
                     let title = "Show do: \(nomeShow)"
                     isAddingToCalendar = true
@@ -221,12 +240,13 @@ struct EventView: View {
                     if isAddingToCalendar {
                         ProgressView()
                     } else {
-                        Image(systemName: "calendar.badge.plus")
+                        Image(systemName:  calendarToastMessage.isEmpty ?  "calendar.badge.plus" : "calendar")
                     }
                 }
                 .disabled(isAddingToCalendar)
                 .tint(.primary)
                 .accessibilityLabel("Adicionar show ao calendário")
+                            
             }
         }
         .sheet(item: $experienceToEdit) { experience in

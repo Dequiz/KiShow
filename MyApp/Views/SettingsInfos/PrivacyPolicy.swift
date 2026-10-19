@@ -26,7 +26,7 @@ struct PrivacyPolicy: View {
 
                 } header: {
                     VStack (alignment: .leading) {
-                        Text ("Última atualização: 14 de outubro de 2026")
+                        Text ("Última atualização: 19 de outubro de 2026")
                             .fontWeight(.regular)
 
                         Spacer(minLength: 30)
@@ -41,7 +41,7 @@ struct PrivacyPolicy: View {
                 .listRowBackground(Color.details)
 
                 Section {
-                    BulletTopic(text: "Nome de exibição e, em instalações que usaram versões anteriores, idade calculada a partir da data de nascimento;")
+                    BulletTopic(text: "Nome de exibição;")
                     BulletTopic(text: "Fotos e vídeos escolhidos pelo usuário;")
                     BulletTopic(text: "Áudios e textos adicionados às experiências de shows;")
                     BulletTopic(text: "Dados dos shows registrados pelo usuário.")
@@ -56,7 +56,7 @@ struct PrivacyPolicy: View {
                 .listRowBackground(Color.details)
 
                 Section {
-                    Text("**Perfil:** O cadastro atual solicita um nome de exibição, armazenado localmente. Versões anteriores solicitavam data de nascimento apenas para calcular a idade; a data não era salva, mas a idade calculada pode permanecer nos dados locais de instalações que usaram essas versões. O cadastro atual não solicita data de nascimento.")
+                    Text("**Perfil:** O cadastro atual solicita um nome de exibição, armazenado localmente.")
 
                     Text("**Fotos e vídeos:** Para anexar uma foto ou vídeo, o app usa o seletor de mídia do iOS. Você escolhe quais itens compartilhar com o app; ele não solicita acesso geral à fototeca nem usa a câmera.")
 
@@ -65,6 +65,7 @@ struct PrivacyPolicy: View {
                     Text("**Calendário:** Ao tocar em adicionar show ao calendário, o app solicita acesso ao Calendário para verificar se já existe um evento semelhante e, se você autorizar, adicionar o show. O conteúdo dos demais eventos não é salvo pelo KiShow nem enviado aos nossos servidores.")
 
                     Text("**Consulta de eventos:** O app envia à Discovery API da Ticketmaster o gênero escolhido e o código do país Brasil para buscar eventos. A Ticketmaster também recebe dados técnicos da conexão, como o endereço IP. Nome, mídias e registros pessoais não são incluídos na consulta.")
+                    
                 } header: {
                     HStack{
                         TermsTopics(numberTerm: "3")
