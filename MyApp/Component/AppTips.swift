@@ -124,7 +124,7 @@ struct EventStoryTip: Tip {
     }
 
     var message: Text? {
-        Text("Fotos e vídeos deste show ficam reunidos aqui. Depois de adicionar uma mídia, toque no disco para rever suas lembranças.")
+        Text("Fotos e vídeos deste show ficam reunidos aqui, toque no disco para rever suas lembranças.")
     }
 
     var image: Image? {
@@ -139,5 +139,69 @@ struct EventStoryTip: Tip {
 
     var options: [TipOption] {
         Tip.MaxDisplayCount(1)
+    }
+}
+
+
+struct InsertMidiaTip: Tip {
+    var title: Text {
+        Text("Inserir mídias")
+    }
+
+    var message: Text? {
+        Text("Por meio deste seletor você escolhe qual mídia inserir (Fotos, Vídeos, Áudios e Textos).")
+    }
+}
+
+struct AnimatedMidiasIcon: View {
+    private let symbols = [
+        "video.circle.fill",
+        "photo.circle.fill",
+        "text.justify.right",
+        "waveform.circle.fill"
+    ]
+
+    @State private var index = 0
+
+    var body: some View {
+        Image(systemName: symbols[index])
+            .font(.largeTitle)
+            .contentTransition(.symbolEffect(.replace))
+            .task {
+                while !Task.isCancelled {
+                    try? await Task.sleep(for: .seconds(1.5))
+                    withAnimation {
+                        index = (index + 1) % symbols.count
+                    }
+                }
+            }
+    }
+}
+
+struct MidiasTipStyle: TipViewStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            AnimatedMidiasIcon()
+
+            VStack(alignment: .leading, spacing: 4) {
+                configuration.title
+                    .font(.headline)
+                configuration.message?
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 0)
+
+            Button {
+                configuration.tip.invalidate(reason: .tipClosed)
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.footnote.bold())
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding()
     }
 }

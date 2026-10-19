@@ -5,26 +5,32 @@
 //  Created by Paulo Eduardo Barbosa da Silva on 02/10/26.
 //
 
-
 import SwiftUI
-
 
 struct ShowList: View {
     let ticketMasterShow: TicketMasterShowViewModel
-    let Taskid: UUID
     var genre: [String]
-    @State var isAddShow: Bool = false
-    @State var actualShow: TicketmasterShow?
     var action: () -> Void
+
+    
+    @State private var selectedShow: TicketmasterShow?
+
     var body: some View {
         VStack {
             switch ticketMasterShow.loadState {
             case .loading:
                 ProgressView("Buscando shows…")
+                    .tint(.mainPink)
                     .padding()
+
             case .failed:
-                ContentUnavailableView("Nenhum show encontrado", systemImage: "music.note", description: Text("Tente outra categoria ou pesquisa."))
-                    .padding()
+                ContentUnavailableView(
+                    "Nenhum show encontrado",
+                    systemImage: "music.note",
+                    description: Text("Tente outra categoria ou pesquisa.")
+                )
+                .padding()
+
             case .idle, .loaded:
                 LazyVGrid(
                     columns: [
@@ -34,44 +40,39 @@ struct ShowList: View {
                 ) {
                     ForEach(ticketMasterShow.filteredShows) { show in
                         Button {
-                            isAddShow.toggle()
-                            actualShow = show
+                            selectedShow = show
                             action()
                         } label: {
-                            Show(imageName: show.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Teste",
-                                 artistName: show.attraction?.name ?? "Desconhecido",
-                                 dateEvent: show.dates?.start?.localDate ?? "Sem data",
-                                 city: show.venue?.city?.name ?? "Sem Cidade"
-                            ).padding()
+                            Show(
+                                imageName: show.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Teste",
+                                artistName: show.attraction?.name ?? "Desconhecido",
+                                dateEvent: show.dates?.start?.localDate ?? "Sem data",
+                                city: show.venue?.city?.name ?? "Sem Cidade",
+                                state: show.venue?.state?.stateCode ?? ""
+                            )
+                            .padding()
                         }
                     }
                 }
             }
         }
         .padding(.horizontal)
-            .sheet(isPresented: $isAddShow){
-                
-                if let actualShow {
-                    NavigationStack{
-                        AddShow(ticketMasterShow: actualShow){
-                            isAddShow.toggle()
-                        }
-                    }
-                    
+        .sheet(item: $selectedShow) { show in
+            NavigationStack {
+                AddShow(ticketMasterShow: show) {
+                    selectedShow = nil
                 }
             }
-            .task(id: Taskid) {
-                switch genre.count {
-                case 0:
-                    await ticketMasterShow.fetchConcert(genre1: "Music")
-                case 1:
-                    await ticketMasterShow.fetchConcert(genre1: genre[0])
-                default:
-                    await ticketMasterShow.fetchConcert(genre1: genre[0], genre2: genre[1])
-                }
+        }
+        .task(id: genre) {
+            switch genre.count {
+            case 0:
+                await ticketMasterShow.fetchConcert(genre1: "Music")
+            case 1:
+                await ticketMasterShow.fetchConcert(genre1: genre[0])
+            default:
+                await ticketMasterShow.fetchConcert(genre1: genre[0], genre2: genre[1])
             }
-        
-        
+        }
     }
 }
-

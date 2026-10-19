@@ -23,7 +23,7 @@ class ExperienceViewModel{
         if mediaType == .image && content.isEmpty{
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description))
+        let newExperience = (ExperienceEntity(type: mediaType,event: event, timeStamp: Date(),textContent: description))
         context.insert(newExperience)
     }
     
@@ -32,7 +32,7 @@ class ExperienceViewModel{
         if mediaType == .image && content.isEmpty{
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description,imageContent: [content]))
+        let newExperience = (ExperienceEntity(type: mediaType,event: event, timeStamp: Date(),textContent: description,imageContent: [content]))
         context.insert(newExperience)
     }
     //Funçao que salva os vídeos inseridos como mídia primaria no app
@@ -41,7 +41,7 @@ class ExperienceViewModel{
         if mediaType == .image && content.isEmpty{
             return
         }
-        let newExperience = (ExperienceEntity(type: mediaType,event: event,textContent: description,videoContent: content))
+        let newExperience = (ExperienceEntity(type: mediaType,event: event, timeStamp: Date(),textContent: description,videoContent: content))
         context.insert(newExperience)
     }
     
@@ -51,7 +51,7 @@ class ExperienceViewModel{
         guard mediaType == .audio, let audioData = content.first, !audioData.isEmpty else {
             return
         }
-        let newExperience = ExperienceEntity(type: mediaType, event: event, textContent: description, audioContent: [audioData])
+        let newExperience = ExperienceEntity(type: mediaType, event: event, timeStamp: Date(), textContent: description, audioContent: [audioData])
         context.insert(newExperience)
         do {
             try context.save()

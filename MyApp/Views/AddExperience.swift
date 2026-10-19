@@ -14,6 +14,9 @@ import AVFoundation
 import TipKit
 
 struct AddExperience: View {
+    enum Field {
+        case description
+    }
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     @State var eventoSelecionado: EventEntity
@@ -26,12 +29,14 @@ struct AddExperience: View {
     @State private var isShowingMicrophonePermissionAlert = false
     @State private var validationMessage: String?
     @State private var itemSelecionado: PhotosPickerItem? = nil
-        @State private var imagemCarregada: UIImage? = nil
+    @State private var imagemCarregada: UIImage? = nil
     @State var viewModel = ExperienceViewModel()
-   @State private var rec = Recorder()
+    @FocusState private var focusedField: Field?
+    @State private var rec = Recorder()
     @State private var player = MiniPlayer()
     @State private var recordings: [URL] = []
     @State private var didLoadExperienceForEditing = false
+    private let insertMidia = InsertMidiaTip()
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Color.appBackground
@@ -46,7 +51,9 @@ struct AddExperience: View {
             }
             MidiaPicker(viewModel: viewModel, alignment: .bottomTrailing)
         }
-
+        .onTapGesture {
+            focusedField = nil
+        }
         .task{
             prepareExperienceForEditing()
             recordings = recordingList()
@@ -82,6 +89,7 @@ struct AddExperience: View {
                     Button(role: .confirm) {
                         saveExperience()
                     }
+                    .tint(.mainPink)
                 }
             }
             .navigationTitle(experienceToEdit == nil ? "Nova experiência" : "Editar experiência")
@@ -185,12 +193,13 @@ struct AddExperience: View {
         let eventAlreadyHasExperiences = eventoSelecionado.experiences?.isEmpty == false
             || experiencies.contains { $0.event?.idEvent == eventoSelecionado.idEvent }
         let isFirstExperienceForEvent = isNewExperience && !eventAlreadyHasExperiences
-        let target = experienceToEdit ?? ExperienceEntity(type: mediaType, event: eventoSelecionado)
+        let target = experienceToEdit ?? ExperienceEntity(type: mediaType, event: eventoSelecionado, timeStamp: Date())
         let oldType = target.type
         let oldTextContent = target.textContent
         let oldImageContent = target.imageContent
         let oldVideoContent = target.videoContent
         let oldAudioContent = target.audioContent
+        let oldTimeStamp = target.timeStamp
         let oldVideoFile = target.type == .video ? target.videoContent?.first : nil
 
         target.type = mediaType
@@ -198,6 +207,7 @@ struct AddExperience: View {
         target.imageContent = imageContent
         target.videoContent = videoContent
         target.audioContent = audioContent
+        target.timeStamp = Date()
 
         if isNewExperience {
             modelContext.insert(target)
@@ -213,6 +223,7 @@ struct AddExperience: View {
                 target.imageContent = oldImageContent
                 target.videoContent = oldVideoContent
                 target.audioContent = oldAudioContent
+                target.timeStamp = oldTimeStamp
             }
             validationMessage = "Não foi possível salvar. Tente novamente."
             return
@@ -255,17 +266,16 @@ struct AddExperience: View {
                                 .scaledToFill()
                         } else {
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(.secondary)
+                                .fill(.details)
                                 .overlay {
                                     Image(systemName: "photo.fill")
                                         .font(.system(size: 38))
-                                        .foregroundStyle(.white)
+                                        .foregroundStyle(.secondary)
                                 }
                         }
                     }
-                    .aspectRatio(4 / 3, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
-                    .frame(maxHeight: 360)
+                    .frame(minWidth: 320)
+                    .frame(minHeight: 360)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .buttonStyle(.plain)
@@ -292,10 +302,11 @@ struct AddExperience: View {
         TextField("Adicione uma descrição", text: $experiencia, axis: .vertical)
             .lineLimit(2...5)
             .padding(14)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .background(.details, in: RoundedRectangle(cornerRadius: 14))
             .foregroundStyle(Color.primary)
             .tint(.mainPink)
             .frame(maxWidth: .infinity)
+            .focused($focusedField, equals: .description)
     }
 
     @ViewBuilder
@@ -329,6 +340,7 @@ struct AddExperience: View {
                 .frame(maxWidth: .infinity)
                 .aspectRatio(16 / 9, contentMode: .fit)
                 .frame(maxHeight: 315)
+                .tint(.mainPink)
         case .empty:
             videoPickerButton(isFailure: false)
         case .failure:
@@ -339,13 +351,13 @@ struct AddExperience: View {
     private func videoPickerButton(isFailure: Bool) -> some View {
         PhotosPicker(selection: $videoPicker.videoSelection, matching: .videos) {
             RoundedRectangle(cornerRadius: 16)
-                .fill(.secondary)
+                .fill(.details)
                 .aspectRatio(16 / 9, contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .overlay {
                     Image(systemName: isFailure ? "exclamationmark.triangle.fill" : "video.badge.plus")
                         .font(.system(size: 38))
-                        .foregroundStyle(isFailure ? Color.red : Color.white)
+                        .foregroundStyle(isFailure ? Color.red : Color.secondary)
                 }
         }
         .buttonStyle(.plain)
@@ -365,6 +377,7 @@ struct AddExperience: View {
                     .font(.title3)
                     .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
+                    .foregroundStyle(.white)
             }
             .disabled(rec.isRecording || (rec.fileURL == nil && experienceToEdit?.audioContent?.first == nil))
             .accessibilityLabel("Reproduzir áudio")
@@ -392,6 +405,7 @@ struct AddExperience: View {
                     .font(.title3)
                     .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
+                    .foregroundStyle(.white)
             }
             .accessibilityLabel(rec.isRecording ? "Parar gravação" : "Iniciar gravação")
         }

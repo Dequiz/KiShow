@@ -19,7 +19,7 @@ struct Settings: View {
                             Text("Sobre o Aplicativo")
                         }
 
-                        NavigationLink(destination: Text("Tela: Categorias")) {
+                        NavigationLink(destination: Categories() ) {
                             Image(systemName: "music.note")
                             Text("Categorias Musicais")
                         }

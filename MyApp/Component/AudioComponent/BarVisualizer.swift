@@ -42,7 +42,7 @@ struct BarVisualizer: View{
                     let yOffSet = (height - barHeight) / 2
                     
                     Rectangle()
-                        .fill(.primary.opacity(0.85))
+                        .fill(.white.opacity(0.85))
                         .frame(width: safeBarWidth,height: barHeight)
                         .cornerRadius(safeBarWidth / 2)
                         .offset(y:yOffSet)
