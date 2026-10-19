@@ -57,7 +57,7 @@ struct ThermsOfService: View {
                             return .handled
                         })
                     
-                    Text("O KiShow não participa da venda de ingressos, ademais até então nosso aplicativo é totalmente gratuito e não há cobranças e ou vendas de produtos ou serviços. Caso haja uma modificação nessas condições o usuário será alertado com antecedência.")
+                    Text("O KiShow não participa da venda de ingressos, o que  torna o aplicativo totalmente gratuito e desprovido de cobranças ou vendas de produtos ou serviços. Caso haja uma modificação nessas condições o usuário será alertado com antecedência.")
                     
                     Text("Ademais, é permitido o registro e a preservação das memórias e sentimentos das experiências vividas em shows. O aplicativo permite reunir fotos, vídeos, áudios e informações sobre o evento em um único espaço, facilitando a organização, localização e revisitação dessas memórias. Sendo estes armazenados exclusivamente de forma local.")
                     
@@ -73,7 +73,7 @@ struct ThermsOfService: View {
                 .listRowBackground(Color.details)
                 
                 Section {
-                    Text("O KiShow não é direcionado a crianças e adolescentes, e menores de 18 anos devem usá-lo somente com supervisão e autorização prévia dos pais ou responsáveis legais. O aplicativo não exibe publicidade, não realiza perfilamento e não permite interação entre usuários.")
+                    Text("O KiShow não é direcionado à crianças e adolescentes, e menores de 18 anos devem usá-lo somente com supervisão e autorização prévia dos pais ou responsáveis legais. O aplicativo não exibe publicidade, não realiza perfilamento e não permite interação entre usuários.")
                     
                     Text("O usuário possui apenas uma licença limitada, não exclusiva, intransferível e revogável para uso pessoal e não comercial do software. É permitido compilar o aplicativo e utilizar o código fonte no desenvolvimento de outro software desde que não utilize as artes, a interface gráfica e nada da identidade visual do aplicativo. Fora isso é vetado a reprodução, modificação ou disponibilização do aplicativo que não seja pelo canal oficial da App Store. Qualquer outro meio de obtenção do aplicativo em outros meios constitui violação destes Termos e da legislação aplicável.")
                  
@@ -133,9 +133,9 @@ struct ThermsOfService: View {
                 
                 
                 Section {
-                    Text("Todos os direitos de propriedade intelectual e comercial relativos ao aplicativo KiShow,exceto os dados da API Discovery da Ticketmaster, inclui códigos fontes, marcas, logos, ilustrações, interfaces e o próprio software, são de propriedade exclusiva da Equipe de Desenvolvimento do KiShow. Sendo por este composto por André Holovati, Elisa Tanada Giacomini da Silva, Maria Clara Fernandes Bessa e Paulo Eduardo Barbosa da Silva.")
+                    Text("Todos os direitos de propriedade intelectual e comercial relativos ao aplicativo KiShow, exceto os dados da API Discovery da Ticketmaster, inclui códigos fontes, marcas, logos, ilustrações, interfaces e o próprio software, são de propriedade exclusiva da Equipe de Desenvolvimento do KiShow, composta por André Holovati, Elisa Tanada Giacomini da Silva, Maria Clara Fernandes Bessa e Paulo Eduardo Barbosa da Silva.")
                     
-                    Text("Entretanto, o código fonte apesar de ser propriedade dos desenvolvedores do KiShow, o código é disponibilizado publicamente. É permitido estudar e utilizar em outros projetos, desde que não se utilize de ilustrações, interfaces gráficas e a marca e nome KiShow.")
+                    Text("Apesar de o código fonte ser de propriedade dos desenvolvedores do KiShow, ele é disponibilizado publicamente. É permitido estudar e utilizar em outros projetos, desde que não se utilize de ilustrações, interfaces gráficas, marca e nome KiShow.")
                     
                     Text("O acesso ao aplicativo não confere ao usuário quaisquer direitos a propriedade intelectual ou comercial do mesmo, Exceto pelo direito limitado, revogável e não exclusivo de uso do aplicativo em conformidade com este Termo de Uso.")
                     
