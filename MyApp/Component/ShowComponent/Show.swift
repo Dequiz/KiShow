@@ -13,6 +13,7 @@ struct Show: View {
     var artistName: String
     var dateEvent: String
     var city: String
+    var state: String
     
     var body: some View {
         ZStack {
@@ -46,10 +47,11 @@ struct Show: View {
                                         .foregroundColor(.white)
                                         .font(.subheadline)
                                         .multilineTextAlignment(.leading)
-                                    Text(city)
+                                    Text("\(city) - \(state)")
                                         .foregroundColor(.white)
                                         .font(.subheadline)
                                         .multilineTextAlignment(.leading)
+                                    
                                 }
                                 .minimumScaleFactor(0.8)
                                 .lineLimit(2)
@@ -68,5 +70,5 @@ struct Show: View {
 }
 
 #Preview {
-    Show(imageName: "https://s1.ticketm.net/dam/a/f3b/4e5c700e-50bb-4b8c-9673-9e4f9f2bef3b_RETINA_LANDSCAPE_16_9.jpg", artistName: "Nome do Artista", dateEvent: "data", city: "Sem cidade")
+    Show(imageName: "https://s1.ticketm.net/dam/a/f3b/4e5c700e-50bb-4b8c-9673-9e4f9f2bef3b_RETINA_LANDSCAPE_16_9.jpg", artistName: "Nome do Artista", dateEvent: "data", city: "Sem cidade", state: "SP")
 }
