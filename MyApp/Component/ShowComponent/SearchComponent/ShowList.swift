@@ -47,7 +47,8 @@ struct ShowList: View {
                                 imageName: show.images?.max(by: { ($0.width ?? 0) < ($1.width ?? 0) })?.url ?? "Teste",
                                 artistName: show.attraction?.name ?? "Desconhecido",
                                 dateEvent: show.dates?.start?.localDate ?? "Sem data",
-                                city: show.venue?.city?.name ?? "Sem Cidade"
+                                city: show.venue?.city?.name ?? "Sem Cidade",
+                                state: show.venue?.state?.stateCode ?? ""
                             )
                             .padding()
                         }
