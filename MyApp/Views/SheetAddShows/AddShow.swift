@@ -238,7 +238,7 @@ struct AddShow: View {
                                         toastMessage = "Show de: \(artist) foi adicionado com sucesso."
                                         toastSucceeded = true
                                         showToast = true
-                                        try? await Task.sleep(nanoseconds: 2_200_000_000)
+                                        try? await Task.sleep(nanoseconds: 1_000_000_000)
                                         action()
                                         dismiss()
                                     } catch {

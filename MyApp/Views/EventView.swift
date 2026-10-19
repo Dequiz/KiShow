@@ -213,7 +213,7 @@ struct EventView: View {
                     if isAddingToCalendar {
                         ProgressView()
                     } else {
-                        Image(systemName: "calendar")
+                        Image(systemName: "calendar.badge.plus")
                     }
                 }
                 .disabled(isAddingToCalendar)
@@ -338,12 +338,13 @@ struct EventView: View {
                 VStack (spacing:10){
                     if let data = experience.imageContent?.first,
                        let uiImage = UIImage(data: data) {
+                        var vertical : Bool {
+                            return uiImage.size.height > uiImage.size.width
+                        }
                         Image(uiImage: uiImage)
                             .resizable()
                             .clipped()
-                            .frame(maxWidth: 370, maxHeight: 500)
                             .clipShape(.rect(topLeadingRadius: 25, topTrailingRadius: 25))
-                            .scaledToFill()
                             .overlay(alignment: .topLeading){
                                 Spacer()
                                 HStack{
@@ -363,6 +364,7 @@ struct EventView: View {
                                 .padding(.horizontal,10)
                                 Spacer()
                             }
+                            .scaledToFill()
                     }
                     if let text = experience.textContent, !text.isEmpty {
                         Text(text.first ?? "Vazio")

@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct MidiaPicker: View {
+    var insertMidia = InsertMidiaTip()
     var viewModel: ExperienceViewModel
     var alignment : Alignment
     var body: some View {
@@ -29,6 +31,8 @@ struct MidiaPicker: View {
             }
             .accessibilityLabel("Adicionar texto")
         }
+        .popoverTip(insertMidia, arrowEdge: .bottom)
+        .tipViewStyle(MidiasTipStyle())
         .padding()
         .glassEffect()
         .padding([.trailing,.bottom],15)
