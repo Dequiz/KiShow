@@ -32,6 +32,10 @@ struct EventDates: Decodable {
     let start: EventStart?
 }
 
+struct VenueState: Decodable {
+    let name: String?
+    let stateCode: String?
+}
 
 struct City: Decodable {
     let name: String?
@@ -73,6 +77,7 @@ struct VenueLocation: Decodable {
 struct Venue: Decodable {
     let name: String?
     let city: City?
+    let state: VenueState?
     let address: Address?
     let location: VenueLocation?
     let timezone: String?

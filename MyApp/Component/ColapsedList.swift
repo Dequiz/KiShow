@@ -53,7 +53,7 @@ struct ColapsedList: View {
                                 .font(.callout)
                         }
                         HStack{
-                            Text("**Hora:** \(formattedEventTime)")
+                            Text("**Horário:** \(formattedEventTime)")
                                 .foregroundStyle(Color.secondary)
                                 .font(.callout)
                         }

@@ -51,12 +51,15 @@ struct EventView: View {
     }
 
     private var filtered: [ExperienceEntity] {
+        let result: [ExperienceEntity]
         switch selected {
-        case .todos:  return experiences
-        case .fotos:  return experiences.filter { $0.type == .image }
-        case .videos: return experiences.filter { $0.type == .video }
-        case .audios: return experiences.filter { $0.type == .audio }
+        case .todos:  result = experiences
+        case .fotos:  result = experiences.filter { $0.type == .image }
+        case .videos: result = experiences.filter { $0.type == .video }
+        case .audios: result = experiences.filter { $0.type == .audio }
         }
+        
+        return result.sorted { $0.timeStamp > $1.timeStamp }
     }
 
     private let favoritoTip = FavoritoTip()
@@ -67,7 +70,7 @@ struct EventView: View {
             Color("AppBackground")
                 .ignoresSafeArea()
             ScrollView {
-                VStack(spacing: 10) {
+                VStack(spacing: 15) {
                     VStack() {
                         NavigationLink(destination: StoryView(stories: dailyStories) {
                             markDailyStoriesAsViewed()
@@ -95,15 +98,20 @@ struct EventView: View {
                         Spacer()
 
                         ColapsedList(eventoSelecionado: eventoSelecionado)
+                            .padding(.bottom, 10)
+                        
+                        Spacer()
 
                         if #available(iOS 27.0, *) {
                             themePicker
                                 .pickerStyle(.tabs)
                                 .glassEffect()
+                              
                         } else {
                             themePicker
                                 .pickerStyle(.segmented)
                                 .glassEffect()
+                                
                         }
                     }
                     .padding(.horizontal)
@@ -112,20 +120,20 @@ struct EventView: View {
                             Image(.camada1)
                                 .resizable()
                                 .frame(maxHeight: 600)
-                                .frame(minHeight: 400)
+                                .frame(minHeight: 300)
                                 .clipped()
                                 .opacity(0.3)
                                 .scaledToFill()
                     }
 
                     Spacer()
+                    
                     if filtered.isEmpty {
                         emptyMediaPlaceholder
                     } else {
-                        LazyVStack(spacing: 0) {
+                        LazyVStack(spacing: 16) {
                             ForEach(filtered) { experience in
                                 row(for: experience)
-                                    .padding(.top)
                                     .contextMenu {
                                         Button("Editar", systemImage: "pencil") {
                                             experienceToEdit = experience
@@ -134,7 +142,7 @@ struct EventView: View {
                                         Button("Excluir",systemImage: "trash.fill", role: .destructive) {
                                             delete(experience)
                                         }
-                                        .tint(.primary)
+                                        .tint(.red)
                                     }
                             }
                         }
@@ -329,13 +337,13 @@ struct EventView: View {
         var dataFormatada: String {
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "pt_BR")
-            formatter.dateFormat = "MMM dd, yyyy 'as' HH'h'mm"
+            formatter.dateFormat = "MMM dd, yyyy 'às' HH'h'mm"
             return formatter.string(from: experience.timeStamp)
         }
 
         switch experience.type {
         case .image:
-                VStack (spacing:10){
+                VStack (spacing:0){
                     if let data = experience.imageContent?.first,
                        let uiImage = UIImage(data: data) {
                         var vertical : Bool {
@@ -374,13 +382,13 @@ struct EventView: View {
                             .background(Color.details)
                             .padding(.top,0)
                             .clipShape(.rect(bottomLeadingRadius:25, bottomTrailingRadius: 25))
-                            .offset(y:-10)
+                            
                     }
                     
                 }
 
         case .video:
-            VStack(spacing: 10){
+            VStack(spacing: 0){
                 if let fileName = experience.videoContent?.first {
                     VideoCard(fileName: fileName)
                         .scaledToFill()
@@ -414,7 +422,6 @@ struct EventView: View {
                         .frame(maxWidth: 370,maxHeight: 230)
                         .background(Color.details)
                         .clipShape(.rect(bottomLeadingRadius:25, bottomTrailingRadius: 25))
-                        .offset(y:-10)
                 }
             }
 

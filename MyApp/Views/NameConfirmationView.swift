@@ -23,14 +23,16 @@ struct NameConfirmationView: View {
                 Color.appBackground
                 VStack{
                     Spacer()
-                    VStack(alignment: .leading, spacing: 10){
+                    VStack(spacing: 10){
                         Text("Nos diga como quer ser chamado(a)")
-                            .font(.system(size: 20))
+                            .font(.title3)
                             .fontWeight(.semibold)
+                        
                         Text("Seu nome será usado somente internamente no aplicativo para apresentação do seu perfil")
-                            .font(.caption)
+                            .font(.body)
                             .fontWeight(.regular)
-                            .frame(width: 255)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 70)
                     }
                     Spacer()
                     TextField("Ex: Maria", text: $viewModel.username)
@@ -53,8 +55,6 @@ struct NameConfirmationView: View {
                             }
                             .disabled(viewModel.username.isEmpty)
                             .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
-                        .disabled(viewModel.username.isEmpty)
-                        .glassEffect(viewModel.username.isEmpty ? .clear.tint(.mainPink.opacity(0.5)) : .clear.tint(.mainPink))
                     }
                     }
                 }.onTapGesture {
