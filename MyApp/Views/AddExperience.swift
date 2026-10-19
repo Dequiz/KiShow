@@ -36,6 +36,7 @@ struct AddExperience: View {
     @State private var player = MiniPlayer()
     @State private var recordings: [URL] = []
     @State private var didLoadExperienceForEditing = false
+    private let insertMidia = InsertMidiaTip()
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Color.appBackground
@@ -273,9 +274,8 @@ struct AddExperience: View {
                                 }
                         }
                     }
-                    .aspectRatio(4 / 3, contentMode: .fit)
-                    .frame(maxWidth: 320)
-                    .frame(maxHeight: 360)
+                    .frame(minWidth: 320)
+                    .frame(minHeight: 360)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .buttonStyle(.plain)
